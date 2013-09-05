@@ -68,13 +68,15 @@
     <!-- al final para que la pagina cargue rapido -->
     <script type="text/javascript" src="libs/js/jquery-1.10.2.min.js"></script>
     <script type="text/javascript" src="libs/js/bootstrap/bootstrap-alert.js"></script>
+    <script type="text/javascript" src="libs/js/md5.js"></script>
 
     <script>
 
-  		function notify(t,m){
-  			var obj = document.getElementById('error_msg');
-        	var actual = obj.innerHTML;
-  			var body = '<div class="alert alert-error" style="margin-top:30px; margin-bottom:0;">'+
+  		function notify(t,m,type){
+  			var tipo = (typeof(type)=='undefined')?'error':type;
+        var obj = document.getElementById('error_msg');
+        var actual = obj.innerHTML;
+  			var body = '<div class="alert alert-'+tipo+'" style="margin-top:30px; margin-bottom:0;">'+
 				        	'<button type="button" class="close" data-dismiss="alert">×</button>'+
 				        	'<strong>'+t+'</strong><br /> '+m+
 				        '</div>';
@@ -84,7 +86,10 @@
     	function login(){
 			var usr = $('#user').val();
 			var pss = $('#password').val();
-			$.ajax({
+			if(usr=='' || pss==''){ notify("Error","Ingrese los datos completos","warning"); return; }
+      if(pss!='') pss = md5(pss);
+
+      $.ajax({
 				url:'login_store.php',
 				data:'user='+usr+'&pass='+pss, dataType:'json', type:'POST',
 				complete:function(datos){
@@ -93,7 +98,7 @@
 					console.log(T.msg);
 					
 					if(T.t=="true"){ window.location = "index.php"; }
-					else{ notify("Error",T.msg); }
+					else{ notify("Error",T.msg,"error"); }
 				}
 			});
 
