@@ -8,7 +8,7 @@ El Salvador
 Descripción de la estructura
 ----------------------------
 
-bd.sql
+bd.sql				Script de la Base de Datos provisional
 
 encabezado.php		Contiene el HTML que se necesita para el encabezado, el menú y los archivos css que se usan
 piepagina.php		Contiene el HTML del cierre de la pagina
