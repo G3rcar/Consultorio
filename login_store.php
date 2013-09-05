@@ -2,7 +2,7 @@
 //- Iniciamos la sesion
 if(!isset($_SESSION)){ session_start(); }
 
-//- Incluimos la libreria de conexion e instanciamos del objeto principal
+//- Incluimos la clase de conexion e instanciamos del objeto principal
 include_once("libs/php/class.connection.php");
 $conexion = new Conexion();
 

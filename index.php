@@ -1,73 +1,13 @@
 <?
+include("sesion.php");
+//- Incluimos la clase de conexion e instanciamos del objeto principal
+include_once("libs/php/class.connection.php");
 
+
+//- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
+include("encabezado.php");
 
 ?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-	<meta charset="utf-8">
-	<title>Consultorio M&eacute;dico Cerna y Alvarado</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="Proyecto ASI 2">
-	<meta name="author" content="@G3rcar">
-
-	<link href="res/css/bootstrap/css/bootstrap.css" rel="stylesheet">
-	<link href="res/css/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
-	<link href="res/css/agenda.css" rel="stylesheet">
-
-	<!-- Fav and touch icons -->
-	<link rel="shortcut icon" href="res/img/favicon.png">
-	<style type="text/css">
-		.cs_superior{
-			margin-top:2px;
-		}
-
-	</style>
-</head>
-
-<body>
-
-	<div class="container">
-    
-    	<div class="navbar cs_superior">
-    		<div class="navbar-inner">
-    			<a class="brand" href="#">Cerna y Alvarado</a>
-    			<ul class="nav pull-right">
-    				<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-							Gerardo Calder&oacute;n <b class="caret"></b>
-						</a>
-						<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
-							<li><a tabindex="-1" href="#">Cuenta</a></li>
-							<li class="divider"></li>
-							<li><a tabindex="-1" href="#">Salir</a></li>
-						</ul>
-					</li>
-
-    				<a href="#" class="navbar-link"></a>
-    			</ul>
-			    <ul class="nav">
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-							Catalogos
-							<b class="caret"></b>
-						</a>
-						<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
-							<li><a tabindex="-1" href="#">Departamentos</a></li>
-							<li><a tabindex="-1" href="#">Municipios</a></li>
-							<li><a tabindex="-1" href="#">Productos</a></li>
-							<li><a tabindex="-1" href="#">Proveedores</a></li>
-							<li><a tabindex="-1" href="#">Empleados/Usuarios</a></li>
-						</ul>
-					</li>
-					<li class="active"> <a href="#">Agenda de citas</a> </li>
-					<li> <a href="#">Medicinas</a> </li>
-					<li> <a href="#">Pacientes</a> </li>
-				</ul>
-			</div>
-		</div>
-
-
 
 
 		<!-- Agenda -->
@@ -359,21 +299,8 @@
 		<br />
 	</div>
 
-	<!-- javascript
-	================================================== -->
-	<!-- al final para que la pagina cargue rapido -->
-	<script type="text/javascript" src="libs/js/jquery-1.10.2.min.js"></script>
-	<script type="text/javascript" src="libs/js/bootstrap/bootstrap-alert.js"></script>
-	<script type="text/javascript" src="libs/js/bootstrap/bootstrap-dropdown.js"></script>
-
-    
-</body>
-</html>
 
 
 
-
-
-
-
+<? include('piepagina.php'); ?>
 
