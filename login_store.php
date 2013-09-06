@@ -2,6 +2,8 @@
 //- Iniciamos la sesion
 if(!isset($_SESSION)){ session_start(); }
 
+sleep(5);
+
 //- Incluimos la clase de conexion e instanciamos del objeto principal
 include_once("libs/php/class.connection.php");
 $conexion = new Conexion();
@@ -18,7 +20,7 @@ $pass = $conexion->escape(utf8_decode($_POST["pass"]));
 $success=array();
 
 //- Escribimos la consulta para buscar al usuario
-$selUser = "SELECT count(id) AS 'total' FROM usuarios WHERE usuario='{$user}'";
+$selUser = "SELECT count(id) AS 'total' FROM usuario WHERE cuenta='{$user}'";
 //- Ejecutamos la consulta y asignamos a la variable $res el resultado del select
 $res = $conexion->execSelect($selUser);
 //- Parseamos el resultado y lo convertimos en un array asociativo
@@ -31,7 +33,7 @@ if($iUsers["total"]!="1"){
 }
 
 //- Repetimos el proceso anterior pero con el usuario y password a la vez
-$selPass = "SELECT count(id) AS 'total',1 AS id FROM usuarios WHERE usuario='{$user}' AND password='{$pass}' ";
+$selPass = "SELECT count(id) AS 'total',1 AS id FROM usuario WHERE cuenta='{$user}' AND contrasena='{$pass}' ";
 $res = $conexion->execSelect($selPass);
 $iUserP = $conexion->fetchArray($res["result"]);
 

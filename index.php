@@ -10,6 +10,9 @@ include("encabezado.php");
 ?>
 
 
+	<h2>Agenda</h2>
+	
+
 		<!-- Agenda -->
 
 		<table class="calendar table table-bordered">
@@ -167,7 +170,7 @@ include("encabezado.php");
 					<td class=" no-events" rowspan="1"></td>
 					<td class=" has-events" rowspan="4">
 						<div class="row-fluid lecture" style="width: 99%; height: 100%;">
-							<span class="title">Data Structures</span> 
+							<span class="title">Cita con Joaqu&iacute;n Aguilares</span> 
 							<span class="lecturer">Doc. Alvarado</span>
 						</div>
 					</td>
@@ -297,8 +300,6 @@ include("encabezado.php");
 		<br />
 		<br />
 		<br />
-	</div>
-
 
 
 

@@ -13,14 +13,22 @@
 
 	<!-- Fav and touch icons -->
 	<link rel="shortcut icon" href="res/img/favicon.png">
+
+	<style>
+		@media (min-width: 980px) {
+			.cm-main-containter {
+				padding-top: 40px;
+			}
+		}
+	</style>
 </head>
 
 <body>
-
-	<div class="container">
+	<div id="wrap">
     
     	<? include('pestanas.php'); ?>
 
+		<div class="container cm-main-containter">
 
 
 <?

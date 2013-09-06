@@ -1,3 +1,7 @@
+	
+	</div>
+	</div>
+
 	<!-- javascript
 	================================================== -->
 	<!-- al final para que la pagina cargue rapido -->

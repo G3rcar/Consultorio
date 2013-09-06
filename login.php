@@ -55,7 +55,7 @@
     		<input id="user" type="text" class="input-block-level" placeholder="Usuario">
     		<input id="password" type="password" class="input-block-level" placeholder="Password">
 
-    		<button class="btn btn-large btn-primary" type="submit">Entrar</button>
+    		<button id="loginButton" class="btn btn-large btn-primary" type="submit">Entrar</button>
 
 	        
 	        <div id="error_msg"></div>
@@ -82,27 +82,33 @@
 				        '</div>';
 			 obj.innerHTML = body+actual;
   		} 
-
+      var loading=false;
     	function login(){
-			var usr = $('#user').val();
-			var pss = $('#password').val();
-			if(usr=='' || pss==''){ notify("Error","Ingrese los datos completos","warning"); return; }
-      if(pss!='') pss = md5(pss);
+        if(loading) return;
+        toggle(false);
 
-      $.ajax({
-				url:'login_store.php',
-				data:'user='+usr+'&pass='+pss, dataType:'json', type:'POST',
-				complete:function(datos){
-					console.log(datos.responseText);
-					var T = jQuery.parseJSON(datos.responseText);
-					console.log(T.msg);
-					
-					if(T.t=="true"){ window.location = "index.php"; }
-					else{ notify("Error",T.msg,"error"); }
-				}
-			});
+  			var usr = $('#user').val();
+  			var pss = $('#password').val();
+  			if(usr=='' || pss==''){ notify("Error","Ingrese los datos completos","warning"); toggle(true); return; }
+        if(pss!='') pss = md5(pss);
 
-		}
+        $.ajax({
+  				url:'login_store.php',
+  				data:'user='+usr+'&pass='+pss, dataType:'json', type:'POST',
+  				complete:function(datos){
+  				  var T = jQuery.parseJSON(datos.responseText);
+  					
+  					if(T.t=="true"){ window.location = "index.php"; }
+  					else{ notify("Error",T.msg,"error"); }
+            toggle(true);
+  				}
+  			});
+
+  		}
+      function toggle(v){
+        if(v){ $('#loginButton').removeClass('disabled').html('Entrar'); }
+        else{ $('#loginButton').addClass('disabled').html('Cargando...'); }
+      }
     </script>
 
   </body>
