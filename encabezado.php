@@ -10,8 +10,20 @@
 	<link href="res/css/bootstrap/css/bootstrap.css" rel="stylesheet">
 	<link href="res/css/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 	<link href="res/css/agenda.css" rel="stylesheet">
+	<link href="res/css/humane.css" rel="stylesheet">
 
-	<!-- Fav and touch icons -->
+
+
+	<!-- javascript ================================================== -->
+	<script type="text/javascript" src="libs/js/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript" src="libs/js/humane.min.js"></script>
+	<script type="text/javascript" src="libs/js/bootstrap/bootstrap-alert.js"></script>
+	<script type="text/javascript" src="libs/js/bootstrap/bootstrap-dropdown.js"></script>
+	<script type="text/javascript" src="libs/js/bootstrap/bootstrap-modal.js"></script>
+
+
+
+	<!-- Favicon -->
 	<link rel="shortcut icon" href="res/img/favicon.png">
 
 	<style>

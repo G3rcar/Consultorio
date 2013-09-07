@@ -5,12 +5,12 @@
 			<ul class="nav pull-right">
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						Gerardo Calder&oacute;n <b class="caret"></b>
+						<?=$_SESSION["user"]?> <b class="caret"></b>
 					</a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
-						<li><a tabindex="-1" href="cuenta.php">Cuenta</a></li>
+						<li><a tabindex="-1" href="cuenta.php"><i class="icon-user"></i> Cuenta</a></li>
 						<li class="divider"></li>
-						<li><a tabindex="-1" href="logout.php">Salir</a></li>
+						<li><a tabindex="-1" href="logout.php"><i class="icon-off"></i> Salir</a></li>
 					</ul>
 				</li>
 
@@ -30,9 +30,9 @@
 						<li><a tabindex="-1" href="usuarios.php">Empleados/Usuarios</a></li>
 					</ul>
 				</li>
-				<li class="active"> <a href="#">Agenda de citas</a> </li>
-				<li> <a href="medicinas.php">Medicinas</a> </li>
-				<li> <a href="pacientes.php">Pacientes</a> </li>
+				<li <?=($botones_menu["citas"]?'class="active" ':'')?> > <a href="agenda.php">Agenda de citas</a> </li>
+				<li <?=($botones_menu["medicinas"]?'class="active" ':'')?> > <a href="medicinas.php">Medicinas</a> </li>
+				<li <?=($botones_menu["pacientes"]?'class="active" ':'')?> > <a href="pacientes.php">Pacientes</a> </li>
 			</ul>
 		</div>
 	</div>

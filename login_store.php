@@ -33,7 +33,7 @@ if($iUsers["total"]!="1"){
 }
 
 //- Repetimos el proceso anterior pero con el usuario y password a la vez
-$selPass = "SELECT count(id) AS 'total',1 AS id FROM usuario WHERE cuenta='{$user}' AND contrasena='{$pass}' ";
+$selPass = "SELECT count(id) AS 'total',id FROM usuario WHERE cuenta='{$user}' AND contrasena='{$pass}' ";
 $res = $conexion->execSelect($selPass);
 $iUserP = $conexion->fetchArray($res["result"]);
 
