@@ -2,10 +2,8 @@
 //- Iniciamos la sesion
 if(!isset($_SESSION)){ session_start(); }
 
-sleep(5);
-
 //- Incluimos la clase de conexion e instanciamos del objeto principal
-include_once("libs/php/class.connection.php");
+include_once("../libs/php/class.connection.php");
 $conexion = new Conexion();
 
 //- Si la variable de usuario no viene se detenemos la ejecucion
