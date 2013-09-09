@@ -7,7 +7,7 @@ $botones_menu["limpio"]=true;
 
 
 //- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
-include("encabezado.php");
+include("res/partes/encabezado.php");
 
 ?>
 <!-- Estilo extra -->
@@ -19,8 +19,19 @@ include("encabezado.php");
 	color: #C00;
 	font-size: 16px;
 }
+.headGrid{
+	background-color: #33b5e5;
+}
+.headGrid th{
+	color: #FFFFFF;
+}
 </style>
 <!-- /Estilo extra -->
+
+<!-- Scripts extra -->
+<script type="text/javascript" src="libs/js/custom/objetos-comunes.js"></script>
+
+<!-- /Scripts extra -->
 
 
 	<h3>Cat&aacute;logos: departamentos</h3>
@@ -119,7 +130,9 @@ include("encabezado.php");
 					$("#contenedorTabla").html(datos.responseText);
 				}
 			});
-		}	
+		}
+
+
 	</script>
 
 
@@ -147,5 +160,5 @@ include("encabezado.php");
 
 
 
-<? include('piepagina.php'); ?>
+<? include('res/partes/pie.pagina.php'); ?>
 

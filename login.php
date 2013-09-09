@@ -93,7 +93,7 @@
         if(pss!='') pss = md5(pss);
 
         $.ajax({
-  				url:'login_store.php',
+  				url:'stores/login.php',
   				data:'user='+usr+'&pass='+pss, dataType:'json', type:'POST',
   				complete:function(datos){
   				  var T = jQuery.parseJSON(datos.responseText);

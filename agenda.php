@@ -7,7 +7,7 @@ $botones_menu["citas"]=true;
 
 
 //- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
-include("encabezado.php");
+include("res/partes/encabezado.php");
 
 ?>
 
@@ -305,5 +305,5 @@ include("encabezado.php");
 
 
 
-<? include('piepagina.php'); ?>
+<? include('res/partes/pie.pagina.php'); ?>
 

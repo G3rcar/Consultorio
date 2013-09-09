@@ -1,8 +1,9 @@
 <?
-include("sesionBack.php");
+include("sesion.back.php");
 
 //- Incluimos la clase de conexion e instanciamos del objeto principal
 include_once("../libs/php/class.connection.php");
+include_once("../libs/php/class.objetos.base.php");
 $conexion = new Conexion();
 
 
@@ -13,6 +14,31 @@ $accion = $_POST["action"];
 
 switch ($accion) {
 	case 'gd_depto':
+
+		$selDeptos = "SELECT id,nombre,DATE_FORMAT(creacion,'%d/%m/%Y %h:%i %p') AS 'creacion' FROM departamento ORDER BY id ";
+		$res = $conexion->execSelect($selDeptos);
+		$headers = array(
+			"Nombre",
+			array("width"=>"200","text"=>"Fecha de creaci&oacute;n")
+		);
+		$tabla = new GridCheck($headers,"gridDeptos");
+		if($res["num"]>0){
+			$i=0;
+			while($iDepto = $conexion->fetchArray($res["result"])){
+				$valoresFila = array($iDepto["nombre"],$iDepto["creacion"]);
+				$fila = array("id"=>$iDepto["id"],"valores"=>$valoresFila);
+				$tabla->nuevaFila($fila);
+			}
+		}
+
+		$html = $tabla->obtenerCodigo();
+
+		echo $html;
+		
+	break;
+
+
+	case 'gda_depto':
 		$selDeptos = "SELECT id,nombre,DATE_FORMAT(creacion,'%d/%m/%Y %h:%i %p') AS 'creacion' FROM departamento ORDER BY id ";
 		$res = $conexion->execSelect($selDeptos);
 		$html = '<table class="table table-bordered table-striped table-hover">
