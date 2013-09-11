@@ -20,8 +20,13 @@
 	<script type="text/javascript" src="libs/js/bootstrap/bootstrap-alert.js"></script>
 	<script type="text/javascript" src="libs/js/bootstrap/bootstrap-dropdown.js"></script>
 	<script type="text/javascript" src="libs/js/bootstrap/bootstrap-modal.js"></script>
+	<script type="text/javascript" src="libs/js/bootbox.min.js"></script>
 
-
+	<script type="text/javascript">
+		$(document).ready(function(){
+			bootbox.setDefaults({ className:'modalPequena', locale:'es' });
+		})
+	</script>
 
 	<!-- Favicon -->
 	<link rel="shortcut icon" href="res/img/favicon.png">

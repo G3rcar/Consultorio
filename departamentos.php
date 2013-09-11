@@ -25,6 +25,11 @@ include("res/partes/encabezado.php");
 .headGrid th{
 	color: #FFFFFF;
 }
+
+.modalPequena{
+	width:350px;
+	margin-left:-175px;
+}
 </style>
 <!-- /Estilo extra -->
 
@@ -45,14 +50,13 @@ include("res/partes/encabezado.php");
 					<ul class="nav nav-list">
 						<li class="nav-header">Opciones</li>
 						<li><a id="lnkAgregar" href="#"><i class="icon-plus"></i> Agregar</a></li>
-						<li><a href="#"><i class="icon-pencil"></i> Modificar</a></li>
-						<li><a href="#"><i class="icon-trash"></i> Borrar</a></li>
+						<li><a id="lnkBorrar" href="#"><i class="icon-trash"></i> Borrar</a></li>
 						
 						<li class="nav-header">Otros</li>
 						<li class="active"><a href="#">Departamentos</a></li>
-						<li><a href="#">Municipios</a></li>
-						<li><a href="#">Productos</a></li>
-						<li><a href="#">Proveedores</a></li>
+						<li><a href="municipios.php">Municipios</a></li>
+						<li><a href="productos.php">Productos</a></li>
+						<li><a href="proveedores.php">Proveedores</a></li>
 					</ul>
 				</div>
 			</div>
@@ -75,43 +79,13 @@ include("res/partes/encabezado.php");
 		$(document).ready(function(){
 			cargarTabla();
 
-			$('#AgregarDepto').on('show',function(){
-				$('#nombreDepto_label').removeClass('error_requerido');
-				$('#nombreDepto').val('');
-			});
-			$('#lnkAgregar').click(function(){
-				$('#AgregarDepto').modal('show');
-			});
-
-			$('#guardarDepto').click(function(){
-				if(!validarAgregar()){ return; }
-				toggle(false);
-
-				var nombre = $('#nombreDepto').val();
-				$.ajax({
-					url:'stores/departamentos.php',
-					data:'action=nv_depto&nombre='+nombre, dataType:'json', type:'POST',
-					complete:function(datos){
-						var T = jQuery.parseJSON(datos.responseText);
-
-						humane.log(T.msg);
-						if(T.success=="true"){
-							$('#AgregarDepto').modal('hide');
-							toggle(true);
-							cargarTabla();
-						}
-						toggle(true);
-					}
-				});
-
-				function toggle(v){
-					if(v){ $('#guardarDepto').removeClass('disabled').html('Guardar'); }
-					else{ $('#guardarDepto').addClass('disabled').html('Guardando...'); }
-				}
-			});
+			$('#lnkAgregar').click(function(){ manto.agregar(); });
+			$('#lnkBorrar').click(function(){ manto.borrar(); });
+			$('#guardarDepto').click(function(){ manto.guardar(); });
+			
 		});
 
-		function validarAgregar(){
+		function validarForm(){
 			var v = $('#nombreDepto').val();
 			if(v==''){
 				humane.log('Complete los campos requeridos');
@@ -133,13 +107,102 @@ include("res/partes/encabezado.php");
 		}
 
 
+
+		var manto = {
+			estado: 'agregar',
+			id:'',
+
+			agregar:function(){
+				this.estado = 'agregar';
+				$('#nombreDepto_label').removeClass('error_requerido');
+				$('#nombreDepto').val('');
+				$('#AgregarDepto').modal('show');
+
+
+			},
+			editar:function(id){
+				this.estado = 'editar';
+				this.id = id;
+				$.ajax({
+					url:'stores/departamentos.php',
+					data:'action=rt_depto&id='+id, dataType:'json', type:'POST',
+					complete:function(datos){
+						var T = jQuery.parseJSON(datos.responseText);
+						
+						$('#nombreDepto_label').removeClass('error_requerido');
+						$('#nombreDepto').val(T.nombre);
+						$('#AgregarDepto').modal('show');
+					}
+				});
+
+			},
+			borrar:function(id){
+				var tipo = (id)?'uno':'varios';
+				var seleccion = gridCheck.getSelectionJSON('gridDeptos');
+				if(tipo=='varios' && seleccion==false){
+					humane.log('No ha seleccionado ning&uacute;n registro');
+					return;
+				}
+
+				var ids = (tipo=='uno')?id:seleccion;
+				var action = (tipo=='uno')?'br_depto':'br_variosdepto' ;
+				
+				bootbox.confirm("¿Esta seguro de eliminar los registros?", function(confirm) {
+					if(confirm){
+						$.ajax({
+							url:'stores/departamentos.php',
+							data:'action='+action+'&id='+ids, dataType:'json', type:'POST',
+							complete:function(datos){
+								var T = jQuery.parseJSON(datos.responseText);
+								
+								humane.log(T.msg)
+								if(T.success=='true') cargarTabla();
+							}
+						});
+					}
+				}); 
+			},
+
+			guardar:function(){
+				if(!validarForm()){ return; }
+				manto.toggle(false);
+				var nombre = $('#nombreDepto').val();
+				
+				if(this.estado=='agregar'){ this.id=''; }
+				var datos = 'action=sv_depto&nombre='+nombre+'&id='+this.id;
+
+				$.ajax({
+					url:'stores/departamentos.php',
+					data:datos, dataType:'json', type:'POST',
+					complete:function(datos){
+						var T = jQuery.parseJSON(datos.responseText);
+
+						humane.log(T.msg);
+						if(T.success=="true"){
+							$('#AgregarDepto').modal('hide');
+							manto.toggle(true);
+							cargarTabla();
+						}
+						manto.toggle(true);
+					}
+				});
+			},
+
+			toggle:function(v){
+				if(v){ $('#guardarDepto').removeClass('disabled').html('Guardar'); }
+				else{ $('#guardarDepto').addClass('disabled').html('Guardando...'); }
+			}
+		}
+
+
 	</script>
 
 
 	<!-- Modales -->
 
 	<!-- Agregar -->
-	<div id="AgregarDepto" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="AgregarDepto" aria-hidden="true" style="width:350px;margin-left:-175px;">
+	<div id="AgregarDepto" class="modal hide fade modalPequena" tabindex="-1" role="dialog" aria-labelledby="AgregarDepto" aria-hidden="true">
+		
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 			<h3 id="modalHead">Agregar departamento</h3>
@@ -156,6 +219,7 @@ include("res/partes/encabezado.php");
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
 			<button id="guardarDepto" class="btn btn-primary">Guardar</button>
 		</div>
+
 	</div>
 
 
