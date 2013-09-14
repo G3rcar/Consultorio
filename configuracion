@@ -1,0 +1,22 @@
+Datos y Usuarios necesarios en las conexiones en el proyecto
+
+
+IP Virtual (VirtualBox) 
+192.168.56.15 [Conectado como "Adaptador sólo anfitrión"]
+
+SSH VirtualBox(Opcional)
+Usuario:	bdadmin
+Password:	cerna
+
+MySQL Virtual
+Usuario:	bdadmin
+Password:	8%(/H#U&Ce5zbvy
+
+
+-------
+La Base de datos funciona en una máquina virtual corriendo Ubuntu Server 12.04 LTS
+Los servicios necesarios para correr la BD son MySQL y SSH.
+SSH se puede obviar si se configura los usuarios nuevos de MySQL en la consola.
+Al archivo my.cnf se le debe comentar la linea "bind-conection" para que permita conexiones externas
+Se debe crear un usuario (bdadmin) y darle permisos para acceder desde cualquier host
+
