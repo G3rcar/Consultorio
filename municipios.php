@@ -54,7 +54,7 @@ include("res/partes/encabezado.php");
 						
 						<li class="nav-header">Otros</li>
 						<li><a href="departamentos.php">Departamentos</a></li>
-						<li class="active"><a href="#">Municipios</a></li>
+						<li class="active"> + <a href="#">Municipios</a></li>
 						<li><a href="productos.php">Productos</a></li>
 						<li><a href="proveedores.php">Proveedores</a></li>
 					</ul>
