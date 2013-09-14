@@ -39,7 +39,7 @@ include("res/partes/encabezado.php");
 <!-- /Scripts extra -->
 
 
-	<h3>Cat&aacute;logos: departamentos</h3>
+	<h3>Cat&aacute;logos: municipios</h3>
 
 	<div class="container-fluid">
 		<div class="row-fluid">
@@ -53,8 +53,8 @@ include("res/partes/encabezado.php");
 						<li><a id="lnkBorrar" href="#"><i class="icon-trash"></i> Borrar</a></li>
 						
 						<li class="nav-header">Otros</li>
-						<li class="active"><a href="#">Departamentos</a></li>
-						<li><a href="municipios.php">Municipios</a></li>
+						<li><a href="departamentos.php">Departamentos</a></li>
+						<li class="active"><a href="#">Municipios</a></li>
 						<li><a href="productos.php">Productos</a></li>
 						<li><a href="proveedores.php">Proveedores</a></li>
 					</ul>
