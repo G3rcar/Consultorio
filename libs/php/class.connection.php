@@ -3,9 +3,12 @@
 class Conexion{
 	private $link;
 	private $bd = "consultorio";
-	private $server = "localhost";
-	private $user = "root";
-	private $pass = "";
+	//private $server = "localhost";
+	private $server = "192.168.56.15";
+	//private $user = "root";
+	private $user = "dbadmin";
+	//private $pass = "";
+	private $pass = "8%(/H#U&Ce5zbvy";
 
 	//--
 	public function __construct(){
