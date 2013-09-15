@@ -10,7 +10,6 @@
     <link href="res/css/bootstrap/css/bootstrap.css" rel="stylesheet">
     <style type="text/css">
       body {
-        padding-top: 40px;
         padding-bottom: 40px;
         background-color: #f5f5f5;
       }
@@ -40,6 +39,22 @@
         padding: 7px 9px;
       }
 
+      .encabezado{
+        text-align: center;
+        z-index: 100;
+        color:#EEEEEE;
+      }
+
+      .back_black{
+        height: 80px;
+        width: 100%;
+        background: #000;
+        position: fixed;
+        top:0;
+        z-index: -1;
+      }
+
+      
     </style>
     <link href="res/css/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 
@@ -50,18 +65,26 @@
   <body>
 
     <div class="container">
-    	<form class="form-signin" action="javascript:login();void(0);">
-    		<h2 class="form-signin-heading">Inicie Sesi&oacute;n</h2>
-    		<input id="user" type="text" class="input-block-level" placeholder="Usuario">
-    		<input id="password" type="password" class="input-block-level" placeholder="Password">
 
-    		<button id="loginButton" class="btn btn-large btn-primary" type="submit">Entrar</button>
+      <div class="page-header encabezado">
+          <h2>Consultorio M&eacute;dico Cerna y Alvarado <small>Intranet</small></h2>
+      </div>
 
-	        
-	        <div id="error_msg"></div>
-	    </form>
+      <br />
+                
+      <form class="form-signin" action="javascript:login();void(0);">
+        <h3 class="form-signin-heading">Inicio</h3>
+        <input id="user" type="text" class="input-block-level" placeholder="Usuario">
+        <input id="password" type="password" class="input-block-level" placeholder="Password">
 
+        <button id="loginButton" class="btn btn-large btn-primary" type="submit">Entrar</button>
+
+          
+          <div id="error_msg"></div>
+      </form>
+                
     </div>
+    <div class="back_black"> &nbsp; </div>
 
     <!-- javascript
     ================================================== -->
