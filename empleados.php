@@ -13,7 +13,7 @@
   
 
 </head>
-        <!-- Agregar -->
+        <!-- Agregar vvdsfdsdtgerd -->
 	<div id="AgregarEmpleado" class="modal hide fade modalPequena" tabindex="-1" role="dialog" aria-labelledby="AgregarEmpl" aria-hidden="true">
 		
 		<div class="modal-header">
