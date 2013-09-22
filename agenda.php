@@ -5,6 +5,9 @@ include_once("libs/php/class.connection.php");
 
 $botones_menu["citas"]=true;
 
+$minutos_citas = 60;
+$hora_inicio = 000025200;
+$hora_fin = 000057600;
 
 //- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
 include("res/partes/encabezado.php");
@@ -16,6 +19,7 @@ include("res/partes/encabezado.php");
 	
 
 		<!-- Agenda -->
+
 
 		<table class="calendar table table-bordered">
 		    <thead>
@@ -31,6 +35,20 @@ include("res/partes/encabezado.php");
 		        </tr>
 		    </thead>
 		    <tbody>
+<?
+
+//----Impresion de tabla
+
+for ($i=0; $i < ; $i++) { 
+	# code...
+}
+
+
+?>
+
+			</tbody>
+		</table>
+<!--
 		        <tr>
 		            <td>08:00</td>
 					<td class=" no-events" rowspan="1"></td>
@@ -296,8 +314,10 @@ include("res/partes/encabezado.php");
 					<td class=" no-events" rowspan="1"></td>
 					<td class=" no-events" rowspan="1"></td>
 				</tr>
+
 			</tbody>
 		</table>
+-->
 
 		<br />
 		<br />
