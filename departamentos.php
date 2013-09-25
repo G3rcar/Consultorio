@@ -50,7 +50,7 @@ include("res/partes/encabezado.php");
 					<ul class="nav nav-list">
 						<li class="nav-header">Opciones</li>
 						<li><a id="lnkAgregar" href="#"><i class="icon-plus"></i> Agregar</a></li>
-						<li><a id="lnkBorrar" href="#"><i class="icon-trash"></i> Borrar</a></li>
+						<li><a id="lnkBorrar" href="#"><i class="icon-remove"></i> Borrar</a></li>
 						
 						<li class="nav-header">Otros</li>
 						<li class="active"><a href="#">Departamentos</a></li>

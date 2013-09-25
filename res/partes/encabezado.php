@@ -9,7 +9,6 @@
 
 	<link href="res/css/bootstrap/css/bootstrap.css" rel="stylesheet">
 	<link href="res/css/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
-	<link href="res/css/agenda.css" rel="stylesheet">
 	<link href="res/css/humane.css" rel="stylesheet">
 
 
@@ -21,6 +20,7 @@
 	<script type="text/javascript" src="libs/js/bootstrap/bootstrap-dropdown.js"></script>
 	<script type="text/javascript" src="libs/js/bootstrap/bootstrap-modal.js"></script>
 	<script type="text/javascript" src="libs/js/bootbox.min.js"></script>
+	<script type="text/javascript" src="libs/js/custom/objetos-comunes.js"></script>
 
 	<script type="text/javascript">
 		$(document).ready(function(){

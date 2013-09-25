@@ -28,8 +28,8 @@ switch ($accion) {
 			$i=0;
 			while($iDepto = $conexion->fetchArray($res["result"])){
 				//Iconos
-				$editar = "<a href='#' onClick='manto.editar({$iDepto["id"]});' title='Editar' ><i class='icon-pencil'></i></a>";
-				$borrar = "<a href='#' onClick='manto.borrar({$iDepto["id"]});' title='Borrar' ><i class='icon-trash'></i></a>";
+				$editar = "<a href='#' onClick='manto.editar({$iDepto["id"]});' title='Editar' ><i class='icon-edit'></i></a>";
+				$borrar = "<a href='#' onClick='manto.borrar({$iDepto["id"]});' title='Borrar' ><i class='icon-remove'></i></a>";
 				
 				$valoresFila = array($iDepto["nombre"],$iDepto["creacion"],$editar,$borrar);
 				$fila = array("id"=>$iDepto["id"],"valores"=>$valoresFila);
