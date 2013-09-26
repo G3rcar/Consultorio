@@ -25,6 +25,15 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 			bootbox.setDefaults({ className:'modalPequena', locale:'es' });
+
+			$(document).bind("ajaxSend", function(){
+				console.log('cargando');
+				$("#progressBar_main").show();
+			}).bind("ajaxComplete", function(){
+				console.log('terminando de cargar');
+				$("#progressBar_main").hide();
+		 	});
+
 		})
 	</script>
 

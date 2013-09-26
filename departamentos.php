@@ -59,11 +59,15 @@ include("res/partes/encabezado.php");
 						<li><a href="proveedores.php">Proveedores</a></li>
 					</ul>
 				</div>
+				<div id="progressBar_main" class="progress progress-striped active" style="margin-top:-18px; display:none;">
+					<div class="bar" style="width: 100%;"></div>
+				</div>
 			</div>
 			<!-- /Columna fluida con peso 3/12 -->
 
 
 			<!-- Columna fluida con peso 9/12 -->
+
 			<div id="contenedorTabla" class="span9">
 				
 			</div>
