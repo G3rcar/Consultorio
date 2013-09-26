@@ -7,11 +7,11 @@ table.calendar > thead > tr > th {
 }
 
 table.calendar > tbody > tr > td {
-    height: 40px;
+    height: 43px;
 }
 
 table.calendar > tbody > tr > td.events {
-    padding: 2px;
+    padding: 1px;
     position: relative;
 }
 
@@ -21,7 +21,6 @@ table.calendar > tbody > tr > td.horas {
 
 table.calendar > tbody > tr > td > div {
     padding: 2px;
-    overflow: hidden;
     display: inline-block;
     vertical-align: middle;
     float: left;
@@ -30,8 +29,8 @@ table.calendar > tbody > tr > td > div {
 table.calendar > tbody > tr > td > div {
     color: white;
     padding: 0;
-    border-radius: 4px;
     width: 100%;
+    height: 50px;
 }
 
 table.calendar > tbody > tr > td > div > table.has-events {
@@ -41,7 +40,7 @@ table.calendar > tbody > tr > td > div > table.has-events {
     cursor: pointer;
     height: 100%;
     width: 100%;
-    display: table;
+    border-radius: 4px;
     transition: all 1s;
 }
 
@@ -133,3 +132,4 @@ table.table-borderless > thead > tr > th, table.table-borderless > tbody > tr > 
 .events:hover .out-button a:hover{
     opacity: 1;
 }
+

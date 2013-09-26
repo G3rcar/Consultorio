@@ -1,7 +1,7 @@
 var mainAgenda = {
 
 	obtenerEvento:function(id,paciente,doctor){
-		return '<table class="has-events" height="100%" width="100%"><tr><td><div id="evento_'+id+'" p:id="'+id+'" class="has-events row-fluid practice">'+
+		return '<table class="has-events" height="90%" width="100%"><tr><td><div id="evento_'+id+'" p:id="'+id+'" class="has-events row-fluid practice">'+
 		'<span class="title">'+paciente+'</span>'+
 		'<span class="lecturer">'+doctor+'</span> '+
 		'<span class="buttons">'+
