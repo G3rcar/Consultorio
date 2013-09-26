@@ -47,6 +47,7 @@ include("res/partes/encabezado.php");
 			<!-- Columna fluida con peso 3/12 -->
 			<div class="span3">
 				<div class="well sidebar-nav">
+					<img id="progressBar_main" src="res/img/loading.gif" class="loading_indicator" />
 					<ul class="nav nav-list">
 						<li class="nav-header">Opciones</li>
 						<li><a id="lnkAgregar" href="#"><i class="icon-plus"></i> Agregar</a></li>
@@ -58,9 +59,6 @@ include("res/partes/encabezado.php");
 						<li><a href="productos.php">Productos</a></li>
 						<li><a href="proveedores.php">Proveedores</a></li>
 					</ul>
-				</div>
-				<div id="progressBar_main" class="progress progress-striped active" style="margin-top:-18px; display:none;">
-					<div class="bar" style="width: 100%;"></div>
 				</div>
 			</div>
 			<!-- /Columna fluida con peso 3/12 -->

@@ -46,6 +46,17 @@
 				padding-top: 40px;
 			}
 		}
+		.loading_indicator{
+			position: absolute;
+			top: 5px;
+			right: 5px;
+			width: 30px;
+			height: 30px;
+			display: none;
+		}
+		.well{
+			position: relative;
+		}
 	</style>
 </head>
 
