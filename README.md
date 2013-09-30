@@ -11,7 +11,7 @@ El Salvador
 * jQuery UI v1.10.3
 * humane.js v3.1.0
 * Twitter Bootstrap (CSS-JS) v2.3.2
-* Bootbox (Objeto para crear modals en Bootstrap) 4.0.0
+* Bootbox (Objeto para crear modals en Bootstrap) v4.0.0
 * md5.js (Implementación de Joseph's Myers)
 
 La mayoría de código PHP es puro, sin frameworks. La clase de conexión se encuentra en **class.connection.php**
