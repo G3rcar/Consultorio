@@ -1,4 +1,4 @@
-<?
+<?php
 include("sesion.php");
 //- Incluimos la clase de conexion e instanciamos del objeto principal
 include_once("libs/php/class.connection.php");

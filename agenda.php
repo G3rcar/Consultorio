@@ -1,4 +1,4 @@
-<?
+<?php
 include("sesion.php");
 //- Incluimos la clase de conexion e instanciamos del objeto principal
 include_once("libs/php/class.connection.php");
@@ -12,6 +12,31 @@ $hora_fin = 1379887200;
 //- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
 include("res/partes/encabezado.php");
 
+
+
+//----Impresion de tabla
+$hora_contador=$hora_inicio;
+$finalizado=false;
+$ho=0;
+$tabla_agenda="";
+while($finalizado==false){
+	$hora = date("h:i a",$hora_contador);
+	$tabla_agenda .= "<tr> <td class='horas'>{$hora}</td>";
+	for($i=1;$i<=7;$i++){
+		$tabla_agenda .= "<td class='events'> <div id='h_{$ho}_d_{$i}'> 
+			<span class='out-button'> <a href='#' onClick='citas.nueva()' title='Agregar'><i class='icon-plus'></i> </a> </span> </div> </td>";
+	}
+	$tabla_agenda .= "</tr>";
+
+	$hora_contador = strtotime("+{$minutos_citas} minutes",$hora_contador);
+
+	if($hora_contador>$hora_fin) $finalizado=true;
+	$ho++;
+}
+
+
+
+
 ?>
 	<link href="res/css/agenda.css" rel="stylesheet" />
 	<style type="text/css">
@@ -22,6 +47,8 @@ include("res/partes/encabezado.php");
 			color: #FFF;
 		} 
 	</style>
+	<link href="res/css/select2/select2.css" rel="stylesheet"/>
+    <script type="text/javascript" src="libs/js/select2/select2.js"></script>
 
 	<script type="text/javascript" src="libs/js/custom/agenda.js"></script>
 	<script type="text/javascript" src="libs/js/jquery-ui-1.10.3.custom.js"></script>
@@ -33,6 +60,12 @@ include("res/partes/encabezado.php");
 			mainAgenda.crearEvento(3,'h_3_d_2','Carlos Perla','Doc. Cerna');
 			mainAgenda.crearEvento(4,'h_4_d_3','Oscar Funes','Doc. Cerna');
 			mainAgenda.crearEvento(5,'h_6_d_5','Sara Rodezno','Doc. Cerna');
+
+			$("#cmb_doctor").select2();
+
+			
+
+
 		});
 
 	</script>
@@ -40,11 +73,19 @@ include("res/partes/encabezado.php");
 	
 
 	<h2>Agenda</h2>
-	<select>
-		<option>Doctor Cerna</option>
-		<option>Doctor Alvarado</option>
+	<select id="cmb_doctor" style="width:300px">
+		<option value="1">Gerardo Calderon</option>
+		<option value="2">Calderon Gerard</option>
+		<option value="3">Manuel Martinez</option>
+		<option value="4">Luis Monzon</option>
+		<option value="5">César Araujo</option>
+		<option value="6">Marcos Umaña</option>
+		<option value="7">Albo Nero</option>
+		<option value="8">San SS</option>
 	</select>
 	
+	<br/>
+	<br/>
 
 		<!-- Agenda -->
 
@@ -63,39 +104,61 @@ include("res/partes/encabezado.php");
 		        </tr>
 		    </thead>
 		    <tbody>
-<?
 
-//----Impresion de tabla
-$hora_contador=$hora_inicio;
-$finalizado=false;
-$ho=0;
-while($finalizado==false){
-	$hora = date("h:i a",$hora_contador);
-	echo "<tr> <td class='horas'>{$hora}</td>";
-	for($i=1;$i<=7;$i++){
-		echo "<td class='events'> <div id='h_{$ho}_d_{$i}'> 
-			<span class='out-button'> <a href='#' title='Agregar'><i class='icon-plus'></i> </a> </span> </div> </td>";
-	}
-	echo "</tr>";
-
-	$hora_contador = strtotime("+{$minutos_citas} minutes",$hora_contador);
-
-	if($hora_contador>$hora_fin) $finalizado=true;
-	$ho++;
-}
-
-
-?>
+		    	<?php echo $tabla_agenda; ?>
 
 			</tbody>
 		</table>
-<!--
-		        
--->
 
 		<br />
 		<br />
 		<br />
+
+
+	<!-- Agregar -->
+	<div id="ManntoCita" class="modal hide fade modalPequena" role="dialog" aria-labelledby="ManntoCita" aria-hidden="true">
+		
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="modalHead">Nueva cita</h3>
+		</div>
+		<div class="modal-body">
+			<form>
+				<fieldset>
+					<label id="paciente_label" class="requerido">Paciente</label>
+					<!--<input id="paciente" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >-->
+					<select id="paciente" class="populate" style="width:100%">
+						<option value=""></option>
+						<option value="1">Gerardo Calderon</option>
+						<option value="2">Calderon Gerard</option>
+						<option value="3">Manuel Martinez</option>
+						<option value="4">Luis Monzon</option>
+						<option value="5">César Araujo</option>
+						<option value="6">Marcos Umaña</option>
+						<option value="7">Albo Nero</option>
+						<option value="8">San SS</option>
+					</select>
+				</fieldset>
+			</form>
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+			<button id="guardarCita" class="btn btn-primary">Guardar</button>
+		</div>
+
+	</div>
+
+
+	<script type="text/javascript">
+
+		var citas = {
+			nueva:function(dia,hora){
+				$('#ManntoCita').modal('show');
+				$("#paciente").select2();
+			},
+		}
+
+	</script>
 
 
 

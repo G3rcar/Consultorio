@@ -1,4 +1,4 @@
-<?
+<?php
 include("sesion.back.php");
 
 

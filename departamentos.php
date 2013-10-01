@@ -1,4 +1,4 @@
-<?
+<?php
 include("sesion.php");
 //- Incluimos la clase de conexion e instanciamos del objeto principal
 include_once("libs/php/class.connection.php");
@@ -13,12 +13,7 @@ include("res/partes/encabezado.php");
 <!-- Estilo extra -->
 <style>
 .sidebar-nav { padding: 9px 0; }
-.error_requerido { color:#F00000; }
-.requerido::after {
-	content: "*";
-	color: #C00;
-	font-size: 16px;
-}
+
 .headGrid{
 	background-color: #33b5e5;
 }

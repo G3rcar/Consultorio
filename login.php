@@ -1,4 +1,4 @@
-<? include('libs/php/constantes.php'); ?>
+<?php include('libs/php/constantes.php'); ?>
 <!DOCTYPE html>
 <html lang="es">
   <head>
