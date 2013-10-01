@@ -48,3 +48,9 @@ var gridCheck = {
 	}
 
 }
+
+
+
+var main = {
+	gO:function(id){ return document.getElementById(id); }
+}

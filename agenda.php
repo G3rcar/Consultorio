@@ -1,307 +1,164 @@
-<?
+<?php
 include("sesion.php");
 //- Incluimos la clase de conexion e instanciamos del objeto principal
 include_once("libs/php/class.connection.php");
 
 $botones_menu["citas"]=true;
 
+$minutos_citas = 40;
+$hora_inicio = 1379854800;
+$hora_fin = 1379887200;
 
 //- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
 include("res/partes/encabezado.php");
 
-?>
 
+
+//----Impresion de tabla
+$hora_contador=$hora_inicio;
+$finalizado=false;
+$ho=0;
+$tabla_agenda="";
+while($finalizado==false){
+	$hora = date("h:i a",$hora_contador);
+	$tabla_agenda .= "<tr> <td class='horas'>{$hora}</td>";
+	for($i=1;$i<=7;$i++){
+		$tabla_agenda .= "<td class='events'> <div id='h_{$ho}_d_{$i}'> 
+			<span class='out-button'> <a href='#' onClick='citas.nueva()' title='Agregar'><i class='icon-plus'></i> </a> </span> </div> </td>";
+	}
+	$tabla_agenda .= "</tr>";
+
+	$hora_contador = strtotime("+{$minutos_citas} minutes",$hora_contador);
+
+	if($hora_contador>$hora_fin) $finalizado=true;
+	$ho++;
+}
+
+
+
+
+?>
+	<link href="res/css/agenda.css" rel="stylesheet" />
+	<style type="text/css">
+		.headGrid {
+			background-color: #33b5e5;
+		}
+		.headGrid th{
+			color: #FFF;
+		} 
+	</style>
+	<link href="res/css/select2/select2.css" rel="stylesheet"/>
+    <script type="text/javascript" src="libs/js/select2/select2.js"></script>
+
+	<script type="text/javascript" src="libs/js/custom/agenda.js"></script>
+	<script type="text/javascript" src="libs/js/jquery-ui-1.10.3.custom.js"></script>
+	<script type="text/javascript">
+
+		$(document).ready(function(){
+			mainAgenda.crearEvento(1,'h_5_d_1','Juan P&eacute;rez','Doc. Cerna');
+			mainAgenda.crearEvento(2,'h_3_d_1','Manuel Salazar','Doc. Cerna');
+			mainAgenda.crearEvento(3,'h_3_d_2','Carlos Perla','Doc. Cerna');
+			mainAgenda.crearEvento(4,'h_4_d_3','Oscar Funes','Doc. Cerna');
+			mainAgenda.crearEvento(5,'h_6_d_5','Sara Rodezno','Doc. Cerna');
+
+			$("#cmb_doctor").select2();
+
+			
+
+
+		});
+
+	</script>
+
+	
 
 	<h2>Agenda</h2>
+	<select id="cmb_doctor" style="width:300px">
+		<option value="1">Gerardo Calderon</option>
+		<option value="2">Calderon Gerard</option>
+		<option value="3">Manuel Martinez</option>
+		<option value="4">Luis Monzon</option>
+		<option value="5">César Araujo</option>
+		<option value="6">Marcos Umaña</option>
+		<option value="7">Albo Nero</option>
+		<option value="8">San SS</option>
+	</select>
 	
+	<br/>
+	<br/>
 
 		<!-- Agenda -->
 
-		<table class="calendar table table-bordered">
+
+		<table class="calendar table table-bordered table-fixed-header">
 		    <thead>
 		        <tr>
-		            <th>&nbsp;</th>
-		            <th width="14%">Domingo</th>
-		            <th width="14%">Lunes</th>
-		            <th width="15%">Martes</th>
-		            <th width="14%">Mi&eacute;rcoles</th>
-		            <th width="15%">Jueves</th>
-		            <th width="14%">Viernes</th>
-		            <th width="14%">S&aacute;bado</th>
+		            <th width="6%">&nbsp;</th>
+		            <th width="13%">Domingo</th>
+		            <th width="13%">Lunes</th>
+		            <th width="14%">Martes</th>
+		            <th width="13%">Mi&eacute;rcoles</th>
+		            <th width="14%">Jueves</th>
+		            <th width="13%">Viernes</th>
+		            <th width="13%">S&aacute;bado</th>
 		        </tr>
 		    </thead>
 		    <tbody>
-		        <tr>
-		            <td>08:00</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-		        </tr>
-		        <tr>
-					<td>08:30</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-				</tr>
-				<tr>
-		        	<td>09:00</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-		        </tr>
-		        <tr>
-		            <td>09:30</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-		        </tr>
-		        <tr>
-		            <td>10:00</td>
-					<td class=" has-events" rowspan="4">
-						<div class="row-fluid practice" style="width: 99%; height: 100%;">
-							<span class="title">Cita con Juan P&eacute;rez</span> 
-							<span class="lecturer">Doc. Cerna</span>
-						</div>
-					</td>
 
-					<td class=" has-events" rowspan="4">
-						<div class="row-fluid lecture" style="width: 99%; height: 100%;">
-							<span class="title">Cita con Manuel Mercadillo</span> 
-							<span class="lecturer">Doc. Alvarado</span>
-						</div>
-					</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" has-events" rowspan="4">
-						<div class="row-fluid practice" style="width: 99%; height: 100%;">
-							<span class="title">Cita con Julia Marroqu&iacute;n</span> 
-							<span class="lecturer">Doc. Cerna</span>
-						</div>
-					</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-				</tr>
-				<tr>
-					<td>10:30</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-				</tr>
-				<tr>
-					<td>11:00</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-				</tr>
-				<tr>
-					<td>11:30</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-				</tr>
-				<tr>
-					<td>12:00</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" has-events conflicts " rowspan="4">
-						<div class="row-fluid practice" style="width: 49%; height: 100%;">
-							<span class="title">Cita con Mar&iacute;a Alvarenga</span> 
-							<span class="lecturer">Doc. Cerna</span>
-						</div>
-						<div class="row-fluid lecture" style="width: 49%; height: 100%;">
-							<span class="title">Cita con Rita L&oacute;pez</span>
-							<span class="lecturer">Doc. Alvarado</span>
-						</div>
-					</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" has-events" rowspan="4">
-						<div class="row-fluid lecture" style="width: 99%; height: 100%;">
-							<span class="title">Cita con Jorge Camacho</span> 
-							<span class="lecturer">Doc. Alvarado</span>
-						</div>
-					</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-				</tr>
-				<tr>
-					<td>12:30</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-				</tr>
-				<tr>
-					<td>13:00</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-				</tr>
-				<tr>
-					<td>13:30</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-				</tr>
-				<tr>
-					<td>14:00</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" has-events" rowspan="4">
-						<div class="row-fluid lecture" style="width: 99%; height: 100%;">
-							<span class="title">Cita con Joaqu&iacute;n Aguilares</span> 
-							<span class="lecturer">Doc. Alvarado</span>
-						</div>
-					</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" has-events" rowspan="6">
-						<div class="row-fluid lecture" style="width: 99%; height: 100%;">
-							<span class="title">Cita con Luis Mej&iacute;a</span> 
-							<span class="lecturer">Dr. Alvarado</span>
-						</div>
-					</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-				</tr>
-				<tr>
-					<td>14:30</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-				</tr>
-				<tr>
-					<td>15:00</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-				</tr>
-				<tr>
-					<td>15:30</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-				</tr>
-				<tr>
-					<td>16:00</td>
-					<td class=" has-events" rowspan="4">
-						<div class="row-fluid practice" style="width: 99%; height: 100%;">
-							<span class="title">Cita con Carlos Carrillo</span> 
-							<span class="lecturer">Dr. Cerna</span>
-						</div>
-					</td>
-					<td class=" has-events" rowspan="4">
-						<div class="row-fluid lecture" style="width: 99%; height: 100%;">
-							<span class="title">Cita con Joel Mart&iacute;nez</span> 
-							<span class="lecturer">Dr. Alvarado</span>
-						</div>
-					</td>
-					<td class=" has-events" rowspan="4">
-						<div class="row-fluid practice" style="width: 99%; height: 100%;">
-							<span class="title">Cita con Omar Lemus</span>
-							<span class="lecturer">Dr. Cerna</span>
-						</div>
-					</td>
-					<td class=" has-events" rowspan="4">
-						<div class="row-fluid practice" style="width: 99%; height: 100%;">
-							<span class="title">Cita con Jos&eacute; Aguilar</span> 
-							<span class="lecturer">Dr. Cerna</span>
-						</div>
-					</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-				</tr>
-				<tr>
-					<td>16:30</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-				</tr>
-				<tr>
-					<td>17:00</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-				</tr>
-				<tr>
-					<td>17:30</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-				</tr>
-				<tr>
-					<td>18:00</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-				</tr>
-				<tr>
-					<td>18:30</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-				</tr>
-				<tr>
-					<td>19:00</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-				</tr>
-				<tr>
-					<td>19:30</td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-					<td class=" no-events" rowspan="1"></td>
-				</tr>
+		    	<?php echo $tabla_agenda; ?>
+
 			</tbody>
 		</table>
 
 		<br />
 		<br />
 		<br />
+
+
+	<!-- Agregar -->
+	<div id="ManntoCita" class="modal hide fade modalPequena" role="dialog" aria-labelledby="ManntoCita" aria-hidden="true">
+		
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="modalHead">Nueva cita</h3>
+		</div>
+		<div class="modal-body">
+			<form>
+				<fieldset>
+					<label id="paciente_label" class="requerido">Paciente</label>
+					<!--<input id="paciente" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >-->
+					<select id="paciente" class="populate" style="width:100%">
+						<option value=""></option>
+						<option value="1">Gerardo Calderon</option>
+						<option value="2">Calderon Gerard</option>
+						<option value="3">Manuel Martinez</option>
+						<option value="4">Luis Monzon</option>
+						<option value="5">César Araujo</option>
+						<option value="6">Marcos Umaña</option>
+						<option value="7">Albo Nero</option>
+						<option value="8">San SS</option>
+					</select>
+				</fieldset>
+			</form>
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+			<button id="guardarCita" class="btn btn-primary">Guardar</button>
+		</div>
+
+	</div>
+
+
+	<script type="text/javascript">
+
+		var citas = {
+			nueva:function(dia,hora){
+				$('#ManntoCita').modal('show');
+				$("#paciente").select2();
+			},
+		}
+
+	</script>
 
 
 

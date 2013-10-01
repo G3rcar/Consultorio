@@ -1,0 +1,14 @@
+
+
+.modalPequena{
+	width:350px;
+	margin-left:-175px;
+}
+
+.requerido::after {
+	content: "*";
+	color: #C00;
+	font-size: 16px;
+}
+
+.error_requerido { color:#F00000; }

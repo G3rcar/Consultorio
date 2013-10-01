@@ -1,4 +1,4 @@
-<?
+<?php
 include("sesion.php");
 //- Incluimos la clase de conexion e instanciamos del objeto principal
 include_once("libs/php/class.connection.php");
@@ -13,12 +13,7 @@ include("res/partes/encabezado.php");
 <!-- Estilo extra -->
 <style>
 .sidebar-nav { padding: 9px 0; }
-.error_requerido { color:#F00000; }
-.requerido::after {
-	content: "*";
-	color: #C00;
-	font-size: 16px;
-}
+
 .headGrid{
 	background-color: #33b5e5;
 }
@@ -47,10 +42,11 @@ include("res/partes/encabezado.php");
 			<!-- Columna fluida con peso 3/12 -->
 			<div class="span3">
 				<div class="well sidebar-nav">
+					<img id="progressBar_main" src="res/img/loading.gif" class="loading_indicator" />
 					<ul class="nav nav-list">
 						<li class="nav-header">Opciones</li>
 						<li><a id="lnkAgregar" href="#"><i class="icon-plus"></i> Agregar</a></li>
-						<li><a id="lnkBorrar" href="#"><i class="icon-trash"></i> Borrar</a></li>
+						<li><a id="lnkBorrar" href="#"><i class="icon-remove"></i> Borrar</a></li>
 						
 						<li class="nav-header">Otros</li>
 						<li class="active"><a href="#">Departamentos</a></li>
@@ -64,6 +60,7 @@ include("res/partes/encabezado.php");
 
 
 			<!-- Columna fluida con peso 9/12 -->
+
 			<div id="contenedorTabla" class="span9">
 				
 			</div>

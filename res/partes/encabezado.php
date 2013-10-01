@@ -9,8 +9,8 @@
 
 	<link href="res/css/bootstrap/css/bootstrap.css" rel="stylesheet">
 	<link href="res/css/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
-	<link href="res/css/agenda.css" rel="stylesheet">
 	<link href="res/css/humane.css" rel="stylesheet">
+	<link href="res/css/default.css" rel="stylesheet">
 
 
 
@@ -21,10 +21,20 @@
 	<script type="text/javascript" src="libs/js/bootstrap/bootstrap-dropdown.js"></script>
 	<script type="text/javascript" src="libs/js/bootstrap/bootstrap-modal.js"></script>
 	<script type="text/javascript" src="libs/js/bootbox.min.js"></script>
+	<script type="text/javascript" src="libs/js/custom/objetos-comunes.js"></script>
 
 	<script type="text/javascript">
 		$(document).ready(function(){
 			bootbox.setDefaults({ className:'modalPequena', locale:'es' });
+
+			$(document).bind("ajaxSend", function(){
+				console.log('cargando');
+				$("#progressBar_main").show();
+			}).bind("ajaxComplete", function(){
+				console.log('terminando de cargar');
+				$("#progressBar_main").hide();
+		 	});
+
 		})
 	</script>
 
@@ -36,6 +46,17 @@
 			.cm-main-containter {
 				padding-top: 40px;
 			}
+		}
+		.loading_indicator{
+			position: absolute;
+			top: 5px;
+			right: 5px;
+			width: 30px;
+			height: 30px;
+			display: none;
+		}
+		.well{
+			position: relative;
 		}
 	</style>
 </head>
