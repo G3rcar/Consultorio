@@ -1,4 +1,4 @@
-<?
+<?php
 
 class GridCheck{
 	private $alias;			//string

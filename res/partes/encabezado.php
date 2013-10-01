@@ -10,6 +10,7 @@
 	<link href="res/css/bootstrap/css/bootstrap.css" rel="stylesheet">
 	<link href="res/css/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 	<link href="res/css/humane.css" rel="stylesheet">
+	<link href="res/css/default.css" rel="stylesheet">
 
 
 

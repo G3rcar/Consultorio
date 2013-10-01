@@ -1,4 +1,4 @@
-<?
+<?php
 
 class Conexion{
 	private $link;
