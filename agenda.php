@@ -45,7 +45,7 @@ while($finalizado==false){
 		}
 		.headGrid th{
 			color: #FFF;
-		} 
+		}
 	</style>
 	<link href="res/css/select2/select2.css" rel="stylesheet"/>
     <script type="text/javascript" src="libs/js/select2/select2.js"></script>
@@ -53,7 +53,6 @@ while($finalizado==false){
 	<script type="text/javascript" src="libs/js/custom/agenda.js"></script>
 	<script type="text/javascript" src="libs/js/jquery-ui-1.10.3.custom.js"></script>
 	<script type="text/javascript">
-
 		$(document).ready(function(){
 			mainAgenda.crearEvento(1,'h_5_d_1','Juan P&eacute;rez','Doc. Cerna');
 			mainAgenda.crearEvento(2,'h_3_d_1','Manuel Salazar','Doc. Cerna');
@@ -63,7 +62,7 @@ while($finalizado==false){
 
 			$("#cmb_doctor").select2();
 
-			
+			$('.table-fixed-header').fixedHeader();
 
 
 		});
@@ -89,9 +88,10 @@ while($finalizado==false){
 
 		<!-- Agenda -->
 
-
+		<div class="fixed-table">
+		<div class="table-content"> 
 		<table class="calendar table table-bordered table-fixed-header">
-		    <thead>
+		    <thead class="header">
 		        <tr>
 		            <th width="6%">&nbsp;</th>
 		            <th width="13%">Domingo</th>
@@ -109,6 +109,8 @@ while($finalizado==false){
 
 			</tbody>
 		</table>
+		</div>
+		</div>
 
 		<br />
 		<br />
