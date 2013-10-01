@@ -48,8 +48,10 @@ while($finalizado==false){
 		}
 	</style>
 	<link href="res/css/select2/select2.css" rel="stylesheet"/>
-    <script type="text/javascript" src="libs/js/select2/select2.js"></script>
+	<link href="res/css/table-fixed-header.css" rel="stylesheet"/>
 
+    <script type="text/javascript" src="libs/js/select2/select2.js"></script>
+    <script type="text/javascript" src="libs/js/table-fixed-header.js"></script>
 	<script type="text/javascript" src="libs/js/custom/agenda.js"></script>
 	<script type="text/javascript" src="libs/js/jquery-ui-1.10.3.custom.js"></script>
 	<script type="text/javascript">
