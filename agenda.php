@@ -48,9 +48,11 @@ while($finalizado==false){
 		}
 	</style>
 	<link href="res/css/select2/select2.css" rel="stylesheet"/>
+	<link href="res/css/bootstrap/css/bootstrap-timepicker.css" rel="stylesheet"/>
 	<link href="res/css/table-fixed-header.css" rel="stylesheet"/>
 
     <script type="text/javascript" src="libs/js/select2/select2.js"></script>
+    <script type="text/javascript" src="libs/js/bootstrap-timepicker.js"></script>
     <script type="text/javascript" src="libs/js/table-fixed-header.js"></script>
 	<script type="text/javascript" src="libs/js/custom/agenda.js"></script>
 	<script type="text/javascript" src="libs/js/jquery-ui-1.10.3.custom.js"></script>
@@ -68,7 +70,7 @@ while($finalizado==false){
 
 
 		});
-
+		var dr_ci = <?php echo $minutos_citas; ?>;
 	</script>
 
 	
@@ -120,27 +122,39 @@ while($finalizado==false){
 
 
 	<!-- Agregar -->
-	<div id="ManntoCita" class="modal hide fade modalPequena" role="dialog" aria-labelledby="ManntoCita" aria-hidden="true">
+	<div id="ManntoCita" class="modal hide fade modalMediana" role="dialog" aria-labelledby="ManntoCita" aria-hidden="true">
 		
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 			<h3 id="modalHead">Nueva cita</h3>
 		</div>
-		<div class="modal-body">
+		<div class="modal-body" style="overflow-y:visible;" >
 			<form>
 				<fieldset>
 					<label id="paciente_label" class="requerido">Paciente</label>
-					<!--<input id="paciente" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >-->
-					<select id="paciente" class="populate" style="width:100%">
-						<option value=""></option>
-						<option value="1">Gerardo Calderon</option>
-						<option value="2">Calderon Gerard</option>
-						<option value="3">Manuel Martinez</option>
-						<option value="4">Luis Monzon</option>
-						<option value="5">César Araujo</option>
-						<option value="6">Marcos Umaña</option>
-						<option value="7">Albo Nero</option>
-						<option value="8">San SS</option>
+					<input type="hidden" id="paciente" style="width:100%" />
+
+					<table width="100%" cellspacing="0" cellpadding="0" style="margin-top:5px;">
+					<tr><td width="50%">
+						<label id="hora_inicio_label" class="requerido">Hora de inicio</label>
+						<div class="input-append bootstrap-timepicker">
+							<input id="hora_inicio" type="text" value="10:35 AM" class="input-small" style="width:155px">
+							<span class="add-on"><i class="icon-time"></i></span>
+						</div>
+					</td>
+					<td width="50%">
+						<label id="hora_inicio_label" class="requerido">Hora de inicio</label>
+						<div class="input-append bootstrap-timepicker">
+							<input id="hora_fin" type="text" value="10:35 AM" class="input-small" style="width:165px">
+							<span class="add-on"><i class="icon-time"></i></span>
+						</div>
+					</td></tr>
+					</table>
+
+					<label id="empleado_label" class="requerido">Doctor</label>
+					<select id="empleado" style="width:100%">
+						<option value="1">Dr. Julio Cerna</option>
+						<option value="2">Dr. Carlos Alvarado</option>
 					</select>
 				</fieldset>
 			</form>
@@ -158,7 +172,32 @@ while($finalizado==false){
 		var citas = {
 			nueva:function(dia,hora){
 				$('#ManntoCita').modal('show');
-				$("#paciente").select2();
+				
+				$("#empleado").select2();
+				$("#paciente").select2({
+					placeholder: "Seleccionar", minimumInputLength: 1,
+					ajax: {
+						url: "stores/agenda.php", dataType: 'json', type:'POST',
+						data: function (term, page) {
+							return { q: term, action:'ls_pacientes' };
+						},
+						results: function (data, page) {
+							return {results: data.results};
+					    }
+					}
+				});
+
+				console.log('abirendo');
+				$('#hora_inicio').timepicker({
+					minuteStep: dr_ci,
+					showInputs: true,
+					modalBackdrop: false,
+					template:'dropdown',
+					showSeconds: false,
+					showMeridian: true
+				});
+
+
 			},
 		}
 

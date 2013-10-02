@@ -5,10 +5,15 @@
 	margin-left:-175px;
 }
 
+.modalMediana{
+	width:450px;
+	margin-left:-225px;
+}
+
 .requerido::after {
 	content: "*";
 	color: #C00;
 	font-size: 16px;
 }
 
-.error_requerido { color:#F00000; }
+.error_requerido { border-color:#F00000; }
