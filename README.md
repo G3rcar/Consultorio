@@ -33,3 +33,16 @@ https://github.com/G3rcar/Consultorio/wiki/Estandares#estructura-de-archivos
 
 Los cambios en el script de la BD están en el archivo BD.sql y en la página siguiente:
 https://github.com/G3rcar/Consultorio/wiki/Base-de-Datos
+
+
+
+##URLs de la documentación de frameworks, plugins y hacks
+* jQuery  http://api.jquery.com/
+* jQuery UI http://api.jqueryui.com/
+* Humane  http://wavded.github.io/humane-js/
+* Bootstrap http://getbootstrap.com/2.3.2/
+* Bootbox http://bootboxjs.com/
+* Select2 http://ivaynberg.github.io/select2/
+* Bootstrap Timepicker  http://jdewit.github.io/bootstrap-timepicker/
+* Fixed Header  https://gist.github.com/G3rcar/6722471
+
