@@ -46,12 +46,16 @@ while($finalizado==false){
 		.headGrid th{
 			color: #FFF;
 		}
+		.error_requerido_sel2 a{
+			border: 1px solid #F00 !important;
+		}
 	</style>
 	<link href="res/css/select2/select2.css" rel="stylesheet"/>
 	<link href="res/css/bootstrap/css/bootstrap-timepicker.css" rel="stylesheet"/>
 	<link href="res/css/table-fixed-header.css" rel="stylesheet"/>
 
     <script type="text/javascript" src="libs/js/select2/select2.js"></script>
+    <script type="text/javascript" src="libs/js/select2/select2_locale_es.js"></script>
     <script type="text/javascript" src="libs/js/bootstrap-timepicker.js"></script>
     <script type="text/javascript" src="libs/js/table-fixed-header.js"></script>
 	<script type="text/javascript" src="libs/js/custom/agenda.js"></script>
@@ -65,12 +69,10 @@ while($finalizado==false){
 			mainAgenda.crearEvento(5,'h_6_d_5','Sara Rodezno','Doc. Cerna');
 
 			$("#cmb_doctor").select2();
-
 			$('.table-fixed-header').fixedHeader();
 
 
 		});
-		var dr_ci = <?php echo $minutos_citas; ?>;
 	</script>
 
 	
@@ -161,13 +163,16 @@ while($finalizado==false){
 		</div>
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-			<button id="guardarCita" class="btn btn-primary">Guardar</button>
+			<button id="guardarCita" onClick="citas.guardar()" class="btn btn-primary">Guardar</button>
 		</div>
 
 	</div>
 
 
 	<script type="text/javascript">
+
+
+		var dr_ci = <?php echo $minutos_citas; ?>;
 
 		var citas = {
 			nueva:function(dia,hora){
@@ -187,18 +192,16 @@ while($finalizado==false){
 					}
 				});
 
-				console.log('abirendo');
-				$('#hora_inicio').timepicker({
-					minuteStep: dr_ci,
-					showInputs: true,
-					modalBackdrop: false,
-					template:'dropdown',
-					showSeconds: false,
-					showMeridian: true
-				});
-
-
+				$('#hora_inicio').timepicker({ minuteStep: dr_ci, showInputs: true, showSeconds: false, showMeridian: true });
+				$('#hora_fin').timepicker({ minuteStep: dr_ci, showInputs: true, showSeconds: false, showMeridian: true });
 			},
+			guardar:function(){
+				if($('#paciente').val()==""){
+					$('#s2id_paciente').addClass("error_requerido_sel2"); return;
+				}else{
+					$('#s2id_paciente').removeClass("error_requerido_sel2");
+				}
+			}
 		}
 
 	</script>
