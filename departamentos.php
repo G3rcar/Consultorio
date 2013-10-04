@@ -42,7 +42,7 @@ include("res/partes/encabezado.php");
 			<!-- Columna fluida con peso 3/12 -->
 			<div class="span3">
 				<div class="well sidebar-nav">
-					<img id="progressBar_main" src="res/img/loading.gif" class="loading_indicator" />
+					<img id="progressBar_main" src="res/img/loading.gif" class="loading_indicator_mannto" />
 					<ul class="nav nav-list">
 						<li class="nav-header">Opciones</li>
 						<li><a id="lnkAgregar" href="#"><i class="icon-plus"></i> Agregar</a></li>
@@ -86,7 +86,7 @@ include("res/partes/encabezado.php");
 			var v = $('#nombreDepto').val();
 			if(v==''){
 				humane.log('Complete los campos requeridos');
-				$('#nombreDepto_label').addClass('error_requerido');
+				$('#nombreDepto').addClass('error_requerido');
 				return false;
 			}else{
 				return true;
@@ -126,7 +126,7 @@ include("res/partes/encabezado.php");
 					complete:function(datos){
 						var T = jQuery.parseJSON(datos.responseText);
 						
-						$('#nombreDepto_label').removeClass('error_requerido');
+						$('#nombreDepto').removeClass('error_requerido');
 						$('#nombreDepto').val(T.nombre);
 						$('#AgregarDepto').modal('show');
 					}

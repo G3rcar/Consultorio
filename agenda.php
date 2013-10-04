@@ -2,8 +2,12 @@
 include("sesion.php");
 //- Incluimos la clase de conexion e instanciamos del objeto principal
 include_once("libs/php/class.connection.php");
+$conexion = new Conexion();
 
 $botones_menu["citas"]=true;
+
+$idUsuario = $_SESSION["iduser"];
+$esDoctor = $_SESSION["esDoctor"];
 
 $minutos_citas = 40;
 $hora_inicio = 1379854800;
@@ -14,7 +18,8 @@ include("res/partes/encabezado.php");
 
 
 
-//----Impresion de tabla
+//----Impresion de tabla agenda
+//----Aqui se imprimen los bloques HTML de la tabla de agenda donde se insertarán las citas posteriormente
 $hora_contador=$hora_inicio;
 $finalizado=false;
 $ho=0;
@@ -33,6 +38,34 @@ while($finalizado==false){
 	if($hora_contador>$hora_fin) $finalizado=true;
 	$ho++;
 }
+//----/Impresion de tabla agenda
+
+
+
+//----Listado de empleados-doctores
+$selDoctores = "SELECT id,CONCAT(nombres,' ',apellidos) AS 'nombre' FROM empleado WHERE idcargo = 1";
+$res = $conexion->execSelect($selDoctores);
+
+$lsDoctores=""; //Almacenará la lista html de los doctores
+$seleccion=""; //Decidirá si un registro será autoseleccionado o no
+$docSeleccionado = "0"; //Id del doctor que se seleccione del listado
+if($res["num"]>0){
+	$i=0;
+	while($iDoc = $conexion->fetchArray($res["result"])){
+		if($idUsuario==$iDoc["id"] && $esDoctor){
+			$seleccion=" selected ";
+			$docSeleccionado = $iDoc["id"];
+		}elseif($i==0 && !$esDoctor){
+			$seleccion=" selected ";
+			$docSeleccionado = $iDoc["id"];
+		}else{
+			$seleccion="";
+		}
+		$lsDoctores.="<option {$seleccion} value='".$iDoc["id"]."' >".utf8_encode($iDoc["nombre"])."</option>";
+		$i++;
+	}
+}
+//----Listado de empleados-doctores
 
 
 
@@ -62,31 +95,19 @@ while($finalizado==false){
 	<script type="text/javascript" src="libs/js/jquery-ui-1.10.3.custom.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
-			mainAgenda.crearEvento(1,'h_5_d_1','Juan P&eacute;rez','Doc. Cerna');
-			mainAgenda.crearEvento(2,'h_3_d_1','Manuel Salazar','Doc. Cerna');
-			mainAgenda.crearEvento(3,'h_3_d_2','Carlos Perla','Doc. Cerna');
-			mainAgenda.crearEvento(4,'h_4_d_3','Oscar Funes','Doc. Cerna');
-			mainAgenda.crearEvento(5,'h_6_d_5','Sara Rodezno','Doc. Cerna');
-
+			
 			$("#cmb_doctor").select2();
 			$('.table-fixed-header').fixedHeader();
-
-
+			mainAgenda.docSeleccionado = <?php echo $docSeleccionado; ?>;
+			mainAgenda.cargarAgenda(<?php echo $docSeleccionado; ?>); 
 		});
 	</script>
 
 	
 
-	<h2>Agenda</h2>
+	<h2>Agenda <img id="progressBar_main" src="res/img/loading.gif" class="loading_indicator_process" /></h2>
 	<select id="cmb_doctor" style="width:300px">
-		<option value="1">Gerardo Calderon</option>
-		<option value="2">Calderon Gerard</option>
-		<option value="3">Manuel Martinez</option>
-		<option value="4">Luis Monzon</option>
-		<option value="5">César Araujo</option>
-		<option value="6">Marcos Umaña</option>
-		<option value="7">Albo Nero</option>
-		<option value="8">San SS</option>
+		<?php echo $lsDoctores; ?>
 	</select>
 	
 	<br/>
