@@ -6,6 +6,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="Proyecto ASI 2">
 	<meta name="author" content="@G3rcar">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta charset="utf-8">
 
 	<link href="res/css/bootstrap/css/bootstrap.css" rel="stylesheet">
 	<link href="res/css/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">

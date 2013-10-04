@@ -23,16 +23,36 @@
 						<b class="caret"></b>
 					</a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+						<li><a tabindex="-1" href="paises.php">Paises</a></li>
 						<li><a tabindex="-1" href="departamentos.php">Departamentos</a></li>
 						<li><a tabindex="-1" href="municipios.php">Municipios</a></li>
-						<li><a tabindex="-1" href="productos.php">Productos</a></li>
+						<li><a tabindex="-1" href="sucursales.php">Sucursales</a></li>
+						<li class="divider"></li>
+						<li><a tabindex="-1" href="documentos.php">Tipos de documentos</a></li>
+						<li><a tabindex="-1" href="movimientos.php">Tipos de movimientos</a></li>
+						<li><a tabindex="-1" href="tipos.sangre.php">Tipos de sangre</a></li>
+						 <li class="divider"></li>
+						<li><a tabindex="-1" href="cargos.php">Cargos</a></li>
+						<li><a tabindex="-1" href="roles.php">Roles</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+						Configuraci&oacute;n
+						<b class="caret"></b>
+					</a>
+					<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+						<li><a tabindex="-1" href="horarios.php">Horario de atenci&oacute;n</a></li>
+						<li><a tabindex="-1" href="empleados.php">Empleados/Usuarios</a></li>
+						<li class="divider"></li>
+						<li><a tabindex="-1" href="productos.php">Productos/Servicios</a></li>
 						<li><a tabindex="-1" href="proveedores.php">Proveedores</a></li>
-						<li><a tabindex="-1" href="usuarios.php">Empleados/Usuarios</a></li>
 					</ul>
 				</li>
 				<li <?php echo ($botones_menu["citas"]?'class="active" ':''); ?> > <a href="agenda.php">Agenda de citas</a> </li>
 				<li <?php echo ($botones_menu["medicinas"]?'class="active" ':''); ?> > <a href="medicinas.php">Medicinas</a> </li>
 				<li <?php echo ($botones_menu["pacientes"]?'class="active" ':''); ?> > <a href="pacientes.php">Pacientes</a> </li>
+				<li <?php echo ($botones_menu["reportes"]?'class="active" ':''); ?> > <a href="reportes.php">Reportes</a> </li>
 			</ul>
 		</div>
 	</div>
