@@ -17,9 +17,7 @@
 	<!-- javascript ================================================== -->
 	<script type="text/javascript" src="libs/js/jquery-1.10.2.min.js"></script>
 	<script type="text/javascript" src="libs/js/humane.min.js"></script>
-	<script type="text/javascript" src="libs/js/bootstrap/bootstrap-alert.js"></script>
-	<script type="text/javascript" src="libs/js/bootstrap/bootstrap-dropdown.js"></script>
-	<script type="text/javascript" src="libs/js/bootstrap/bootstrap-modal.js"></script>
+	<script type="text/javascript" src="libs/js/bootstrap/bootstrap.js"></script>
 	<script type="text/javascript" src="libs/js/bootbox.min.js"></script>
 	<script type="text/javascript" src="libs/js/custom/objetos-comunes.js"></script>
 
