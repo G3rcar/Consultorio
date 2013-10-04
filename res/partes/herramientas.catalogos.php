@@ -17,5 +17,6 @@
 		<hr />
 		<li <?php echo ($botones_herramientas["cargos"]?'class="active" ':''); ?> ><a href="cargos.php">Cargos</a></li>
 		<li <?php echo ($botones_herramientas["roles"]?'class="active" ':''); ?> ><a href="roles.php">Roles</a></li>
+		<li <?php echo ($botones_herramientas["configuraciones"]?'class="active" ':''); ?> ><a href="configuracion.php">Configuraciones globales</a></li>
 	</ul>
 </div>

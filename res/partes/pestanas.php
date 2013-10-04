@@ -34,6 +34,7 @@
 						 <li class="divider"></li>
 						<li><a tabindex="-1" href="cargos.php">Cargos</a></li>
 						<li><a tabindex="-1" href="roles.php">Roles</a></li>
+						<li><a tabindex="-1" href="configuracion.php">Configuraciones globales</a></li>
 					</ul>
 				</li>
 				<li class="dropdown">
@@ -49,9 +50,10 @@
 						<li><a tabindex="-1" href="proveedores.php">Proveedores</a></li>
 					</ul>
 				</li>
-				<li <?php echo ($botones_menu["citas"]?'class="active" ':''); ?> > <a href="agenda.php">Agenda de citas</a> </li>
-				<li <?php echo ($botones_menu["medicinas"]?'class="active" ':''); ?> > <a href="medicinas.php">Medicinas</a> </li>
+				<li <?php echo ($botones_menu["citas"]?'class="active" ':''); ?> > <a href="agenda.php">Agenda</a> </li>
+				<li <?php echo ($botones_menu["consultas"]?'class="active" ':''); ?> > <a href="consultas.php">Consultas</a> </li>
 				<li <?php echo ($botones_menu["pacientes"]?'class="active" ':''); ?> > <a href="pacientes.php">Pacientes</a> </li>
+				<li <?php echo ($botones_menu["facturas"]?'class="active" ':''); ?> > <a href="facturas.php">Facturas</a> </li>
 				<li <?php echo ($botones_menu["reportes"]?'class="active" ':''); ?> > <a href="reportes.php">Reportes</a> </li>
 			</ul>
 		</div>
