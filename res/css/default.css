@@ -33,4 +33,4 @@
 	font-size: 16px;
 }
 
-.error_requerido { border-color:#FF0000 !important; }
+.error_requerido, .error_requerido_sel2 a { border-color:#FF0000 !important; }

@@ -79,9 +79,7 @@ if($res["num"]>0){
 		.headGrid th{
 			color: #FFF;
 		}
-		.error_requerido_sel2 a{
-			border: 1px solid #F00 !important;
-		}
+		
 	</style>
 	<link href="res/css/select2/select2.css" rel="stylesheet"/>
 	<link href="res/css/bootstrap/css/bootstrap-timepicker.css" rel="stylesheet"/>
@@ -199,9 +197,9 @@ if($res["num"]>0){
 			nueva:function(dia,hora){
 				$('#ManntoCita').modal('show');
 				
-				$("#empleado").select2();
+				$("#empleado").select2({ allowClear:true });
 				$("#paciente").select2({
-					placeholder: "Seleccionar", minimumInputLength: 1,
+					placeholder: "Seleccionar",
 					ajax: {
 						url: "stores/agenda.php", dataType: 'json', type:'POST',
 						data: function (term, page) {

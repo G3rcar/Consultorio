@@ -32,7 +32,7 @@ switch ($accion) {
 				$editar = "<a href='#' onClick='manto.editar({$iDepto["id"]});' title='Editar' ><i class='icon-edit'></i></a>";
 				$borrar = "<a href='#' onClick='manto.borrar({$iDepto["id"]});' title='Borrar' ><i class='icon-remove'></i></a>";
 				
-				$valoresFila = array($iDepto["nombre"],$iDepto["creacion"],$editar,$borrar);
+				$valoresFila = array(utf8_encode($iDepto["nombre"]),$iDepto["creacion"],$editar,$borrar);
 				$fila = array("id"=>$iDepto["id"],"valores"=>$valoresFila);
 				$tabla->nuevaFila($fila);
 			}
@@ -49,7 +49,7 @@ switch ($accion) {
 		$tipo = ($_POST["id"]=="")?'nuevo':'editar';
 
 		$id = (int)$conexion->escape($_POST["id"]);
-		$nombre = $conexion->escape($_POST["nombre"]);
+		$nombre = $conexion->escape(utf8_decode($_POST["nombre"]));
 		
 		$nuevoDepto = "";
 		if($tipo=='nuevo'){
@@ -81,7 +81,7 @@ switch ($accion) {
 
 		if($res["num"]>0){
 			$iDepto = $conexion->fetchArray($res["result"]);
-			$result = array("id"=>$iDepto["id"],"nombre"=>$iDepto["nombre"]);
+			$result = array("id"=>$iDepto["id"],"nombre"=>utf8_encode($iDepto["nombre"]));
 		}
 
 		echo json_encode($result);
@@ -127,7 +127,7 @@ switch ($accion) {
 		}elseif($errores==$tot){
 			$result = array("success"=>"false","msg"=>"No se pudo eliminar ningun departamento");
 		}else{
-			$result = array("success"=>"true","msg"=>"Los departamentos se han borrado {$errores} {$tot}");
+			$result = array("success"=>"true","msg"=>"Los departamentos se han borrado");
 			
 		}
 		echo json_encode($result);
