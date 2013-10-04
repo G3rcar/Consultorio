@@ -1,4 +1,21 @@
-
+@media (min-width: 980px) {
+	.cm-main-containter {
+		padding-top: 40px;
+	}
+}
+.loading_indicator_mannto, .loading_indicator_process{
+	display: none;
+	width: 30px;
+	height: 30px;
+}
+.loading_indicator_mannto{
+	position: absolute;
+	top: 5px;
+	right: 5px;
+}
+.well{
+	position: relative;
+}
 
 .modalPequena{
 	width:350px;
@@ -16,4 +33,4 @@
 	font-size: 16px;
 }
 
-.error_requerido { border-color:#FF0000; }
+.error_requerido { border-color:#FF0000 !important; }

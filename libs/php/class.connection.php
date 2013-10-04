@@ -31,7 +31,7 @@ class Conexion{
 	}
 
 	public function escape($t){
-		return mysql_real_escape_string($t);
+		return strip_tags(mysql_real_escape_string($t));
 	}
 	public function numRows($r){
 		return mysql_num_rows($r);
