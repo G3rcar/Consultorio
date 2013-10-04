@@ -164,5 +164,5 @@ while($finalizado==false){
 
 
 
-<? include('res/partes/pie.pagina.php'); ?>
+<?php include('res/partes/pie.pagina.php'); ?>
 

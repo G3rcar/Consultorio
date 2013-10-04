@@ -1,4 +1,4 @@
-<?
+<?php
 //- Iniciamos la sesion
 if(!isset($_SESSION)){ session_start(); }
 

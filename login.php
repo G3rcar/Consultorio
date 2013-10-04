@@ -3,7 +3,7 @@
 <html lang="es">
   <head>
     <meta charset="utf-8">
-    <title><?=TITULO_SISTEMA?> - Login</title>
+    <title><?php echo TITULO_SISTEMA; ?> - Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Proyecto ASI 2">
     <meta name="author" content="@G3rcar">
