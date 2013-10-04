@@ -64,12 +64,12 @@
 <body>
 	<div id="wrap">
     
-    	<? include('pestanas.php'); ?>
+    	<?php include('pestanas.php'); ?>
 
 		<div class="container cm-main-containter">
 
 
-<?
+<?php
 
 /*
 *	Se incluyen todos los CSS necesarios y las pestañas
