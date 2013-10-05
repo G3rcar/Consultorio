@@ -130,7 +130,7 @@ function calcularCuadroAgenda($fecha,$hora){
 	$hi = strtotime(date("Y-m-d")." ".date("H:i",$hora_inicio));
 	$hf = strtotime(date("Y-m-d")." ".date("H:i",$hora_fin));
 	$hc = strtotime(date("Y-m-d")." ".$hora);
-	$hMaximo = entero(($hi-$hf)/($minutos_citas*60));
+	$hMaximo = entero(($hf-$hi)/($minutos_citas*60));
 
 	$diff = $hc-$hi;
 	$posh = 0;
