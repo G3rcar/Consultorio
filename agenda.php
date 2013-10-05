@@ -178,7 +178,7 @@ if($res["num"]>0){
 						<input type="hidden" id="paciente" style="width:95%" />
 					</td>
 					<td width="20%">
-						<label id="hora_inicio_label" class="requerido">Hora de inicio</label>
+						<label id="hora_inicio_label" class="requerido">Hora</label>
 						<div class="input-append bootstrap-timepicker" style="padding-top:4px;">
 							<input id="hora_inicio" type="text" class="input-small" style="width:80px">
 							<span class="add-on"><i class="icon-time"></i></span>
