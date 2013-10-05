@@ -78,15 +78,15 @@ switch ($accion) {
 		$idDepto = (int)$conexion->escape($_POST["idDepto"]);
 		$nombre = $conexion->escape(utf8_decode($_POST["nombre"]));
 		
-		$nuevoDepto = "";
+		$mantoMuni = "";
 		if($tipo=='nuevo'){
-			$mantoDepto = "INSERT INTO municipio(nombre,iddepartamento,creacion) VALUES('{$nombre}','{$idDepto}',NOW()) ";
+			$mantoMuni = "INSERT INTO municipio(nombre,iddepartamento,creacion) VALUES('{$nombre}','{$idDepto}',NOW()) ";
 		}else{
-			$mantoDepto = "UPDATE municipio SET nombre='{$nombre}',iddepartamento='{$idDepto}' WHERE id = {$id} ";
+			$mantoMuni = "UPDATE municipio SET nombre='{$nombre}',iddepartamento='{$idDepto}' WHERE id = {$id} ";
 		}
 		
 		$res = 0;
-		$res = $conexion->execManto($mantoDepto);
+		$res = $conexion->execManto($mantoMuni);
 
 		if($res>0){
 			$success = array("success"=>"true","msg"=>"El municipio se ha guardado");

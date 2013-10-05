@@ -1,10 +1,23 @@
 var mainAgenda = {
 
 	docSeleccionado:0,
+	fechaInicial:0,
 
 	cargarAgenda:function(idDoctor){
 		var _t = this;
 		_t.docSeleccionado = idDoctor;
+
+		$.ajax({
+			url:'stores/agenda.php',
+			data:'action=rt_agenda&iddoctor='+idDoctor+'&fechainicial'+fechaInicial, dataType:'json', type:'POST',
+			complete:function(datos){
+				var T = jQuery.parseJSON(datos.responseText);
+				
+				humane.log(T.msg)
+				if(T.success=='true') cargarTabla();
+			}
+		});
+
 		_t.crearEvento(1,'h_5_d_1','Juan P&eacute;rez','Doc. Cerna');
 		_t.crearEvento(2,'h_3_d_1','Manuel Salazar','Doc. Cerna');
 		_t.crearEvento(3,'h_3_d_2','Carlos Perla','Doc. Cerna');
