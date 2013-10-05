@@ -47,6 +47,7 @@ $selDoctores = "SELECT id,CONCAT(nombres,' ',apellidos) AS 'nombre' FROM emplead
 $res = $conexion->execSelect($selDoctores);
 
 $lsDoctores=""; //Almacenará la lista html de los doctores
+$lsDoctoresWin=""; //Almacenará la lista html de los doctores para la ventana
 $seleccion=""; //Decidirá si un registro será autoseleccionado o no
 $docSeleccionado = "0"; //Id del doctor que se seleccione del listado
 if($res["num"]>0){
@@ -62,6 +63,7 @@ if($res["num"]>0){
 			$seleccion="";
 		}
 		$lsDoctores.="<option {$seleccion} value='".$iDoc["id"]."' >".utf8_encode($iDoc["nombre"])."</option>";
+		$lsDoctoresWin.="<option {$seleccion} value='".$iDoc["id"]."' >".utf8_encode($iDoc["nombre"])."</option>";
 		$i++;
 	}
 }
@@ -159,14 +161,14 @@ if($res["num"]>0){
 					<tr><td width="50%">
 						<label id="hora_inicio_label" class="requerido">Hora de inicio</label>
 						<div class="input-append bootstrap-timepicker">
-							<input id="hora_inicio" type="text" value="10:35 AM" class="input-small" style="width:155px">
+							<input id="hora_inicio" type="text" class="input-small" style="width:155px">
 							<span class="add-on"><i class="icon-time"></i></span>
 						</div>
 					</td>
 					<td width="50%">
-						<label id="hora_inicio_label" class="requerido">Hora de inicio</label>
+						<label id="hora_inicio_label" class="requerido">Hora de fin</label>
 						<div class="input-append bootstrap-timepicker">
-							<input id="hora_fin" type="text" value="10:35 AM" class="input-small" style="width:165px">
+							<input id="hora_fin" type="text" class="input-small" style="width:165px">
 							<span class="add-on"><i class="icon-time"></i></span>
 						</div>
 					</td></tr>
@@ -174,8 +176,7 @@ if($res["num"]>0){
 
 					<label id="empleado_label" class="requerido">Doctor</label>
 					<select id="empleado" style="width:100%">
-						<option value="1">Dr. Julio Cerna</option>
-						<option value="2">Dr. Carlos Alvarado</option>
+						<?php echo $lsDoctoresWin; ?>
 					</select>
 				</fieldset>
 			</form>
@@ -194,7 +195,13 @@ if($res["num"]>0){
 		var dr_ci = <?php echo $minutos_citas; ?>;
 
 		var citas = {
+			estado: 'agregar',
+			id:'',
+
+			min_inicio:0,
+			min_fin:0,
 			nueva:function(dia,hora){
+				var _t = this;
 				$('#ManntoCita').modal('show');
 				
 				$("#empleado").select2({ allowClear:true });
@@ -211,14 +218,69 @@ if($res["num"]>0){
 					}
 				});
 
-				$('#hora_inicio').timepicker({ minuteStep: dr_ci, showInputs: true, showSeconds: false, showMeridian: true });
-				$('#hora_fin').timepicker({ minuteStep: dr_ci, showInputs: true, showSeconds: false, showMeridian: true });
+				$('#hora_inicio').timepicker({ 
+					minuteStep: dr_ci, showInputs: true, showSeconds: false, showMeridian: true 
+				}).on("changeTime.timepicker",function(e){ _t.procesarMinutos(e.time,"inicio"); })
+				$('#hora_fin').timepicker({ 
+					minuteStep: dr_ci, showInputs: true, showSeconds: false, showMeridian: true 
+				}).on("changeTime.timepicker",function(e){ _t.procesarMinutos(e.time,"fin"); });
 			},
+			
 			guardar:function(){
-				if($('#paciente').val()==""){
-					$('#s2id_paciente').addClass("error_requerido_sel2"); return;
+				var _t = this;
+
+				if(!_t.validarForm()){ return; }
+				manto.toggle(false);
+				var idPaciete = $('#paciete').val();
+				var hi = _t.hora_inicio;
+				var hf = _t.hora_fin;
+				var idEmpleado = $('#empleado').val();
+				
+				if(this.estado=='agregar'){ this.id=''; }
+				var datos = 'action=sv_cita&idPaciente='+idPaciete+'&hinicio='+hi+'&hfin='+hf+'&idEmpleado='+idEmpleado+'&id='+this.id;
+
+				$.ajax({
+					url:'stores/agenda.php',
+					data:datos, dataType:'json', type:'POST',
+					complete:function(datos){
+						var T = jQuery.parseJSON(datos.responseText);
+
+						humane.log(T.msg);
+						if(T.success=="true"){
+							$('#ManntoCita').modal('hide');
+							manto.toggle(true);
+							cargarTabla();
+						}
+						manto.toggle(true);
+					}
+				});
+			},
+			procesarMinutos:function(tiempo,tipo){
+				var _t = this;
+				var h = tiempo.hours;
+				var m = tiempo.minutes;
+				var p = tiempo.meridian;
+				h += (p=="PM")?12:0;
+				h = (p=="AM"&&h==12)?0:h;
+				h = h*60;
+				h += m;
+				if(tipo=="inicio"){ _t.hora_inicio = h; }
+				else{ _t.hora_fin = h; }
+			},
+			validarForm:function(){
+				var _t = this;
+				var errores=0;
+				var iv1 = $('#s2id_paciente').val();
+				var hi = _t.hora_inicio;
+				var hf = _t.hora_fin;
+
+				if(iv1==''){ $('#s2id_paciente').addClass('error_requerido_sel2'); errores++; }
+				if(hi>=hf){ $('#hora_fin').addClass('error_requerido'); errores++; }
+				if(errores>0){
+					humane.log('Complete los campos requeridos');
+					return false;
 				}else{
-					$('#s2id_paciente').removeClass("error_requerido_sel2");
+					return true;
 				}
 			}
 		}
