@@ -42,25 +42,32 @@ switch ($accion) {
 
 	case 'rt_agenda':
 
-		$selCitas = "SELECT c.id,CONCAT(p.nombre,' 'p.apellido) AS 'nombre', DATE_FORMAT(c.fecha,'%d/%m/%Y') AS 'fecha',
+		$selCitas = "SELECT c.id,CONCAT(p.nombres,' ',p.apellidos) AS 'nombre', DATE_FORMAT(c.fecha,'%Y/%m/%d') AS 'fecha',
 						DATE_FORMAT(c.fecha,'%H:%i') AS 'hora'
 						FROM cita AS c INNER JOIN paciente AS p ON c.idpaciente = p.id";
+		
 		$res = $conexion->execSelect($selCitas);
 		$citas = array();
 
+		$registros=array();
+		$i=0;
 		if($res["num"]>0){
-			$i=0;
 			while($iCita = $conexion->fetchArray($res["result"])){
-				
 
-				$valoresFila = array(utf8_encode($iMuni["nombre"]),utf8_encode($iMuni["depto"]),$iMuni["creacion"],$editar,$borrar);
-				$fila = array("id"=>$iMuni["id"],"valores"=>$valoresFila);
-				$tabla->nuevaFila($fila);
+				$posicion = calcularCuadroAgenda($iCita["fecha"],$iCita["hora"]);
+
+				$registros[]=array(
+					"id_cita"=>$iCita["id"],
+					"posicion"=>$posicion,
+					"texto_uno"=>utf8_encode($iCita["nombre"]),
+					"texto_dos"=>"&nbsp;"
+				);
+				$i++;
 			}
 		}
 
-		$html = $tabla->obtenerCodigo();
-		echo $html;
+		$results = array("citas"=>$registros,"total"=>$i);
+		echo json_encode($results);
 
 	break;
 
@@ -118,9 +125,32 @@ switch ($accion) {
 
 
 
-function calcularCuadroAgenda($h){
+function calcularCuadroAgenda($fecha,$hora){
 	global $minutos_citas,$hora_inicio,$hora_fin;
+	$hi = strtotime(date("Y-m-d")." ".date("H:i",$hora_inicio));
+	$hf = strtotime(date("Y-m-d")." ".date("H:i",$hora_fin));
+	$hc = strtotime(date("Y-m-d")." ".$hora);
+	$hMaximo = entero(($hi-$hf)/($minutos_citas*60));
+
+	$diff = $hc-$hi;
+	$posh = 0;
+	if($diff<=0){ $posh = 0; }
+	elseif($diff>=($hf-$hi)){ $posh=$hMaximo; }
+	else{ $posh = entero($diff/($minutos_citas*60)); }
 	
+
+	$posd = date("N",strtotime($fecha));
+
+	$id = "h_{$posh}_d_{$posd}";
+	return $id;
+}
+
+function entero($n){
+	$nTmp = (string)$n;
+	if($nTmp=="") return 0;
+	if(strstr($nTmp,".") === false) return (int)$n;
+	$nE = explode(".",$n);
+	return (int)$nE[0];
 }
 
 ?>

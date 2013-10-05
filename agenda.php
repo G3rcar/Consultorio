@@ -40,7 +40,7 @@ while($finalizado==false){
 	$tabla_agenda .= "<tr> <td class='horas'>{$hora}</td>";
 	for($i=1;$i<=7;$i++){
 
-		$tabla_agenda .= "<td class='events'> <div id='h_{$ho}_d_{$i}'>
+		$tabla_agenda .= "<td class='events'> <div id='h_{$ho}_d_{$i}' p:fecha='{$fecha_impresion}' p:hora='{$hora}'>
 			<span class='out-button'> <a href='#' onClick='citas.nueva($fecha_impresion,\"{$hora}\")' title='Agregar'><i class='icon-plus'></i> </a> </span> </div> </td>";
 		$fecha_impresion = strtotime("+1 day",$fecha_impresion);
 	}
@@ -287,7 +287,7 @@ if($res["num"]>0){
 						if(T.success=="true"){
 							$('#ManntoCita').modal('hide');
 							_t.toggle(true);
-							//cargarTabla();
+							mainAgenda.cargarAgenda(mainAgenda.docSeleccionado);
 						}
 						_t.toggle(true);
 					}
@@ -307,7 +307,10 @@ if($res["num"]>0){
 								var T = jQuery.parseJSON(datos.responseText);
 								
 								humane.log(T.msg)
-								if(T.success=='true') cargarTabla();
+								if(T.success=='true'){ 
+									mainAgenda.cargarAgenda(mainAgenda.docSeleccionado);
+									mainAgenda.removerEvento(id);
+								}
 							}
 						});
 					}
