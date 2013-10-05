@@ -41,12 +41,17 @@ if($iUserP["total"]!="1"){
 	echo json_encode($success); exit(); 
 }
 
+$selPass = "SELECT idcargo FROM empleado WHERE id='".$iUserP["id"]."'";
+$res = $conexion->execSelect($selPass);
+$iEmp = $conexion->fetchArray($res["result"]);
+$esDoctor = ($iEmp["idcargo"]=="1")?true:false;
 
 //- Si llego hasta aqui es porque se encontro el usuario, 
 //- por lo tanto se asignan las variables a la sesion
 $_SESSION["iduser"] = $iUserP["id"];
 $_SESSION["user"] = $user;
 $_SESSION["password"] = $pass;
+$_SESSION["esDoctor"] = $esDoctor;
 
 $success = array("success"=>"true","t"=>"true","msg"=>"Correcto");
 echo json_encode($success); exit(); 

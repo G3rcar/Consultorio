@@ -6,6 +6,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="Proyecto ASI 2">
 	<meta name="author" content="@G3rcar">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta charset="utf-8">
 
 	<link href="res/css/bootstrap/css/bootstrap.css" rel="stylesheet">
 	<link href="res/css/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
@@ -17,9 +19,7 @@
 	<!-- javascript ================================================== -->
 	<script type="text/javascript" src="libs/js/jquery-1.10.2.min.js"></script>
 	<script type="text/javascript" src="libs/js/humane.min.js"></script>
-	<script type="text/javascript" src="libs/js/bootstrap/bootstrap-alert.js"></script>
-	<script type="text/javascript" src="libs/js/bootstrap/bootstrap-dropdown.js"></script>
-	<script type="text/javascript" src="libs/js/bootstrap/bootstrap-modal.js"></script>
+	<script type="text/javascript" src="libs/js/bootstrap/bootstrap.js"></script>
 	<script type="text/javascript" src="libs/js/bootbox.min.js"></script>
 	<script type="text/javascript" src="libs/js/custom/objetos-comunes.js"></script>
 
@@ -40,25 +40,6 @@
 
 	<!-- Favicon -->
 	<link rel="shortcut icon" href="res/img/favicon.png">
-
-	<style>
-		@media (min-width: 980px) {
-			.cm-main-containter {
-				padding-top: 40px;
-			}
-		}
-		.loading_indicator{
-			position: absolute;
-			top: 5px;
-			right: 5px;
-			width: 30px;
-			height: 30px;
-			display: none;
-		}
-		.well{
-			position: relative;
-		}
-	</style>
 </head>
 
 <body>
