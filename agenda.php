@@ -62,7 +62,7 @@ while($finalizado==false){
 			mainAgenda.crearEvento(3,'h_3_d_2','Carlos Perla','Doc. Cerna');
 			mainAgenda.crearEvento(4,'h_4_d_3','Oscar Funes','Doc. Cerna');
 			mainAgenda.crearEvento(5,'h_6_d_5','Sara Rodezno','Doc. Cerna');
-
+            mainAgenda.crearEvento(6,'h_5_d_2', 'Juan carlos', 'DOC.cerna');
 			$("#cmb_doctor").select2();
 
 			
