@@ -221,5 +221,5 @@ include("res/partes/encabezado.php");
 
 
 
-<? include('res/partes/pie.pagina.php'); ?>
+<?php include('res/partes/pie.pagina.php'); ?>
 
