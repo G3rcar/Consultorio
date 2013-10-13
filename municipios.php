@@ -228,8 +228,8 @@ include("res/partes/encabezado.php");
 	<div id="AgregarMuni" class="modal hide fade modalPequena" role="dialog" aria-labelledby="AgregarMuni" aria-hidden="true">
 		
 		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-			<h3 id="modalHead">Agregar municipio</h3>
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3 id="modalHead">Municipio</h3>
 		</div>
 		<div class="modal-body">
 			<form>

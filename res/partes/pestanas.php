@@ -1,7 +1,7 @@
 <div class="navbar navbar-inverse navbar-fixed-top">
 	<div class="navbar-inner">
 		<div class="container">
-			<a class="brand" href="#">Cerna y Alvarado</a>
+			<a class="brand" href="#">Consultorio</a>
 			<ul class="nav pull-right">
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -31,10 +31,6 @@
 						<li><a tabindex="-1" href="documentos.php">Tipos de documentos</a></li>
 						<li><a tabindex="-1" href="movimientos.php">Tipos de movimientos</a></li>
 						<li><a tabindex="-1" href="tipos.sangre.php">Tipos de sangre</a></li>
-						 <li class="divider"></li>
-						<li><a tabindex="-1" href="cargos.php">Cargos</a></li>
-						<li><a tabindex="-1" href="roles.php">Roles</a></li>
-						<li><a tabindex="-1" href="configuracion.php">Configuraciones globales</a></li>
 					</ul>
 				</li>
 				<li class="dropdown">
@@ -44,7 +40,10 @@
 					</a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
 						<li><a tabindex="-1" href="horarios.php">Horario de atenci&oacute;n</a></li>
+						<li><a tabindex="-1" href="cargos.php">Cargos</a></li>
+						<li><a tabindex="-1" href="roles.php">Roles</a></li>
 						<li><a tabindex="-1" href="empleados.php">Empleados/Usuarios</a></li>
+						<li><a tabindex="-1" href="configuracion.php">Configuraciones globales</a></li>
 						<li class="divider"></li>
 						<li><a tabindex="-1" href="productos.php">Productos/Servicios</a></li>
 						<li><a tabindex="-1" href="proveedores.php">Proveedores</a></li>

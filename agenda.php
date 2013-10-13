@@ -12,6 +12,16 @@ $esDoctor = $_SESSION["esDoctor"];
 $minutos_citas = 40;
 $hora_inicio = 1379854800;
 $hora_fin = 1379887200;
+$arrayDias = array("1"=>"Lunes","2"=>"Martes","3"=>"Mi&eacute;rcoles","4"=>"Jueves","5"=>"Viernes","6"=>"S&aacute;bado","7"=>"Domingo");
+$fecha_actual = strtotime(date("Y-m-d"));
+
+$numDia = date("d");
+$diaSemana = date("N")-1;
+$mes = date("m");
+$anyo = date("Y");
+$horai_form = date("h:i a",$hora_inicio);
+
+$fecha_inicial = strtotime("-{$diaSemana} days",$fecha_actual);
 
 //- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
 include("res/partes/encabezado.php");
@@ -24,21 +34,36 @@ $hora_contador=$hora_inicio;
 $finalizado=false;
 $ho=0;
 $tabla_agenda="";
+$fecha_impresion=$fecha_inicial;
 while($finalizado==false){
 	$hora = date("h:i a",$hora_contador);
 	$tabla_agenda .= "<tr> <td class='horas'>{$hora}</td>";
 	for($i=1;$i<=7;$i++){
-		$tabla_agenda .= "<td class='events'> <div id='h_{$ho}_d_{$i}'> 
-			<span class='out-button'> <a href='#' onClick='citas.nueva()' title='Agregar'><i class='icon-plus'></i> </a> </span> </div> </td>";
+
+		$tabla_agenda .= "<td class='events'> <div id='h_{$ho}_d_{$i}' p:fecha='{$fecha_impresion}' p:hora='{$hora}'>
+			<span class='out-button'> <a href='#' onClick='citas.nueva($fecha_impresion,\"{$hora}\")' title='Agregar'><i class='icon-plus'></i> </a> </span> </div> </td>";
+		$fecha_impresion = strtotime("+1 day",$fecha_impresion);
 	}
 	$tabla_agenda .= "</tr>";
 
 	$hora_contador = strtotime("+{$minutos_citas} minutes",$hora_contador);
+	$fecha_impresion=$fecha_inicial;
 
 	if($hora_contador>$hora_fin) $finalizado=true;
 	$ho++;
 }
 //----/Impresion de tabla agenda
+
+//----Impresion de días de la agenda
+$dias_agenda="";
+for($i=1;$i<=7;$i++){
+	$diaI = date("d",$fecha_impresion);
+	$mesI = date("m",$fecha_impresion);
+	$nomDiaI = $arrayDias[date("N",$fecha_impresion)];
+	$dias_agenda .= "<th width='13%'>{$nomDiaI} {$diaI}/{$mesI}</th>";
+	$fecha_impresion = strtotime("+1 day",$fecha_impresion);
+}
+$fecha_impresion=$fecha_inicial;
 
 
 
@@ -47,6 +72,7 @@ $selDoctores = "SELECT id,CONCAT(nombres,' ',apellidos) AS 'nombre' FROM emplead
 $res = $conexion->execSelect($selDoctores);
 
 $lsDoctores=""; //Almacenará la lista html de los doctores
+$lsDoctoresWin=""; //Almacenará la lista html de los doctores para la ventana
 $seleccion=""; //Decidirá si un registro será autoseleccionado o no
 $docSeleccionado = "0"; //Id del doctor que se seleccione del listado
 if($res["num"]>0){
@@ -62,6 +88,7 @@ if($res["num"]>0){
 			$seleccion="";
 		}
 		$lsDoctores.="<option {$seleccion} value='".$iDoc["id"]."' >".utf8_encode($iDoc["nombre"])."</option>";
+		$lsDoctoresWin.="<option {$seleccion} value='".$iDoc["id"]."' >".utf8_encode($iDoc["nombre"])."</option>";
 		$i++;
 	}
 }
@@ -96,6 +123,7 @@ if($res["num"]>0){
 			
 			$("#cmb_doctor").select2();
 			$('.table-fixed-header').fixedHeader();
+			mainAgenda.fechaInicial = <?php echo $fecha_inicial; ?>;
 			mainAgenda.docSeleccionado = <?php echo $docSeleccionado; ?>;
 			mainAgenda.cargarAgenda(<?php echo $docSeleccionado; ?>); 
 		});
@@ -116,22 +144,14 @@ if($res["num"]>0){
 		<div class="fixed-table">
 		<div class="table-content"> 
 		<table class="calendar table table-bordered table-fixed-header">
-		    <thead class="header">
-		        <tr>
-		            <th width="6%">&nbsp;</th>
-		            <th width="13%">Domingo</th>
-		            <th width="13%">Lunes</th>
-		            <th width="14%">Martes</th>
-		            <th width="13%">Mi&eacute;rcoles</th>
-		            <th width="14%">Jueves</th>
-		            <th width="13%">Viernes</th>
-		            <th width="13%">S&aacute;bado</th>
-		        </tr>
-		    </thead>
-		    <tbody>
-
-		    	<?php echo $tabla_agenda; ?>
-
+			<thead class="header">
+				<tr>
+					<th width="6%">&nbsp;</th>
+					<?php echo $dias_agenda; ?>
+				</tr>
+			</thead>
+			<tbody>
+				<?php echo $tabla_agenda; ?>
 			</tbody>
 		</table>
 		</div>
@@ -152,30 +172,42 @@ if($res["num"]>0){
 		<div class="modal-body" style="overflow-y:visible;" >
 			<form>
 				<fieldset>
-					<label id="paciente_label" class="requerido">Paciente</label>
-					<input type="hidden" id="paciente" style="width:100%" />
-
 					<table width="100%" cellspacing="0" cellpadding="0" style="margin-top:5px;">
-					<tr><td width="50%">
-						<label id="hora_inicio_label" class="requerido">Hora de inicio</label>
-						<div class="input-append bootstrap-timepicker">
-							<input id="hora_inicio" type="text" value="10:35 AM" class="input-small" style="width:155px">
-							<span class="add-on"><i class="icon-time"></i></span>
-						</div>
+					<tr><td width="80%">
+						<label id="paciente_label" class="requerido">Paciente</label>
+						<input type="hidden" id="paciente" style="width:95%" />
 					</td>
-					<td width="50%">
-						<label id="hora_inicio_label" class="requerido">Hora de inicio</label>
-						<div class="input-append bootstrap-timepicker">
-							<input id="hora_fin" type="text" value="10:35 AM" class="input-small" style="width:165px">
+					<td width="20%">
+						<label id="hora_inicio_label" class="requerido">Hora</label>
+						<div class="input-append bootstrap-timepicker" style="padding-top:4px;">
+							<input id="hora_inicio" type="text" class="input-small" style="width:80px">
 							<span class="add-on"><i class="icon-time"></i></span>
 						</div>
 					</td></tr>
 					</table>
+					<!--
+					<label id="paciente_label" class="requerido">Paciente</label>
+					<input type="hidden" id="paciente" style="width:100%" />
+					<table width="100%" cellspacing="0" cellpadding="0" style="margin-top:5px;">
+					<tr><td width="50%">
+						<label id="hora_inicio_label" class="requerido">Hora de inicio</label>
+						<div class="input-append bootstrap-timepicker">
+							<input id="hora_inicio" type="text" class="input-small" style="width:155px">
+							<span class="add-on"><i class="icon-time"></i></span>
+						</div>
+					</td>
+					<td width="50%">
+						<label id="hora_inicio_label" class="requerido">Hora de fin</label>
+						<div class="input-append bootstrap-timepicker">
+							<input id="hora_fin" type="text" class="input-small" style="width:165px">
+							<span class="add-on"><i class="icon-time"></i></span>
+						</div>
+					</td></tr>
+					</table>-->
 
 					<label id="empleado_label" class="requerido">Doctor</label>
 					<select id="empleado" style="width:100%">
-						<option value="1">Dr. Julio Cerna</option>
-						<option value="2">Dr. Carlos Alvarado</option>
+						<?php echo $lsDoctoresWin; ?>
 					</select>
 				</fieldset>
 			</form>
@@ -194,7 +226,15 @@ if($res["num"]>0){
 		var dr_ci = <?php echo $minutos_citas; ?>;
 
 		var citas = {
-			nueva:function(dia,hora){
+			estado: 'agregar',
+			id:'',
+
+			min_inicio:0,
+			min_fin:0,
+			fecha_seleccionada:0,
+			nueva:function(fecha,hora){
+				var _t = this;
+				_t.fecha_seleccionada = fecha;
 				$('#ManntoCita').modal('show');
 				
 				$("#empleado").select2({ allowClear:true });
@@ -211,15 +251,106 @@ if($res["num"]>0){
 					}
 				});
 
-				$('#hora_inicio').timepicker({ minuteStep: dr_ci, showInputs: true, showSeconds: false, showMeridian: true });
-				$('#hora_fin').timepicker({ minuteStep: dr_ci, showInputs: true, showSeconds: false, showMeridian: true });
+				$('#hora_inicio').timepicker({ 
+					minuteStep: dr_ci, showInputs: true, showSeconds: false, showMeridian: true 
+				}).on("changeTime.timepicker",function(e){ _t.procesarMinutos(e.time,"inicio"); });
+				$('#hora_inicio').timepicker('setTime',hora);
+				/*$('#hora_fin').timepicker({ 
+					minuteStep: dr_ci, showInputs: true, showSeconds: false, showMeridian: true 
+				}).on("changeTime.timepicker",function(e){ _t.procesarMinutos(e.time,"fin"); });*/
 			},
+			
 			guardar:function(){
-				if($('#paciente').val()==""){
-					$('#s2id_paciente').addClass("error_requerido_sel2"); return;
+				var _t = this;
+
+				if(!_t.validarForm()){ return; }
+				$('#s2id_paciente').removeClass('error_requerido_sel2');
+
+				_t.toggle(false);
+				var idPaciete = $('#paciente').val();
+				var hi = _t.hora_inicio;
+				var hf = _t.hora_fin;
+				var fecha = _t.fecha_seleccionada;
+				var idEmpleado = $('#empleado').val();
+				
+				if(this.estado=='agregar'){ this.id=''; }
+				var datos = 'action=sv_cita&idpaciente='+idPaciete+'&hinicio='+hi+'&idempleado='+idEmpleado+'&fecha='+fecha+'&id='+this.id;
+				//+'&hfin='+hf
+
+				$.ajax({
+					url:'stores/agenda.php',
+					data:datos, dataType:'json', type:'POST',
+					complete:function(datos){
+						var T = jQuery.parseJSON(datos.responseText);
+
+						humane.log(T.msg);
+						if(T.success=="true"){
+							$('#ManntoCita').modal('hide');
+							_t.toggle(true);
+							mainAgenda.cargarAgenda(mainAgenda.docSeleccionado);
+						}
+						_t.toggle(true);
+					}
+				});
+			},
+			borrar:function(id){
+				var tipo = 'uno';
+				var ids = id;
+				var action = 'br_cita';
+				
+				bootbox.confirm("¿Esta seguro de eliminar la cita?", function(confirm) {
+					if(confirm){
+						$.ajax({
+							url:'stores/agenda.php',
+							data:'action='+action+'&id='+ids, dataType:'json', type:'POST',
+							complete:function(datos){
+								var T = jQuery.parseJSON(datos.responseText);
+								
+								humane.log(T.msg)
+								if(T.success=='true'){ 
+									mainAgenda.cargarAgenda(mainAgenda.docSeleccionado);
+									mainAgenda.removerEvento(id);
+								}
+							}
+						});
+					}
+				}); 
+			},
+
+
+
+			procesarMinutos:function(tiempo,tipo){
+				var _t = this;
+				var h = tiempo.hours;
+				var m = tiempo.minutes;
+				var p = tiempo.meridian;
+				h += (p=="PM")?12:0;
+				h = (p=="AM"&&h==12)?0:h;
+				h = h*60;
+				h += m;
+				if(tipo=="inicio"){ _t.hora_inicio = h; }
+				else{ _t.hora_fin = h; }
+			},
+			validarForm:function(){
+				var _t = this;
+				var errores=0;
+				var iv1 = $('#paciente').val();
+				var hi = _t.hora_inicio;
+				//var hf = _t.hora_fin;
+
+				if(iv1==''){ $('#s2id_paciente').addClass('error_requerido_sel2'); errores++; }
+				//if(hi>=hf){ $('#hora_fin').addClass('error_requerido'); errores++; }
+				if(errores>0){
+					humane.log('Complete los campos requeridos');
+					return false;
 				}else{
-					$('#s2id_paciente').removeClass("error_requerido_sel2");
+					return true;
 				}
+			},
+
+			toggle:function(v){
+				if(v){ $('#guardarCita').removeClass('disabled').html('Guardar'); }
+				else{ $('#guardarCita').addClass('disabled').html('Guardando...'); }
 			}
 		}
 

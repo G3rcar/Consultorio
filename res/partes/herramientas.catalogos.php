@@ -14,9 +14,5 @@
 		<li <?php echo ($botones_herramientas["documentos"]?'class="active" ':''); ?> ><a href="documentos.php">Tipos de documento</a></li>
 		<li <?php echo ($botones_herramientas["movimientos"]?'class="active" ':''); ?> ><a href="movimientos.php">Tipos de movimiento</a></li>
 		<li <?php echo ($botones_herramientas["tiposangre"]?'class="active" ':''); ?> ><a href="tipos.sangre.php">Tipos de sangre</a></li>
-		<hr />
-		<li <?php echo ($botones_herramientas["cargos"]?'class="active" ':''); ?> ><a href="cargos.php">Cargos</a></li>
-		<li <?php echo ($botones_herramientas["roles"]?'class="active" ':''); ?> ><a href="roles.php">Roles</a></li>
-		<li <?php echo ($botones_herramientas["configuraciones"]?'class="active" ':''); ?> ><a href="configuracion.php">Configuraciones globales</a></li>
 	</ul>
 </div>
