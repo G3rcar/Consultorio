@@ -43,7 +43,7 @@ switch ($accion) {
 		
 	break;
 
-	case 'sv_depto':
+	case 'sv_paciente':
 		if(!isset($_POST["nombre"])) exit();
 
 		$tipo = ($_POST["id"]=="")?'nuevo':'editar';
@@ -55,7 +55,7 @@ switch ($accion) {
 		if($tipo=='nuevo'){
 			$mantopaciente = "INSERT INTO paciente(nombre,creacion) VALUES('{$nombre}',NOW()) ";
 		}else{
-			$mantopaciente = "UPDATE departamento SET nombre='{$nombre}' WHERE id = {$id} ";
+			$mantopaciente = "UPDATE paciente SET nombre='{$nombre}' WHERE id = {$id} ";
 		}
 		
 		$res = 0;
@@ -81,7 +81,7 @@ switch ($accion) {
 
 		if($res["num"]>0){
 			$iDepto = $conexion->fetchArray($res["result"]);
-			$result = array("id"=>$iDepto["id"],"nombre"=>utf8_encode($ipaciente["nombre"]));
+			$result = array("id"=>$ipaciente["id"],"nombre"=>utf8_encode($ipaciente["nombre"]));
 		}
 
 		echo json_encode($result);
