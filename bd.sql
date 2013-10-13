@@ -7,443 +7,271 @@ DROP SCHEMA IF EXISTS `consultorio`;
 CREATE SCHEMA IF NOT EXISTS `consultorio` DEFAULT CHARACTER SET utf8 COLLATE utf8_spanish2_ci ;
 USE `consultorio` ;
 
--- -----------------------------------------------------
--- Table `consultorio`.`departamento`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `consultorio`.`departamento` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `nombre` VARCHAR(45) NOT NULL ,
-  `creacion` DATETIME NOT NULL ,
-  PRIMARY KEY (`id`) )
-ENGINE = InnoDB;
+create table empleado (emp_id	Int(8) Not null,
+                      emp_nom	Varchar(45) not null,
+                      emp_ape	Varchar(45) not null,
+                      emp_fecha_nac	Date not null,	
+                      emp_gen	Varchar(1) not null,
+                      emp_fecha_cre	Datetime not null,	
+                      emp_idsuc	Int(8) not null,
+                      emp_idcar	Int(8) not null,
+                      emp_idesp	Int(8) not null,
+                      emp_iddir	Int(8) not null,
+                      primary key(emp_id))
+                      ENGINE = InnoDB;
+
+ create table direccion(dir_id	Int(8) not null,
+                        dir_cond	varchar(20) ,
+                        dir_cond2	Varchar(20),
+                        dir_calle	Varchar(45) not null,
+                        dir_compcalle	varchar(45),
+                        dir_casa	Varchar(10),
+                        dir_col	Varchar(20),
+                        dir_dist	Varchar(20),
+                        dir_ref	varchar(45),
+                        dir_fecha_cre	Datetime not null,	
+                        dir_idmun	Int(8) not null,
+                        primary key(dir_id))
+                      ENGINE = InnoDB;
+
+create table cargo (car_id	Int(8) not null,
+              car_nom	Varchar(45) not null,
+              car_fecha_cre	Datetime not null,
+              primary key(car_id))
+                      ENGINE = InnoDB;	
+
+create table telefono(tel_id	Int(8) not null,
+                      tel_nom	Varchar(45) not null,
+                      tel_num	Varchar(10) not null,
+                      tel_fecha_cre	Datetime not null,	
+                      tel_idemp	Int(8) not null,
+                      tel_idpac	Int(8) not null,
+                      tel_idpro	Int(8) not null,
+                      primary key(tel_id))
+                      ENGINE = InnoDB;
+                      
+create table tipo_documento(tip_id	Int(8) not null,
+						tip_nom	Varchar(20) not null,
+						primary key(tip_id))
+                      ENGINE = InnoDB;
+                            
+
+create table documento(doc_id	Int(8),
+                      doc_num	Varchar(20),
+                      doc_idtipo_doc	Int(8),
+                      doc_idemp	Int(8),
+                      doc_idpac	Int(8),
+                      primary key(doc_id))
+                      ENGINE = InnoDB;
+                      
+create table login(log_id	Int(8) not null,
+                  log_usr	Varchar(45) not null,
+                  log_pss	Varchar(45) not null,
+                  log_est	Varchar(1) not null,
+                  log_idemp	Int(8) not null,
+                  log_idrol	Int(8) not null,
+                  primary key(log_id))
+                      ENGINE = InnoDB;                      
+
+create table rol(rol_id	Int(8) not null,
+                rol_nom	Varchar(45) not null,
+                rol_desc	Varchar(50),
+                rol_fecha_ini	Date not null,	
+                rol_fecha_fin	Date,	
+                rol_est	Varchar(1) not null,
+                primary key(rol_id))
+                      ENGINE = InnoDB;
+                
+create table pais(pai_id	Int(8) not null,
+                  pai_nom	Varchar(45)not null,
+                  primary key(pai_id))
+                      ENGINE = InnoDB;
+create table departamento(dep_id	Int(8) not null,
+                          dep_nom	Varchar(45) not null,
+                          dep_idpai	Int(8) not null,
+                          primary key(dep_id))
+                      ENGINE = InnoDB;
+                      
+create table municipio(mun_id	Int(8) not null,
+                        mun_nom	Varchar(45) not null,
+                        mun_iddep	Int(8) not null,
+                        primary key(mun_id))
+                      ENGINE = InnoDB;
+                        
+create table tipo_sangre(tps_id	Int(8) not null,
+                         tps_tipo_san	Varchar(15) not null,
+                         primary key(tps_id))
+                      ENGINE = InnoDB;
+                         
+create table paciente(pac_id	Int(8) not null,
+                      pac_nom	Varchar(45) not null,
+                      pac_ape	Varchar(45) not null,
+                      pac_fecha_nac	Date not null,	
+                      pac_peso	Decimal(8,2),
+                      pac_alt	Decimal(8,2),
+                      pac_gen	Varchar(1) not null,
+                      pac_ale	Varchar(45),
+                      pac_correo	Varchar(45),
+                      pac_est	Varchar(1) not null,
+                      pac_fecha_cre	Datetime not null,	
+                      pac_iddir	Int(8) not null,
+                      pac_idtps	Int(8) not null,
+                      primary key(pac_id))
+                      ENGINE = InnoDB;
+                      
+create table accesso(acc_id	Int(8) not null,
+                    acc_ult	Datetime not null,	
+                    acc_idlog	Int(8) not null,
+                    primary key(acc_id))
+                      ENGINE = InnoDB;
+
+create table sucursal(suc_id	Int(8) not null,
+                      suc_nom	Varchar(45) not null,
+                      suc_iddir	Int(8) not null,
+                      primary key(suc_id))
+                      ENGINE = InnoDB;
+
+create table  no_disponibilidad(nod_id	Int(8) not null,
+                                nod_dia	Int(2) not null,
+                                nod_hora_ini	Time not null,	
+                                nod_hora_fin	Time not null,	
+                                nod_fecha_cre	Datetime not null,	
+                                nod_idemp	Int(8) not null,
+                                primary key(nod_id))
+                      ENGINE = InnoDB;
+                                
+create table  hora_atencion(hor_id	Int(8) not null,
+                            hor_dia	Int(2) not null,
+                            hor_hora_ape	Time not null,	
+                            hor_hora_cie	Time not null,	
+                            hor_fecha_cre	Datetime not null,	
+                            hor_idsuc	Int(8) not null,
+                            primary key(hor_id))
+                      ENGINE = InnoDB;
+                            
+create table proveedor(prv_id	Int(8) not null,
+                        prv_nom	Varchar(45) not null,	
+                        prv_cor	Varchar(45),
+                        prv_fecha_cre	Datetime not null,	
+                        prv_iddir	Int(8) not null,
+                        primary key(prv_id))
+                      ENGINE = InnoDB;
+                      
+create table solicitud_cita(slc_id	Int(8) not null,
+                            slc_desc	varchar(45) not null,
+                            slc_fecha_sol	Datetime not null,	
+                            slc_fecha_cre	Datetime not null,	
+                            slc_idpac	Int(8) not null,
+                            primary key(slc_id))
+                      ENGINE = InnoDB;
+                            
+create table cita(cit_id	Int(8) not null,
+                  cit_fecha_cita	Date not null,	
+                  cit_com	Varchar(50),
+                  cit_estado	Varchar(1) not null,
+                  cit_fecha_cre	Datetime not null,	
+                  cit_idemp	Int(8) not null,
+                  cit_idsuc	Int(8) not null,
+                  cit_idpac	Int(8) not null,
+                  cit_idslc	Int(8) not null,
+                  primary key(cit_id))
+                      ENGINE = InnoDB;
+                  
+create table consulta(con_id	Int(8) not null,
+                      con_desc	Varchar(50) not null,
+                      con_diag	Varchar(50) not null,
+                      con_fecha_cre	Datetime not null,	
+                      con_idcit	Int(8) not null,
+                      primary key(con_id))
+                      ENGINE = InnoDB;
+
+create table receta(rec_id	Int(8) not null,
+                    rec_desc	Varchar(50) not null,
+                    rec_fecha_cre	Datetime not null,	
+                    rec_idcon	Int(8) not null,
+                    primary key(rec_id))
+                      ENGINE = InnoDB;
+
+create table detalle_receta(dtr_id	Int(8) not null,
+                            dtr_desc	Varchar(50) not null,
+                            dtr_fecha_cre	Datetime not null,	
+                            dtr_idrec	Int(8) not null,
+                            primary key(dtr_id)
+                            );
+create table marca(mar_id	Int(8) not null,
+                    mar_nom	Varchar(45) not null,
+                    primary key(mar_id))
+                      ENGINE = InnoDB;
+                    
+create table producto(pro_id	Int(8) not null,
+                      pro_nom	Varchar(45) not null,
+                      pro_ubi	Varchar(45),
+                      pro_salant_uni	Int(8) not null,
+                      pro_salant_mon	Double(8,2) not null,
+                      pro_costo_uni	Double(8,2) not null,
+                      pro_ult_cost	Double(8,2) not null,
+                      pro_existencia	int(8) not null,
+                      pro_ult_ven	Date,	
+                      pro_fecha_cre	Datetime not null,	
+                      pro_idsuc	Int(8) not null,
+                      pro_idmar	Int(8) not null,
+                      primary key(pro_id))
+                      ENGINE = InnoDB;
+                      
+create table historico_producto(hsp_periodo	Int(8) not null,
+                                hsp_mes	Int(8) not null,
+                                hsp_ult_cost	Double(8,2) not null,
+                                hsp_sal_uni	Int(8) not null,
+                                hsp_sal_mon	Double(8,2) not null,
+                                hsp_cos_uni	Double(8,2) not null,
+                                hsp_idpro	Int(8) not null,
+                                hsp_idsuc	Int(8) not null,
+                                primary key(hsp_periodo,hsp_mes))
+                      ENGINE = InnoDB;
+                                
+create table tipo_movimiento(tpm_tipo_mov	Varchar(3) not null,
+                            tpm_desc	Varchar(45) not null,
+                            tpm_mov	Varchar(1) not null,
+                            tpm_idsuc	Int(8) not null,
+                            primary key(tpm_tipo_mov))
+                      ENGINE = InnoDB;
+                            
+create table movimiento(mov_periodo	Int(8) not null,
+                        mov_cos_uni	Double(8,2) not null,
+                        mov_fecha	Date not null,	 
+                        mov_uni	Int(8) not null,
+                        mov_idsuc	Int(8) not null,
+                        mov_idpro	Int(8) not null,
+                        mov_tipo	Varchar(3) not null,
+                        primary key(mov_periodo))
+                      ENGINE = InnoDB;
+                        
+create table facturacion(fac_id	Int(8) not null,
+                        fac_desc	Varchar(45) not null,
+                        fac_fecha	Date not null,	
+                        fac_dir	Varchar(45),
+                        fac_can	Double(8,2) not null,	
+                        fac_tot	Double(8,2)	not null,
+                        fac_nom_cli	Varchar(45)	not null,
+                        fac_ape_cli	Varchar(45)	not null,
+                        fac_tipo	Varchar(10)	not null,
+                        fac_registro	Varchar(10) ,	
+                        fac_fecha_cre	Datetime	not null,
+                        fac_idsuc	Int(8) not null,
+                        primary key(fac_id))
+                      ENGINE = InnoDB;
+                        
+create table detalle_facturacion(dtf_id	Int(8) not null,
+                                dtf_can	Int(8) not null,
+                                dtf_pre_uni	Double(8,2) not null,
+                                dtf_tot	Double(8,2) not null,
+                                dtf_fecha_cre	Datetime	not null,
+                                dtf_idfac	Int(8) not null,
+                                dtf_idpro	Int(8) not null,
+                                primary key(dtf_id))
+                      ENGINE = InnoDB;
 
 
--- -----------------------------------------------------
--- Table `consultorio`.`municipio`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `consultorio`.`municipio` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `nombre` VARCHAR(45) NOT NULL ,
-  `iddepartamento` INT NOT NULL ,
-  `creacion` DATETIME NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_municipio_departamento_idx` (`iddepartamento` ASC) ,
-  CONSTRAINT `fk_municipio_departamento`
-    FOREIGN KEY (`iddepartamento` )
-    REFERENCES `consultorio`.`departamento` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `consultorio`.`paciente`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `consultorio`.`paciente` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `nombres` VARCHAR(45) NOT NULL ,
-  `apellidos` VARCHAR(45) NOT NULL ,
-  `fecha_nacimiento` DATE NOT NULL ,
-  `peso` DECIMAL NULL ,
-  `altura` DECIMAL NULL ,
-  `genero` INT NULL ,
-  `idmunicipio` INT NULL ,
-  `direccion` VARCHAR(255) NULL ,
-  `telefono` VARCHAR(45) NULL ,
-  `celular` VARCHAR(45) NULL ,
-  `dui` VARCHAR(45) NULL ,
-  `nit` VARCHAR(45) NULL ,
-  `alergias` VARCHAR(255) NULL ,
-  `tipo_sangre` VARCHAR(45) NULL ,
-  `usuario` VARCHAR(45) NOT NULL ,
-  `contrasena` VARCHAR(45) NOT NULL ,
-  `estado` INT NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_paciente_municipio_idx` (`idmunicipio` ASC) ,
-  CONSTRAINT `fk_paciente_municipio`
-    FOREIGN KEY (`idmunicipio` )
-    REFERENCES `consultorio`.`municipio` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `consultorio`.`cargo`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `consultorio`.`cargo` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `nombre` VARCHAR(45) NOT NULL ,
-  `creacion` DATETIME NOT NULL ,
-  PRIMARY KEY (`id`) )
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `consultorio`.`especialidad`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `consultorio`.`especialidad` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `nombre` VARCHAR(45) NOT NULL ,
-  `creacion` DATETIME NOT NULL ,
-  PRIMARY KEY (`id`, `creacion`, `nombre`) )
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `consultorio`.`empleado`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `consultorio`.`empleado` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `nombres` VARCHAR(45) NOT NULL ,
-  `apellidos` VARCHAR(45) NOT NULL ,
-  `fecha_nacimiento` DATE NOT NULL ,
-  `genero` INT NOT NULL ,
-  `idmunicipio` INT NOT NULL ,
-  `direccion` VARCHAR(255) NULL ,
-  `telefono` VARCHAR(45) NULL ,
-  `celular` VARCHAR(45) NULL ,
-  `dui` VARCHAR(45) NULL ,
-  `nit` VARCHAR(45) NULL ,
-  `idcargo` INT NOT NULL ,
-  `idespecialidad` INT NOT NULL ,
-  `creacion` DATETIME NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_empleado_municipio_idx` (`idmunicipio` ASC) ,
-  INDEX `fk_empleado_cargo_idx` (`idcargo` ASC) ,
-  INDEX `fk_empleado_especialidad_idx` (`idespecialidad` ASC) ,
-  CONSTRAINT `fk_empleado_municipio`
-    FOREIGN KEY (`idmunicipio` )
-    REFERENCES `consultorio`.`municipio` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_empleado_cargo`
-    FOREIGN KEY (`idcargo` )
-    REFERENCES `consultorio`.`cargo` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_empleado_especialidad`
-    FOREIGN KEY (`idespecialidad` )
-    REFERENCES `consultorio`.`especialidad` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `consultorio`.`cita`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `consultorio`.`cita` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `idpaciente` INT NOT NULL ,
-  `fecha` DATETIME NOT NULL ,
-  `estado` INT NOT NULL ,
-  `idempleado` INT NOT NULL ,
-  `creacion` DATETIME NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_cita_paciente_idx` (`idpaciente` ASC) ,
-  INDEX `fk_cita_empleado_idx` (`idempleado` ASC) ,
-  CONSTRAINT `fk_cita_paciente`
-    FOREIGN KEY (`idpaciente` )
-    REFERENCES `consultorio`.`paciente` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_cita_empleado`
-    FOREIGN KEY (`idempleado` )
-    REFERENCES `consultorio`.`empleado` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `consultorio`.`consulta`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `consultorio`.`consulta` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `descripcion` VARCHAR(255) NOT NULL ,
-  `diagnostico` VARCHAR(900) NOT NULL ,
-  `idcita` INT NOT NULL ,
-  `creacion` DATETIME NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  CONSTRAINT `fk_consulta_cita`
-    FOREIGN KEY (`id` )
-    REFERENCES `consultorio`.`cita` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `consultorio`.`receta`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `consultorio`.`receta` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `idconsulta` INT NOT NULL ,
-  `descripcion` VARCHAR(255) NULL ,
-  `creacion` DATETIME NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_receta_consulta_idx` (`idconsulta` ASC) ,
-  CONSTRAINT `fk_receta_consulta`
-    FOREIGN KEY (`idconsulta` )
-    REFERENCES `consultorio`.`consulta` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `consultorio`.`marca`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `consultorio`.`marca` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `nombre` VARCHAR(45) NOT NULL ,
-  `creacion` DATETIME NOT NULL ,
-  PRIMARY KEY (`id`) )
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `consultorio`.`medicina`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `consultorio`.`medicina` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `nombre` VARCHAR(45) NOT NULL ,
-  `descripcion` VARCHAR(255) NOT NULL ,
-  `precio_unidad` DECIMAL NULL ,
-  `idmarca` INT NOT NULL ,
-  `existencia_minima` INT NULL ,
-  `creacion` DATETIME NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_medicina_marca_idx` (`idmarca` ASC) ,
-  CONSTRAINT `fk_medicina_marca`
-    FOREIGN KEY (`idmarca` )
-    REFERENCES `consultorio`.`marca` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `consultorio`.`detalle_receta`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `consultorio`.`detalle_receta` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `idreceta` INT NOT NULL ,
-  `idmedicina` INT NOT NULL ,
-  `creacion` DATETIME NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_medicina_receta_medicina_idx` (`idmedicina` ASC) ,
-  INDEX `fk_medicina_receta_receta_idx` (`idreceta` ASC) ,
-  CONSTRAINT `fk_medicina_receta_medicina`
-    FOREIGN KEY (`idmedicina` )
-    REFERENCES `consultorio`.`medicina` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_medicina_receta_receta`
-    FOREIGN KEY (`idreceta` )
-    REFERENCES `consultorio`.`receta` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `consultorio`.`producto_servicio`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `consultorio`.`producto_servicio` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `nombre` VARCHAR(45) NOT NULL ,
-  `descripcion` VARCHAR(255) NOT NULL ,
-  `idmedicina` INT NOT NULL ,
-  `precio` DECIMAL NOT NULL ,
-  `tipo` ENUM('producto','servicio') NOT NULL ,
-  `creacion` DATETIME NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_productos_servicios_medicina_idx` (`idmedicina` ASC) ,
-  CONSTRAINT `fk_productos_servicios_medicina`
-    FOREIGN KEY (`idmedicina` )
-    REFERENCES `consultorio`.`medicina` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `consultorio`.`proveedor`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `consultorio`.`proveedor` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `nombre` VARCHAR(45) NOT NULL ,
-  `telefono` VARCHAR(45) NULL ,
-  `correo` VARCHAR(45) NULL ,
-  `direccion` VARCHAR(255) NULL ,
-  `idmunicipio` INT NOT NULL ,
-  `creacion` DATETIME NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_proveedor_municipio_idx` (`idmunicipio` ASC) ,
-  CONSTRAINT `fk_proveedor_municipio`
-    FOREIGN KEY (`idmunicipio` )
-    REFERENCES `consultorio`.`municipio` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `consultorio`.`pago`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `consultorio`.`pago` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `idproveedor` INT NOT NULL ,
-  `total` DECIMAL NOT NULL ,
-  `numero_factura` VARCHAR(45) NOT NULL ,
-  `fecha` DATE NOT NULL ,
-  `creacion` DATETIME NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_pago_proveedor_idx` (`idproveedor` ASC) ,
-  CONSTRAINT `fk_pago_proveedor`
-    FOREIGN KEY (`idproveedor` )
-    REFERENCES `consultorio`.`proveedor` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `consultorio`.`entrada`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `consultorio`.`entrada` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `idmedicina` INT NOT NULL ,
-  `cantidad` DECIMAL NOT NULL ,
-  `lote` VARCHAR(45) NULL ,
-  `fecha_vencimiento` DATETIME NOT NULL ,
-  `idpago` INT NOT NULL ,
-  `estado` INT NOT NULL ,
-  `total` DECIMAL NULL ,
-  `creacion` DATETIME NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_entrada_medicina_idx` (`idmedicina` ASC) ,
-  INDEX `fk_entrada_pago_idx` (`idpago` ASC) ,
-  CONSTRAINT `fk_entrada_medicina`
-    FOREIGN KEY (`idmedicina` )
-    REFERENCES `consultorio`.`medicina` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_entrada_pago`
-    FOREIGN KEY (`idpago` )
-    REFERENCES `consultorio`.`pago` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `consultorio`.`devolucion`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `consultorio`.`devolucion` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `descripcion` VARCHAR(255) NOT NULL ,
-  `identrada` INT NOT NULL ,
-  `creacion` DATETIME NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_devolucion_entrada_idx` (`identrada` ASC) ,
-  CONSTRAINT `fk_devolucion_entrada`
-    FOREIGN KEY (`identrada` )
-    REFERENCES `consultorio`.`entrada` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `consultorio`.`factura`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `consultorio`.`factura` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `fecha` DATE NOT NULL ,
-  `descripcion` VARCHAR(255) NOT NULL ,
-  `cantidad` INT NULL ,
-  `total` DECIMAL NOT NULL ,
-  `nombres_cliente` VARCHAR(255) NOT NULL ,
-  `apellidos_cliente` VARCHAR(255) NOT NULL ,
-  `tipo` INT NOT NULL ,
-  `registro` VARCHAR(45) NULL ,
-  `creacion` DATETIME NOT NULL ,
-  PRIMARY KEY (`id`) )
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `consultorio`.`detalle_factura`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `consultorio`.`detalle_factura` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `idfactura` INT NOT NULL ,
-  `idproducto_servicio` INT NOT NULL ,
-  `cantidad` INT NOT NULL ,
-  `precio_unidad` DECIMAL NOT NULL ,
-  `total` DECIMAL NOT NULL ,
-  `creacion` DATETIME NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_detalle_factura_producto_servicio_idx` (`idproducto_servicio` ASC) ,
-  INDEX `fk_detalle_factura_factura_idx` (`idfactura` ASC) ,
-  CONSTRAINT `fk_detalle_factura_producto_servicio`
-    FOREIGN KEY (`idproducto_servicio` )
-    REFERENCES `consultorio`.`producto_servicio` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_detalle_factura_factura`
-    FOREIGN KEY (`idfactura` )
-    REFERENCES `consultorio`.`factura` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `consultorio`.`salida`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `consultorio`.`salida` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `idmedicina` INT NOT NULL ,
-  `cantidad` INT NOT NULL ,
-  `idfactura` INT NOT NULL ,
-  `creacion` DATETIME NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_salida_medicina_idx` (`idmedicina` ASC) ,
-  INDEX `fk_salida_factura_idx` (`idfactura` ASC) ,
-  CONSTRAINT `fk_salida_medicina`
-    FOREIGN KEY (`idmedicina` )
-    REFERENCES `consultorio`.`medicina` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_salida_factura`
-    FOREIGN KEY (`idfactura` )
-    REFERENCES `consultorio`.`factura` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `consultorio`.`usuario`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `consultorio`.`usuario` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `cuenta` VARCHAR(45) NOT NULL ,
-  `contrasena` VARCHAR(45) NOT NULL ,
-  `rol` VARCHAR(45) NULL ,
-  `idempleado` INT NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `idempleado_UNIQUE` (`idempleado` ASC) ,
-  CONSTRAINT `fk_usuario_empleado`
-    FOREIGN KEY (`idempleado` )
-    REFERENCES `consultorio`.`empleado` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
 
 USE `consultorio` ;
 
@@ -452,10 +280,13 @@ SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
-INSERT INTO `departamento`(`id`,`nombre`,`creacion`) VALUES(1,'La Libertad',NOW());
-INSERT INTO `municipio`(`id`,`nombre`,`iddepartamento`,`creacion`) VALUES(1,'Santa Tecla',1,NOW());
-INSERT INTO `cargo`(`id`,`nombre`,`creacion`) VALUES(1,'Doctor',NOW());
-INSERT INTO `especialidad`(`id`,`nombre`,`creacion`) VALUES(1,'Dentista',NOW());
-INSERT INTO `empleado`(`id`,`nombres`,`apellidos`,`fecha_nacimiento`,`genero`,`idmunicipio`,`idcargo`,`idespecialidad`,`creacion`) VALUES(1,'Arturo','Cerna','1970-02-04',1,1,1,1,NOW());
-INSERT INTO `usuario`(`id`,`cuenta`,`contrasena`,`rol`,`idempleado`) VALUES(1,'g3rcar',md5('test'),'ADMIN',1);
+
+
+INSERT INTO `pais`(`pai_id`,`pai_nom`) VALUES(1,'El Salvador');
+INSERT INTO `departamento`(`dep_id`,`dep_nom`,`dep_idpai`) VALUES(1,'La Libertad',1);
+INSERT INTO `municipio`(`mun_id`,`mun_nom`,`mun_iddep`) VALUES(1,'Santa Tecla',1);
+INSERT INTO `cargo`(`car_id`,`car_nom`,`car_fecha_cre`) VALUES(1,'Doctor',NOW());
+INSERT INTO `empleado`(`emp_id`,`emp_nom`,`emp_ape`,`emp_fecha_nac`,`emp_gen`,`emp_idsuc`,`emp_idcar`,`emp_idesp`,`emp_iddir`,`emp_fecha_cre`) 
+VALUES(1,'Arturo','Cerna','1970-02-04',1,1,1,1,1,NOW());
+INSERT INTO `login`(`log_id`,`log_usr`,`log_pss`,`log_est`,`log_idrol`,`log_idemp`) VALUES(1,'admin',md5('admin'),'a',1,1);
 
