@@ -108,6 +108,7 @@ include("res/partes/encabezado.php");
 
 			agregar:function(){
 				this.estado = 'agregar';
+				$('#modalHead').html("Agregar Departamento");
 				this.id = '';
 				$('#s2id_idPais').removeClass('error_requerido_sel2');
 				$('#nombreDepto').removeClass('error_requerido');
@@ -131,6 +132,7 @@ include("res/partes/encabezado.php");
 			},
 			editar:function(id){
 				this.estado = 'editar';
+				$('#modalHead').html("Editar Departamento");
 				this.id = id;
 				$.ajax({
 					url:'stores/departamentos.php',

@@ -51,7 +51,7 @@ switch ($accion) {
 			$q = $conexion->escape($_POST["q"]);
 			$query = " WHERE pai_nom LIKE '%{$q}%' ";
 		}
-		$selRes = "SELECT pai_id,pai_nom AS 'nombre' FROM pais {$query} ORDER BY pai_id";
+		$selRes = "SELECT pai_id AS 'id',pai_nom AS 'nombre' FROM pais {$query} ORDER BY pai_id";
 		$res = $conexion->execSelect($selRes);
 		
 		$registros=array();
@@ -73,12 +73,13 @@ switch ($accion) {
 
 		$id = (int)$conexion->escape($_POST["id"]);
 		$nombre = $conexion->escape(utf8_decode($_POST["nombre"]));
+		$pais = (int)$conexion->escape(utf8_decode($_POST["idPais"]));
 		
 		$nuevoDepto = "";
 		if($tipo=='nuevo'){
-			$mantoDepto = "INSERT INTO departamento(nombre,creacion) VALUES('{$nombre}',NOW()) ";
+			$mantoDepto = "INSERT INTO departamento(dep_nom,dep_idpai) VALUES('{$nombre}','{$pais}') ";
 		}else{
-			$mantoDepto = "UPDATE departamento SET nombre='{$nombre}' WHERE id = {$id} ";
+			$mantoDepto = "UPDATE departamento SET dep_nom='{$nombre}', dep_idpai='{$pais}' WHERE dep_id = {$id} ";
 		}
 		
 		$res = 0;
@@ -99,12 +100,13 @@ switch ($accion) {
 		if(!isset($_POST["id"])){ exit(); }
 		$id = $conexion->escape($_POST["id"]);
 
-		$selDepto = "SELECT id,nombre FROM departamento WHERE id = {$id} ";
+		$selDepto = "SELECT dep_id,dep_nom,pai_id,pai_nom FROM departamento AS d INNER JOIN pais AS p 
+						WHERE dep_id = {$id} ";
 		$res = $conexion->execSelect($selDepto);
 
 		if($res["num"]>0){
 			$iDepto = $conexion->fetchArray($res["result"]);
-			$result = array("id"=>$iDepto["id"],"nombre"=>utf8_encode($iDepto["nombre"]));
+			$result = array("id"=>$iDepto["dep_id"],"nombre"=>utf8_encode($iDepto["dep_nom"]),"idPais"=>$iDepto["pai_id"],"pais"=>utf8_encode($iDepto["pai_nom"]));
 		}
 
 		echo json_encode($result);
