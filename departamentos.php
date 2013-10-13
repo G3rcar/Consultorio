@@ -187,7 +187,7 @@ include("res/partes/encabezado.php");
 	<div id="AgregarDepto" class="modal hide fade modalPequena" tabindex="-1" role="dialog" aria-labelledby="AgregarDepto" aria-hidden="true">
 		
 		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			<h3 id="modalHead">Departamento</h3>
 		</div>
 		<div class="modal-body">

@@ -114,7 +114,7 @@
 				var obj = document.getElementById('error_msg');
 				var actual = obj.innerHTML;
 				var body = '<div class="alert alert-'+tipo+'" style="margin-top:30px; margin-bottom:0;">'+
-									'<button type="button" class="close" data-dismiss="alert">×</button>'+
+									'<button type="button" class="close" data-dismiss="alert">&times;</button>'+
 									'<strong>'+t+'</strong><br /> '+m+
 								'</div>';
 			 obj.innerHTML = body+actual;
