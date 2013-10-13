@@ -24,7 +24,7 @@ switch ($accion) {
 			array("width"=>"15","text"=>"&nbsp;"),
 			array("width"=>"15","text"=>"&nbsp;")
 		);
-		$tabla = new GridCheck($headers,"gridPais");
+		$tabla = new GridCheck($headers,"gridPaises");
 		if($res["num"]>0){
 			$i=0;
 			while($iPais = $conexion->fetchArray($res["result"])){
