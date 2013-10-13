@@ -1,7 +1,7 @@
 <div class="navbar navbar-inverse navbar-fixed-top">
 	<div class="navbar-inner">
 		<div class="container">
-			<a class="brand" href="#">Cerna y Alvarado</a>
+			<a class="brand" href="#">Consultorio</a>
 			<ul class="nav pull-right">
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
