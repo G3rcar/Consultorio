@@ -16,7 +16,7 @@ $accion = $_POST["action"];
 switch ($accion) {
 	case 'gd_paciente':
 
-		$selpaciente = "SELECT id,nombres,DATE_FORMAT(creacion,'%d/%m/%Y %h:%i %p'), apellidos,alergias,tipo_sangre, estado AS 'creacion' FROM paciente ORDER BY id ";
+		$selpaciente = "SELECT * FROM paciente ORDER BY id ";
 		$res = $conexion->execSelect($selpacicente);
 		$headers = array(
 			"Nombre",
@@ -62,7 +62,7 @@ switch ($accion) {
 		$res = $conexion->execManto($mantopaciente);
 
 		if($res>0){
-			$success = array("success"=>"true","msg"=>"El departamento se ha guardado");
+			$success = array("success"=>"true","msg"=>"El paciente se ha guardado");
 		}else{
 			$success = array("success"=>"false","msg"=>"Ha ocurrido un error");
 		}
@@ -76,7 +76,7 @@ switch ($accion) {
 		if(!isset($_POST["id"])){ exit(); }
 		$id = $conexion->escape($_POST["id"]);
 
-		$selpaciente = "SELECT id,nombre FROM departamento WHERE id = {$id} ";
+		$selpaciente = "SELECT id,nombre FROM dpaciente WHERE id = {$id} ";
 		$res = $conexion->execSelect($selpaciente);
 
 		if($res["num"]>0){
@@ -88,7 +88,7 @@ switch ($accion) {
 
 	break;
 
-	case 'br_depto':
+	case 'br_variospaciente':
 		$result = array("success"=>"false","msg"=>"");
 
 		if(!isset($_POST["id"])){ exit(); }

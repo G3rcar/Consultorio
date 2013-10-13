@@ -31,7 +31,7 @@ include("res/partes/encabezado.php");
 <!-- /Scripts extra -->
 
 
-	<h3>Cat&aacute;logos: departamentos</h3>
+	<h3>paciente</h3>
 
 	<div class="container-fluid">
 		<div class="row-fluid">
@@ -68,8 +68,8 @@ include("res/partes/encabezado.php");
 
 		function validarForm(){
 			var errores = 0;
-			var v1 = $('#nombreDepto').val();
-			if(v1==''){ $('#nombreDepto').addClass('error_requerido'); errores++; }
+			var v1 = $('#nombrepaciente').val();
+			if(v1==''){ $('#nombrepaciente').addClass('error_requerido'); errores++; }
 			if(errores>0){
 				humane.log('Complete los campos requeridos');
 				return false;
@@ -80,8 +80,8 @@ include("res/partes/encabezado.php");
 
 		function cargarTabla(){
 			$.ajax({
-				url:'stores/departamentos.php',
-				data:'action=gd_depto', dataType:'json', type:'POST',
+				url:'stores/paciente.php',
+				data:'action=gd_paciente', dataType:'json', type:'POST',
 				complete:function(datos){
 					$("#contenedorTabla").html(datos.responseText);
 				}
@@ -97,9 +97,9 @@ include("res/partes/encabezado.php");
 			agregar:function(){
 				this.estado = 'agregar';
 				this.id = '';
-				$('#nombreDepto_label').removeClass('error_requerido');
-				$('#nombreDepto').val('');
-				$('#AgregarDepto').modal('show');
+				$('#nombrepaciente_label').removeClass('error_requerido');
+				$('#nombrepaciente').val('');
+				$('#Agregarpaciente').modal('show');
 
 
 			},
@@ -107,21 +107,21 @@ include("res/partes/encabezado.php");
 				this.estado = 'editar';
 				this.id = id;
 				$.ajax({
-					url:'stores/departamentos.php',
-					data:'action=rt_depto&id='+id, dataType:'json', type:'POST',
+					url:'stores/paciente.php',
+					data:'action=rt_paciente&id='+id, dataType:'json', type:'POST',
 					complete:function(datos){
 						var T = jQuery.parseJSON(datos.responseText);
 						
-						$('#nombreDepto').removeClass('error_requerido');
-						$('#nombreDepto').val(T.nombre);
-						$('#AgregarDepto').modal('show');
+						$('#nombrepaciente').removeClass('error_requerido');
+						$('#nombrepaciente').val(T.nombre);
+						$('#Agregarpaciente').modal('show');
 					}
 				});
 
 			},
 			borrar:function(id){
 				var tipo = (id)?'uno':'varios';
-				var seleccion = gridCheck.getSelectionJSON('gridDeptos');
+				var seleccion = gridCheck.getSelectionJSON('gridpaciente');
 				if(tipo=='varios' && seleccion==false){
 					humane.log('No ha seleccionado ning&uacute;n registro');
 					return;
@@ -133,7 +133,7 @@ include("res/partes/encabezado.php");
 				bootbox.confirm("¿Esta seguro de eliminar los registros?", function(confirm) {
 					if(confirm){
 						$.ajax({
-							url:'stores/departamentos.php',
+							url:'stores/paciente.php',
 							data:'action='+action+'&id='+ids, dataType:'json', type:'POST',
 							complete:function(datos){
 								var T = jQuery.parseJSON(datos.responseText);
@@ -149,20 +149,20 @@ include("res/partes/encabezado.php");
 			guardar:function(){
 				if(!validarForm()){ return; }
 				manto.toggle(false);
-				var nombre = $('#nombreDepto').val();
+				var nombre = $('#nombrepaciente').val();
 				
 				if(this.estado=='agregar'){ this.id=''; }
-				var datos = 'action=sv_depto&nombre='+nombre+'&id='+this.id;
+				var datos = 'action=sv_paciente&nombre='+nombre+'&id='+this.id;
 
 				$.ajax({
-					url:'stores/departamentos.php',
+					url:'stores/paciente.php',
 					data:datos, dataType:'json', type:'POST',
 					complete:function(datos){
 						var T = jQuery.parseJSON(datos.responseText);
 
 						humane.log(T.msg);
 						if(T.success=="true"){
-							$('#AgregarDepto').modal('hide');
+							$('#Agregarpaciente').modal('hide');
 							manto.toggle(true);
 							cargarTabla();
 						}
@@ -172,8 +172,8 @@ include("res/partes/encabezado.php");
 			},
 
 			toggle:function(v){
-				if(v){ $('#guardarDepto').removeClass('disabled').html('Guardar'); }
-				else{ $('#guardarDepto').addClass('disabled').html('Guardando...'); }
+				if(v){ $('#guardarpaciente').removeClass('disabled').html('Guardar'); }
+				else{ $('#guardarpaciente').addClass('disabled').html('Guardando...'); }
 			}
 		}
 
@@ -184,7 +184,7 @@ include("res/partes/encabezado.php");
 	<!-- Modales -->
 
 	<!-- Agregar -->
-	<div id="AgregarDepto" class="modal hide fade modalPequena" tabindex="-1" role="dialog" aria-labelledby="AgregarDepto" aria-hidden="true">
+	<div id="Agregarpaciente" class="modal hide fade modalPequena" tabindex="-1" role="dialog" aria-labelledby="Agregarpaciente" aria-hidden="true">
 		
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -193,14 +193,14 @@ include("res/partes/encabezado.php");
 		<div class="modal-body">
 			<form>
 				<fieldset>
-					<label id="nombreDepto_label" class="requerido">Nombre</label>
-					<input id="nombreDepto" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
+					<label id="nombrepaciente_label" class="requerido">Nombre</label>
+					<input id="nombrepaciente" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
 				</fieldset>
 			</form>
 		</div>
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-			<button id="guardarDepto" class="btn btn-primary">Guardar</button>
+			<button id="guardarpaciente" class="btn btn-primary">Guardar</button>
 		</div>
 
 	</div>
