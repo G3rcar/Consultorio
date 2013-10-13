@@ -16,11 +16,13 @@ $accion = $_POST["action"];
 switch ($accion) {
 	case 'gd_depto':
 
-		$selDeptos = "SELECT id,nombre,DATE_FORMAT(creacion,'%d/%m/%Y %h:%i %p') AS 'creacion' FROM departamento ORDER BY id ";
-		$res = $conexion->execSelect($selDeptos);
+		$selRes = "SELECT dep_id,dep_nom,pai_nom FROM departamento 
+					INNER JOIN pais ON dep_idpai = pai_id ORDER BY dep_id ";
+		$res = $conexion->execSelect($selRes);
 		$headers = array(
 			"Nombre",
-			array("width"=>"200","text"=>"Fecha de creaci&oacute;n"),
+			"Pa&iacute;s",
+			//array("width"=>"200","text"=>"Fecha de creaci&oacute;n"),
 			array("width"=>"15","text"=>"&nbsp;"),
 			array("width"=>"15","text"=>"&nbsp;")
 		);
@@ -29,11 +31,11 @@ switch ($accion) {
 			$i=0;
 			while($iDepto = $conexion->fetchArray($res["result"])){
 				//Iconos
-				$editar = "<a href='#' onClick='manto.editar({$iDepto["id"]});' title='Editar' ><i class='icon-edit'></i></a>";
-				$borrar = "<a href='#' onClick='manto.borrar({$iDepto["id"]});' title='Borrar' ><i class='icon-remove'></i></a>";
+				$editar = "<a href='#' onClick='manto.editar({$iDepto["dep_id"]});' title='Editar' ><i class='icon-edit'></i></a>";
+				$borrar = "<a href='#' onClick='manto.borrar({$iDepto["dep_id"]});' title='Borrar' ><i class='icon-remove'></i></a>";
 				
-				$valoresFila = array(utf8_encode($iDepto["nombre"]),$iDepto["creacion"],$editar,$borrar);
-				$fila = array("id"=>$iDepto["id"],"valores"=>$valoresFila);
+				$valoresFila = array(utf8_encode($iDepto["dep_nom"]),$iDepto["pai_nom"],$editar,$borrar);
+				$fila = array("id"=>$iDepto["dep_id"],"valores"=>$valoresFila);
 				$tabla->nuevaFila($fila);
 			}
 		}
@@ -41,6 +43,27 @@ switch ($accion) {
 		$html = $tabla->obtenerCodigo();
 		echo $html;
 		
+	break;
+
+	case 'ls_pais':
+		$query = "";
+		if(isset($_POST["q"]) && $_POST["q"]!=""){
+			$q = $conexion->escape($_POST["q"]);
+			$query = " WHERE pai_nom LIKE '%{$q}%' ";
+		}
+		$selRes = "SELECT pai_id,pai_nom AS 'nombre' FROM pais {$query} ORDER BY pai_id";
+		$res = $conexion->execSelect($selRes);
+		
+		$registros=array();
+		if($res["num"]>0){
+			$i=0;
+			while($iDepto = $conexion->fetchArray($res["result"])){
+				$registros[]=array("id"=>$iDepto["id"],"text"=>utf8_encode($iDepto["nombre"]));
+			}
+		}
+
+		$results = array("results"=>$registros,"more"=>false);
+		echo json_encode($results);
 	break;
 
 	case 'sv_depto':
