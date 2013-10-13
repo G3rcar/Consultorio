@@ -18,7 +18,7 @@ $pass = $conexion->escape(utf8_decode($_POST["pass"]));
 $success=array();
 
 //- Escribimos la consulta para buscar al usuario
-$selUser = "SELECT count(id) AS 'total' FROM usuario WHERE cuenta='{$user}'";
+$selUser = "SELECT count(log_id) AS 'total' FROM login WHERE log_usr='{$user}'";
 //- Ejecutamos la consulta y asignamos a la variable $res el resultado del select
 $res = $conexion->execSelect($selUser);
 //- Parseamos el resultado y lo convertimos en un array asociativo
@@ -31,7 +31,7 @@ if($iUsers["total"]!="1"){
 }
 
 //- Repetimos el proceso anterior pero con el usuario y password a la vez
-$selPass = "SELECT count(id) AS 'total',id FROM usuario WHERE cuenta='{$user}' AND contrasena='{$pass}' ";
+$selPass = "SELECT count(log_id) AS 'total',log_id AS 'id' FROM login WHERE log_usr='{$user}' AND log_pss='{$pass}' ";
 $res = $conexion->execSelect($selPass);
 $iUserP = $conexion->fetchArray($res["result"]);
 
@@ -41,7 +41,7 @@ if($iUserP["total"]!="1"){
 	echo json_encode($success); exit(); 
 }
 
-$selPass = "SELECT idcargo FROM empleado WHERE id='".$iUserP["id"]."'";
+$selPass = "SELECT emp_idcar AS 'idcargo' FROM empleado WHERE emp_id='".$iUserP["id"]."'";
 $res = $conexion->execSelect($selPass);
 $iEmp = $conexion->fetchArray($res["result"]);
 $esDoctor = ($iEmp["idcargo"]=="1")?true:false;
