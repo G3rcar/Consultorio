@@ -4,6 +4,7 @@ include("sesion.php");
 include_once("libs/php/class.connection.php");
 
 $botones_menu["limpio"]=true;
+$botones_herramientas["departamentos"]=true;
 
 
 //- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
@@ -21,10 +22,6 @@ include("res/partes/encabezado.php");
 	color: #FFFFFF;
 }
 
-.modalPequena{
-	width:350px;
-	margin-left:-175px;
-}
 </style>
 <!-- /Estilo extra -->
 
@@ -41,20 +38,7 @@ include("res/partes/encabezado.php");
 			
 			<!-- Columna fluida con peso 3/12 -->
 			<div class="span3">
-				<div class="well sidebar-nav">
-					<img id="progressBar_main" src="res/img/loading.gif" class="loading_indicator" />
-					<ul class="nav nav-list">
-						<li class="nav-header">Opciones</li>
-						<li><a id="lnkAgregar" href="#"><i class="icon-plus"></i> Agregar</a></li>
-						<li><a id="lnkBorrar" href="#"><i class="icon-remove"></i> Borrar</a></li>
-						
-						<li class="nav-header">Otros</li>
-						<li class="active"><a href="#">Departamentos</a></li>
-						<li><a href="municipios.php">Municipios</a></li>
-						<li><a href="productos.php">Productos</a></li>
-						<li><a href="proveedores.php">Proveedores</a></li>
-					</ul>
-				</div>
+				<?php include('res/partes/herramientas.catalogos.php'); ?>
 			</div>
 			<!-- /Columna fluida con peso 3/12 -->
 
@@ -83,10 +67,11 @@ include("res/partes/encabezado.php");
 		});
 
 		function validarForm(){
-			var v = $('#nombreDepto').val();
-			if(v==''){
+			var errores = 0;
+			var v1 = $('#nombreDepto').val();
+			if(v1==''){ $('#nombreDepto').addClass('error_requerido'); errores++; }
+			if(errores>0){
 				humane.log('Complete los campos requeridos');
-				$('#nombreDepto_label').addClass('error_requerido');
 				return false;
 			}else{
 				return true;
@@ -111,6 +96,7 @@ include("res/partes/encabezado.php");
 
 			agregar:function(){
 				this.estado = 'agregar';
+				this.id = '';
 				$('#nombreDepto_label').removeClass('error_requerido');
 				$('#nombreDepto').val('');
 				$('#AgregarDepto').modal('show');
@@ -126,7 +112,7 @@ include("res/partes/encabezado.php");
 					complete:function(datos){
 						var T = jQuery.parseJSON(datos.responseText);
 						
-						$('#nombreDepto_label').removeClass('error_requerido');
+						$('#nombreDepto').removeClass('error_requerido');
 						$('#nombreDepto').val(T.nombre);
 						$('#AgregarDepto').modal('show');
 					}
@@ -202,7 +188,7 @@ include("res/partes/encabezado.php");
 		
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-			<h3 id="modalHead">Agregar departamento</h3>
+			<h3 id="modalHead">Departamento</h3>
 		</div>
 		<div class="modal-body">
 			<form>
