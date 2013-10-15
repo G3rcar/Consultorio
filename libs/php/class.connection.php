@@ -23,10 +23,12 @@ class Conexion{
 	public function execSelect($q){
 		$r = mysql_query($q,$this->link);
 		$n = $this->numRows($r);
+		if(mysql_errno($this->link)!=0){ echo "<br/>ERROR (".mysql_errno($this->link)."): ".$q; exit(); }
 		return array("result"=>$r,"num"=>(int)$n);
 	}
 	public function execManto($q){
 		$r = mysql_query($q,$this->link);
+		if(mysql_errno($this->link)!=0){ echo "<br/>ERROR (".mysql_errno($this->link)."): ".$q; exit(); }
 		return (int)mysql_affected_rows($this->link);
 	}
 
