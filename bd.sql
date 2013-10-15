@@ -299,7 +299,7 @@ DROP TABLE IF EXISTS `consultorio`.`cita` ;
 
 CREATE  TABLE IF NOT EXISTS `consultorio`.`cita` (
   `cit_id` INT(8) NOT NULL AUTO_INCREMENT ,
-  `cit_fecha_cita` DATE NOT NULL ,
+  `cit_fecha_cita` DATETIME NOT NULL ,
   `cit_com` VARCHAR(50) CHARACTER SET 'utf8' COLLATE 'utf8_spanish2_ci' NULL DEFAULT NULL ,
   `cit_estado` VARCHAR(1) CHARACTER SET 'utf8' COLLATE 'utf8_spanish2_ci' NOT NULL ,
   `cit_fecha_cre` DATETIME NOT NULL ,
