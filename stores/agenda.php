@@ -79,7 +79,7 @@ switch ($accion) {
 		$id = (int)$conexion->escape($_POST["id"]);
 		$idPaciente = (int)$conexion->escape($_POST["idpaciente"]);
 		$idEmpleado = (int)$conexion->escape($_POST["idempleado"]);
-		$comentario = (string)$conexion->escape($_POST["comentario"]);
+		$comentario = utf8_decode((string)$conexion->escape($_POST["comentario"]));
 		$hi = ((int)$_POST["hinicio"])*60;
 		//$hf = (int)$_POST["hfin"]);
 		$fe = (int)$_POST["fecha"];
