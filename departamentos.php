@@ -163,7 +163,7 @@ include("res/partes/encabezado.php");
 			},
 			borrar:function(id){
 				var tipo = (id)?'uno':'varios';
-				var seleccion = gridCheck.getSelectionJSON('gridDepto');
+				var seleccion = gridCheck.getSelectionJSON('gridDeptos');
 				if(tipo=='varios' && seleccion==false){
 					humane.log('No ha seleccionado ning&uacute;n registro');
 					return;

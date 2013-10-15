@@ -119,7 +119,7 @@ switch ($accion) {
 		if(!isset($_POST["id"])){ exit(); }
 		$id = json_decode($_POST["id"],true);
 
-		$borrarDepto = "DELETE FROM departamento WHERE id = {$id} ";
+		$borrarDepto = "DELETE FROM departamento WHERE dep_id = {$id} ";
 		$res = $conexion->execManto($borrarDepto);
 		if($res>0){
 			$result = array("success"=>"true","msg"=>"El departamento se ha borrado");
@@ -143,7 +143,7 @@ switch ($accion) {
 		for($i=0;$i<$tot;$i++){
 			$id = $ids[$i];
 
-			$borrarDepto = "DELETE FROM departamento WHERE id = {$id} ";
+			$borrarDepto = "DELETE FROM departamento WHERE dep_id = {$id} ";
 			$res = $conexion->execManto($borrarDepto);
 			if(!($res>0)) $errores++;
 		}
