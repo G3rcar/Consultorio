@@ -222,17 +222,17 @@ COLLATE = utf8_spanish2_ci;
 
 
 -- -----------------------------------------------------
--- Table `consultorio`.`accesso`
+-- Table `consultorio`.`acceso`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `consultorio`.`accesso` ;
+DROP TABLE IF EXISTS `consultorio`.`acceso` ;
 
-CREATE  TABLE IF NOT EXISTS `consultorio`.`accesso` (
+CREATE  TABLE IF NOT EXISTS `consultorio`.`acceso` (
   `acc_id` INT(8) NOT NULL AUTO_INCREMENT ,
   `acc_ult` DATETIME NOT NULL ,
   `acc_idlog` INT(8) NOT NULL ,
   PRIMARY KEY (`acc_id`) ,
-  INDEX `fk_accesso_login_idx` (`acc_idlog` ASC) ,
-  CONSTRAINT `fk_accesso_login`
+  INDEX `fk_acceso_login_idx` (`acc_idlog` ASC) ,
+  CONSTRAINT `fk_acceso_login`
     FOREIGN KEY (`acc_idlog` )
     REFERENCES `consultorio`.`login` (`log_id` )
     ON DELETE NO ACTION
@@ -268,7 +268,7 @@ CREATE  TABLE IF NOT EXISTS `consultorio`.`paciente` (
   `pac_fecha_nac` DATE NOT NULL ,
   `pac_peso` DECIMAL(8,2) NULL DEFAULT NULL ,
   `pac_alt` DECIMAL(8,2) NULL DEFAULT NULL ,
-  `pac_gen` VARCHAR(1) CHARACTER SET 'utf8' COLLATE 'utf8_spanish2_ci' NOT NULL ,
+  `pac_gen` ENUM('M','F') CHARACTER SET 'utf8' COLLATE 'utf8_spanish2_ci' NOT NULL ,
   `pac_ale` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_spanish2_ci' NULL DEFAULT NULL ,
   `pac_correo` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_spanish2_ci' NULL DEFAULT NULL ,
   `pac_est` VARCHAR(1) CHARACTER SET 'utf8' COLLATE 'utf8_spanish2_ci' NOT NULL ,
@@ -300,7 +300,7 @@ DROP TABLE IF EXISTS `consultorio`.`cita` ;
 
 CREATE  TABLE IF NOT EXISTS `consultorio`.`cita` (
   `cit_id` INT(8) NOT NULL AUTO_INCREMENT ,
-  `cit_fecha_cita` DATE NOT NULL ,
+  `cit_fecha_cita` DATETIME NOT NULL ,
   `cit_com` VARCHAR(50) CHARACTER SET 'utf8' COLLATE 'utf8_spanish2_ci' NULL DEFAULT NULL ,
   `cit_estado` VARCHAR(1) CHARACTER SET 'utf8' COLLATE 'utf8_spanish2_ci' NOT NULL ,
   `cit_fecha_cre` DATETIME NOT NULL ,

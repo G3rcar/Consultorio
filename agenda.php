@@ -23,11 +23,6 @@ $horai_form = date("h:i a",$hora_inicio);
 
 $fecha_inicial = strtotime("-{$diaSemana} days",$fecha_actual);
 
-//- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
-include("res/partes/encabezado.php");
-
-
-
 //----Impresion de tabla agenda
 //----Aqui se imprimen los bloques HTML de la tabla de agenda donde se insertarán las citas posteriormente
 $hora_contador=$hora_inicio;
@@ -96,7 +91,8 @@ if($res["num"]>0){
 //----Listado de empleados-doctores
 
 
-
+//- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
+include("res/partes/encabezado.php");
 
 ?>
 	<link href="res/css/agenda.css" rel="stylesheet" />

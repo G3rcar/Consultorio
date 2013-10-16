@@ -14,28 +14,26 @@ if(!isset($_POST["action"])){ exit(); }
 $accion = $_POST["action"];
 
 switch ($accion) {
-	case 'gd_depto':
+	case 'gd_tipo':
 
-		$selRes = "SELECT dep_id,dep_nom,pai_nom FROM departamento 
-					INNER JOIN pais ON dep_idpai = pai_id ORDER BY dep_id ";
+		$selRes = "SELECT tps_id AS 'id',tps_tipo_san AS 'nombre' FROM tipo_sangre ORDER BY tps_id ";
 		$res = $conexion->execSelect($selRes);
 		$headers = array(
 			"Nombre",
-			"Pa&iacute;s",
 			//array("width"=>"200","text"=>"Fecha de creaci&oacute;n"),
 			array("width"=>"15","text"=>"&nbsp;"),
 			array("width"=>"15","text"=>"&nbsp;")
 		);
-		$tabla = new GridCheck($headers,"gridDeptos");
+		$tabla = new GridCheck($headers,"gridTipos");
 		if($res["num"]>0){
 			$i=0;
-			while($iDepto = $conexion->fetchArray($res["result"])){
+			while($iTipo = $conexion->fetchArray($res["result"])){
 				//Iconos
-				$editar = "<a href='#' onClick='manto.editar({$iDepto["dep_id"]});' title='Editar' ><i class='icon-edit'></i></a>";
-				$borrar = "<a href='#' onClick='manto.borrar({$iDepto["dep_id"]});' title='Borrar' ><i class='icon-remove'></i></a>";
+				$editar = "<a href='#' onClick='manto.editar({$iTipo["id"]});' title='Editar' ><i class='icon-edit'></i></a>";
+				$borrar = "<a href='#' onClick='manto.borrar({$iTipo["id"]});' title='Borrar' ><i class='icon-remove'></i></a>";
 				
-				$valoresFila = array(utf8_encode($iDepto["dep_nom"]),$iDepto["pai_nom"],$editar,$borrar);
-				$fila = array("id"=>$iDepto["dep_id"],"valores"=>$valoresFila);
+				$valoresFila = array(utf8_encode($iTipo["nombre"]),$editar,$borrar);
+				$fila = array("id"=>$iTipo["id"],"valores"=>$valoresFila);
 				$tabla->nuevaFila($fila);
 			}
 		}
@@ -45,48 +43,26 @@ switch ($accion) {
 		
 	break;
 
-	case 'ls_pais':
-		$query = "";
-		if(isset($_POST["q"]) && $_POST["q"]!=""){
-			$q = $conexion->escape($_POST["q"]);
-			$query = " WHERE pai_nom LIKE '%{$q}%' ";
-		}
-		$selRes = "SELECT pai_id AS 'id',pai_nom AS 'nombre' FROM pais {$query} ORDER BY pai_id";
-		$res = $conexion->execSelect($selRes);
-		
-		$registros=array();
-		if($res["num"]>0){
-			$i=0;
-			while($iDepto = $conexion->fetchArray($res["result"])){
-				$registros[]=array("id"=>$iDepto["id"],"text"=>utf8_encode($iDepto["nombre"]));
-			}
-		}
-
-		$results = array("results"=>$registros,"more"=>false);
-		echo json_encode($results);
-	break;
-
-	case 'sv_depto':
+	case 'sv_tipo':
 		if(!isset($_POST["nombre"])) exit();
 
 		$tipo = ($_POST["id"]=="")?'nuevo':'editar';
 
 		$id = (int)$conexion->escape($_POST["id"]);
 		$nombre = $conexion->escape(utf8_decode($_POST["nombre"]));
-		$pais = (int)$conexion->escape(utf8_decode($_POST["idPais"]));
 		
 		$nuevoDepto = "";
 		if($tipo=='nuevo'){
-			$mantoDepto = "INSERT INTO departamento(dep_nom,dep_idpai) VALUES('{$nombre}','{$pais}') ";
+			$mantoTipo = "INSERT INTO tipo_sangre(tps_tipo_san) VALUES('{$nombre}') ";
 		}else{
-			$mantoDepto = "UPDATE departamento SET dep_nom='{$nombre}', dep_idpai='{$pais}' WHERE dep_id = {$id} ";
+			$mantoTipo = "UPDATE tipo_sangre SET tps_tipo_san='{$nombre}' WHERE tps_id = {$id} ";
 		}
 		
 		$res = 0;
-		$res = $conexion->execManto($mantoDepto);
+		$res = $conexion->execManto($mantoTipo);
 
 		if($res>0){
-			$success = array("success"=>"true","msg"=>"El departamento se ha guardado");
+			$success = array("success"=>"true","msg"=>"El registro se ha guardado");
 		}else{
 			$success = array("success"=>"false","msg"=>"Ha ocurrido un error");
 		}
@@ -94,37 +70,36 @@ switch ($accion) {
 
 	break;
 
-	case 'rt_depto':
+	case 'rt_tipo':
 		$result = array("success"=>"false","msg"=>"");
 
 		if(!isset($_POST["id"])){ exit(); }
 		$id = $conexion->escape($_POST["id"]);
 
-		$selDepto = "SELECT dep_id,dep_nom,pai_id,pai_nom FROM departamento AS d INNER JOIN pais AS p 
-						WHERE dep_id = {$id} ";
-		$res = $conexion->execSelect($selDepto);
+		$selTipo = "SELECT tps_id,tps_tipo_san FROM tipo_sangre WHERE tps_id = {$id} ";
+		$res = $conexion->execSelect($selTipo);
 
 		if($res["num"]>0){
-			$iDepto = $conexion->fetchArray($res["result"]);
-			$result = array("id"=>$iDepto["dep_id"],"nombre"=>utf8_encode($iDepto["dep_nom"]),"idPais"=>$iDepto["pai_id"],"pais"=>utf8_encode($iDepto["pai_nom"]));
+			$iTipo = $conexion->fetchArray($res["result"]);
+			$result = array("id"=>$iTipo["tps_id"],"nombre"=>utf8_encode($iTipo["tps_tipo_san"]));
 		}
 
 		echo json_encode($result);
 
 	break;
 
-	case 'br_depto':
+	case 'br_tipo':
 		$result = array("success"=>"false","msg"=>"");
 
 		if(!isset($_POST["id"])){ exit(); }
 		$id = json_decode($_POST["id"],true);
 
-		$borrarDepto = "DELETE FROM departamento WHERE dep_id = {$id} ";
+		$borrarDepto = "DELETE FROM tipo_sangre WHERE tps_id = {$id} ";
 		$res = $conexion->execManto($borrarDepto);
 		if($res>0){
-			$result = array("success"=>"true","msg"=>"El departamento se ha borrado");
+			$result = array("success"=>"true","msg"=>"El registro se ha borrado");
 		}else{
-			$result = array("success"=>"false","msg"=>"El departamento tiene datos relacionados");
+			$result = array("success"=>"false","msg"=>"El registro tiene datos relacionados");
 		}
 		echo json_encode($result);
 		
@@ -143,16 +118,16 @@ switch ($accion) {
 		for($i=0;$i<$tot;$i++){
 			$id = $ids[$i];
 
-			$borrarDepto = "DELETE FROM departamento WHERE dep_id = {$id} ";
+			$borrarDepto = "DELETE FROM tipo_sangre WHERE tps_id = {$id} ";
 			$res = $conexion->execManto($borrarDepto);
 			if(!($res>0)) $errores++;
 		}
 		if($errores>0 && $errores<$tot){
-			$result = array("success"=>"true","msg"=>"Algunos departamentos no se pudieron eliminar");
+			$result = array("success"=>"true","msg"=>"Algunos registros no se pudieron eliminar");
 		}elseif($errores==$tot){
-			$result = array("success"=>"false","msg"=>"No se pudo eliminar ningun departamento");
+			$result = array("success"=>"false","msg"=>"No se pudo eliminar ningun registros");
 		}else{
-			$result = array("success"=>"true","msg"=>"Los departamentos se han borrado");
+			$result = array("success"=>"true","msg"=>"Los registros se han borrado");
 			
 		}
 		echo json_encode($result);

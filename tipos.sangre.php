@@ -84,8 +84,8 @@ include("res/partes/encabezado.php");
 
 		function cargarTabla(){
 			$.ajax({
-				url:'stores/departamentos.php',
-				data:'action=gd_depto', dataType:'json', type:'POST',
+				url:'stores/tipos.sangre.php',
+				data:'action=gd_tipo', dataType:'json', type:'POST',
 				complete:function(datos){
 					$("#contenedorTabla").html(datos.responseText);
 				}
@@ -100,17 +100,17 @@ include("res/partes/encabezado.php");
 
 			agregar:function(){
 				this.estado = 'agregar';
-				$('#modalHead').html("Agregar Departamento");
+				$('#modalHead').html("Agregar Tipo de Sangre");
 				this.id = '';
 				$('#s2id_idPais').removeClass('error_requerido_sel2');
 				$('#nombreTipo').removeClass('error_requerido');
 				$('#idPais').val('');
 				$('#nombreTipo').val('');
-				$('#AgregarDepto').modal('show');
+				$('#AgregarTipo').modal('show');
 				$("#idPais").select2({
 					placeholder: "Seleccionar",
 					ajax: {
-						url: "stores/departamentos.php", dataType: 'json', type:'POST',
+						url: "stores/tipos.sangre.php", dataType: 'json', type:'POST',
 						data: function (term, page) {
 							return { q: term, action:'ls_pais' };
 						},
@@ -124,22 +124,22 @@ include("res/partes/encabezado.php");
 			},
 			editar:function(id){
 				this.estado = 'editar';
-				$('#modalHead').html("Editar Departamento");
+				$('#modalHead').html("Editar Tipo de Sangre");
 				this.id = id;
 				$.ajax({
-					url:'stores/departamentos.php',
-					data:'action=rt_depto&id='+id, dataType:'json', type:'POST',
+					url:'stores/tipos.sangre.php',
+					data:'action=rt_tipo&id='+id, dataType:'json', type:'POST',
 					complete:function(datos){
 						var T = jQuery.parseJSON(datos.responseText);
 						
 						$('#s2id_idPais').removeClass('error_requerido_sel2');
 						$('#nombreTipo_label').removeClass('error_requerido');
 						$('#nombreTipo').val(T.nombre);
-						$('#AgregarDepto').modal('show');
+						$('#AgregarTipo').modal('show');
 						$("#idPais").select2({
 							placeholder: "Seleccionar",
 							ajax: {
-								url: "stores/departamentos.php", dataType: 'json', type:'POST',
+								url: "stores/tipos.sangre.php", dataType: 'json', type:'POST',
 								data: function (term, page) {
 									return { q: term, action:'ls_pais' };
 								},
@@ -155,19 +155,19 @@ include("res/partes/encabezado.php");
 			},
 			borrar:function(id){
 				var tipo = (id)?'uno':'varios';
-				var seleccion = gridCheck.getSelectionJSON('gridDeptos');
+				var seleccion = gridCheck.getSelectionJSON('gridTipos');
 				if(tipo=='varios' && seleccion==false){
 					humane.log('No ha seleccionado ning&uacute;n registro');
 					return;
 				}
 
 				var ids = (tipo=='uno')?id:seleccion;
-				var action = (tipo=='uno')?'br_depto':'br_variosdepto' ;
+				var action = (tipo=='uno')?'br_tipo':'br_variostipos' ;
 				
-				bootbox.confirm("Â¿Esta seguro de eliminar los registros?", function(confirm) {
+				bootbox.confirm("¿Esta seguro de eliminar los registros?", function(confirm) {
 					if(confirm){
 						$.ajax({
-							url:'stores/departamentos.php',
+							url:'stores/tipos.sangre.php',
 							data:'action='+action+'&id='+ids, dataType:'json', type:'POST',
 							complete:function(datos){
 								var T = jQuery.parseJSON(datos.responseText);
@@ -184,20 +184,19 @@ include("res/partes/encabezado.php");
 				if(!validarForm()){ return; }
 				manto.toggle(false);
 				var nombre = $('#nombreTipo').val();
-				var idPais = $('#idPais').val();
 				
 				if(this.estado=='agregar'){ this.id=''; }
-				var datos = 'action=sv_depto&nombre='+nombre+'&idPais='+idPais+'&id='+this.id;
+				var datos = 'action=sv_tipo&nombre='+nombre+'&id='+this.id;
 
 				$.ajax({
-					url:'stores/departamentos.php',
+					url:'stores/tipos.sangre.php',
 					data:datos, dataType:'json', type:'POST',
 					complete:function(datos){
 						var T = jQuery.parseJSON(datos.responseText);
 
 						humane.log(T.msg);
 						if(T.success=="true"){
-							$('#AgregarDepto').modal('hide');
+							$('#AgregarTipo').modal('hide');
 							manto.toggle(true);
 							cargarTabla();
 						}
@@ -219,11 +218,11 @@ include("res/partes/encabezado.php");
 	<!-- Modales -->
 
 	<!-- Agregar -->
-	<div id="AgregarDepto" class="modal hide fade modalPequena" role="dialog" aria-labelledby="AgregarDepto" aria-hidden="true">
+	<div id="AgregarTipo" class="modal hide fade modalPequena" role="dialog" aria-labelledby="AgregarTipo" aria-hidden="true">
 		
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3 id="modalHead">Departamento</h3>
+			<h3 id="modalHead">Tipo de Sangre</h3>
 		</div>
 		<div class="modal-body">
 			<form>
