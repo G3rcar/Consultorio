@@ -102,25 +102,9 @@ include("res/partes/encabezado.php");
 				this.estado = 'agregar';
 				$('#modalHead').html("Agregar Tipo de Sangre");
 				this.id = '';
-				$('#s2id_idPais').removeClass('error_requerido_sel2');
 				$('#nombreTipo').removeClass('error_requerido');
-				$('#idPais').val('');
 				$('#nombreTipo').val('');
 				$('#AgregarTipo').modal('show');
-				$("#idPais").select2({
-					placeholder: "Seleccionar",
-					ajax: {
-						url: "stores/tipos.sangre.php", dataType: 'json', type:'POST',
-						data: function (term, page) {
-							return { q: term, action:'ls_pais' };
-						},
-						results: function (data, page) {
-							return {results: data.results};
-						}
-					}
-				});
-
-
 			},
 			editar:function(id){
 				this.estado = 'editar';
@@ -132,23 +116,9 @@ include("res/partes/encabezado.php");
 					complete:function(datos){
 						var T = jQuery.parseJSON(datos.responseText);
 						
-						$('#s2id_idPais').removeClass('error_requerido_sel2');
 						$('#nombreTipo_label').removeClass('error_requerido');
 						$('#nombreTipo').val(T.nombre);
 						$('#AgregarTipo').modal('show');
-						$("#idPais").select2({
-							placeholder: "Seleccionar",
-							ajax: {
-								url: "stores/tipos.sangre.php", dataType: 'json', type:'POST',
-								data: function (term, page) {
-									return { q: term, action:'ls_pais' };
-								},
-								results: function (data, page) {
-									return {results: data.results};
-								}
-							}
-						});
-						$("#idPais").select2("data",{id:T.idPais,text:T.pais});
 					}
 				});
 
@@ -227,8 +197,6 @@ include("res/partes/encabezado.php");
 		<div class="modal-body">
 			<form>
 				<fieldset>
-					<label id="idPais_label" class="requerido">Pais</label>
-					<input id="idPais" type="hidden" style="width:100%" >
 					<label id="nombreTipo_label" class="requerido" style="margin-top:5px;">Nombre</label>
 					<input id="nombreTipo" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
 				</fieldset>
