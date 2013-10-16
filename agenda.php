@@ -69,7 +69,7 @@ $fecha_impresion=$fecha_inicial;
 
 //----Listado de empleados-doctores
 $selDoctores = "SELECT e.emp_id AS 'id',CONCAT(e.emp_nom,' ',e.emp_ape) AS 'nombre',c.car_nom 
-				FROM empleado AS e INNER JOIN cargo AS c ON e.emp_idcar = c.car_id WHERE emp_idcar = 1";
+				FROM empleado AS e INNER JOIN cargo AS c ON e.emp_idcar = c.car_id WHERE c.car_es_doctor = 'true'";
 $res = $conexion->execSelect($selDoctores);
 
 $lsDoctores=""; //Almacenará la lista html de los doctores

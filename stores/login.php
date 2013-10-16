@@ -41,10 +41,10 @@ if($iUserP["total"]!="1"){
 	echo json_encode($success); exit(); 
 }
 
-$selPass = "SELECT emp_idcar AS 'idcargo',emp_idsuc FROM empleado WHERE emp_id='".$iUserP["id"]."'";
+$selPass = "SELECT car_es_doctor AS 'isdoctor',emp_idsuc FROM empleado WHERE emp_id='".$iUserP["id"]."'";
 $res = $conexion->execSelect($selPass);
 $iEmp = $conexion->fetchArray($res["result"]);
-$esDoctor = ($iEmp["idcargo"]=="1")?true:false;
+$esDoctor = ($iEmp["isdoctor"]=="true")?true:false;
 
 //- Si llego hasta aqui es porque se encontro el usuario, 
 //- por lo tanto se asignan las variables a la sesion
@@ -53,6 +53,9 @@ $_SESSION["user"] = $user;
 $_SESSION["password"] = $pass;
 $_SESSION["esDoctor"] = $esDoctor;
 $_SESSION["idsucursal"] = $iEmp["emp_idsuc"];
+
+$selPass = "SELECT car_es_doctor AS 'isdoctor',emp_idsuc FROM empleado WHERE emp_id='".$iUserP["id"]."'";
+$res = $conexion->execManto("INSERT INTO ");
 
 $success = array("success"=>"true","t"=>"true","msg"=>"Correcto");
 echo json_encode($success); exit(); 
