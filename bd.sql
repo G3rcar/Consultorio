@@ -13,6 +13,7 @@ DROP TABLE IF EXISTS `consultorio`.`cargo` ;
 
 CREATE  TABLE IF NOT EXISTS `consultorio`.`cargo` (
   `car_id` INT(8) NOT NULL AUTO_INCREMENT ,
+  `car_es_doctor` ENUM('true','false') CHARACTER SET 'utf8' COLLATE 'utf8_spanish2_ci' NOT NULL DEFAULT 'false' ,
   `car_nom` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_spanish2_ci' NOT NULL ,
   `car_fecha_cre` DATETIME NOT NULL ,
   PRIMARY KEY (`car_id`) )
