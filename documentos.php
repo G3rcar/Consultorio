@@ -4,7 +4,7 @@ include("sesion.php");
 include_once("libs/php/class.connection.php");
 
 $botones_menu["limpio"]=true;
-$botones_herramientas["tiposangre"]=true;
+$botones_herramientas["documentos"]=true;
 
 
 //- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
@@ -33,7 +33,7 @@ include("res/partes/encabezado.php");
 <!-- /Scripts extra -->
 
 
-	<h3>Cat&aacute;logos: tipos de sangre</h3>
+	<h3>Cat&aacute;logos: tipos de documentos</h3>
 
 	<div class="container-fluid">
 		<div class="row-fluid">
@@ -82,7 +82,7 @@ include("res/partes/encabezado.php");
 
 		function cargarTabla(){
 			$.ajax({
-				url:'stores/tipos.sangre.php',
+				url:'stores/documentos.php',
 				data:'action=gd_tipo', dataType:'json', type:'POST',
 				complete:function(datos){
 					$("#contenedorTabla").html(datos.responseText);
@@ -98,7 +98,7 @@ include("res/partes/encabezado.php");
 
 			agregar:function(){
 				this.estado = 'agregar';
-				$('#modalHead').html("Agregar Tipo de Sangre");
+				$('#modalHead').html("Agregar Tipo de Documento");
 				this.id = '';
 				$('#nombreTipo').removeClass('error_requerido');
 				$('#nombreTipo').val('');
@@ -106,10 +106,10 @@ include("res/partes/encabezado.php");
 			},
 			editar:function(id){
 				this.estado = 'editar';
-				$('#modalHead').html("Editar Tipo de Sangre");
+				$('#modalHead').html("Editar Tipo de Documento");
 				this.id = id;
 				$.ajax({
-					url:'stores/tipos.sangre.php',
+					url:'stores/documentos.php',
 					data:'action=rt_tipo&id='+id, dataType:'json', type:'POST',
 					complete:function(datos){
 						var T = jQuery.parseJSON(datos.responseText);
@@ -135,7 +135,7 @@ include("res/partes/encabezado.php");
 				bootbox.confirm("¿Esta seguro de eliminar los registros?", function(confirm) {
 					if(confirm){
 						$.ajax({
-							url:'stores/tipos.sangre.php',
+							url:'stores/documentos.php',
 							data:'action='+action+'&id='+ids, dataType:'json', type:'POST',
 							complete:function(datos){
 								var T = jQuery.parseJSON(datos.responseText);
@@ -157,7 +157,7 @@ include("res/partes/encabezado.php");
 				var datos = 'action=sv_tipo&nombre='+nombre+'&id='+this.id;
 
 				$.ajax({
-					url:'stores/tipos.sangre.php',
+					url:'stores/documentos.php',
 					data:datos, dataType:'json', type:'POST',
 					complete:function(datos){
 						var T = jQuery.parseJSON(datos.responseText);
@@ -190,7 +190,7 @@ include("res/partes/encabezado.php");
 		
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3 id="modalHead">Tipo de Sangre</h3>
+			<h3 id="modalHead">Tipo de Documento</h3>
 		</div>
 		<div class="modal-body">
 			<form>

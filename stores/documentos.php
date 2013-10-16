@@ -16,7 +16,7 @@ $accion = $_POST["action"];
 switch ($accion) {
 	case 'gd_tipo':
 
-		$selRes = "SELECT tps_id AS 'id',tps_tipo_san AS 'nombre' FROM tipo_sangre ORDER BY tps_id ";
+		$selRes = "SELECT tip_id AS 'id',tip_nom AS 'nombre' FROM tipo_documento ORDER BY tip_id ";
 		$res = $conexion->execSelect($selRes);
 		$headers = array(
 			"Nombre",
@@ -53,9 +53,9 @@ switch ($accion) {
 		
 		$nuevoDepto = "";
 		if($tipo=='nuevo'){
-			$mantoTipo = "INSERT INTO tipo_sangre(tps_tipo_san) VALUES('{$nombre}') ";
+			$mantoTipo = "INSERT INTO tipo_documento(tip_nom) VALUES('{$nombre}') ";
 		}else{
-			$mantoTipo = "UPDATE tipo_sangre SET tps_tipo_san='{$nombre}' WHERE tps_id = {$id} ";
+			$mantoTipo = "UPDATE tipo_documento SET tip_nom='{$nombre}' WHERE tip_id = {$id} ";
 		}
 		
 		$res = 0;
@@ -76,12 +76,12 @@ switch ($accion) {
 		if(!isset($_POST["id"])){ exit(); }
 		$id = $conexion->escape($_POST["id"]);
 
-		$selTipo = "SELECT tps_id,tps_tipo_san FROM tipo_sangre WHERE tps_id = {$id} ";
+		$selTipo = "SELECT tip_id,tip_nom FROM tipo_documento WHERE tip_id = {$id} ";
 		$res = $conexion->execSelect($selTipo);
 
 		if($res["num"]>0){
 			$iTipo = $conexion->fetchArray($res["result"]);
-			$result = array("id"=>$iTipo["tps_id"],"nombre"=>utf8_encode($iTipo["tps_tipo_san"]));
+			$result = array("id"=>$iTipo["tip_id"],"nombre"=>utf8_encode($iTipo["tip_nom"]));
 		}
 
 		echo json_encode($result);
@@ -94,7 +94,7 @@ switch ($accion) {
 		if(!isset($_POST["id"])){ exit(); }
 		$id = json_decode($_POST["id"],true);
 
-		$borrarDepto = "DELETE FROM tipo_sangre WHERE tps_id = {$id} ";
+		$borrarDepto = "DELETE FROM tipo_documento WHERE tip_id = {$id} ";
 		$res = $conexion->execManto($borrarDepto);
 		if($res>0){
 			$result = array("success"=>"true","msg"=>"El registro se ha borrado");
@@ -118,7 +118,7 @@ switch ($accion) {
 		for($i=0;$i<$tot;$i++){
 			$id = $ids[$i];
 
-			$borrarDepto = "DELETE FROM tipo_sangre WHERE tps_id = {$id} ";
+			$borrarDepto = "DELETE FROM tipo_documento WHERE tip_id = {$id} ";
 			$res = $conexion->execManto($borrarDepto);
 			if(!($res>0)) $errores++;
 		}
