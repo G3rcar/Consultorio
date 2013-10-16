@@ -16,12 +16,18 @@ $accion = $_POST["action"];
 switch ($accion) {
 	case 'gd_suc':
 
-		$selSuc = "SELECT id,nombre,DATE_FORMAT(creacion,'%d/%m/%Y %h:%i %p') AS 'creacion' FROM sucursal ORDER BY id ";
+		$selSuc = " SELECT suc_id,suc_nom,dir_cond,dir_cond2,dir_calle,dir_compcalle, dir_casa, dir_col, dir_dist, dir_ref, dir_fecha_cre, dir_idmun
+		FROM sucursal
+		INNER JOIN direccion ON suc_iddir = dir_id
+		ORDER BY suc_id ";
+
+
+
 		$res = $conexion->execSelect($selSuc);
 		$headers = array(
 			"Nombre",
 			array("width"=>"200","text"=>"Fecha de creaci&oacute;n"),
-			array("width"=>"15","text"=>"&nbsp;"),
+			array("width"=>"200","text"=>"Direccion;"),
 			array("width"=>"15","text"=>"&nbsp;")
 		);
 		$tabla = new GridCheck($headers,"gridSucursales");
@@ -53,7 +59,8 @@ switch ($accion) {
 		
 		$nuevoSuc = "";
 		if($tipo=='nuevo'){
-			$mantoSuc = "INSERT INTO sucursal(nombre,creacion) VALUES('{$nombre}',NOW()) ";
+			$mantoSuc = "INSERT INTO direccion(nombre,creacion) VALUES('{$nombre}',NOW()) ";
+			"INSERT INTO sucursal(nombre,creacion) VALUES('{$nombre}',NOW()) ";
 		}else{
 			$mantoSuc = "UPDATE sucursal SET nombre='{$nombre}' WHERE id = {$id} ";
 		}
