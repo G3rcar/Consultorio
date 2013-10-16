@@ -16,7 +16,7 @@ $accion = $_POST["action"];
 switch ($accion) {
 	case 'gd_pais':
 
-		$selPais = "SELECT id,nombre,DATE_FORMAT(creacion,'%d/%m/%Y %h:%i %p') AS 'creacion' FROM pais ORDER BY id ";
+		$selPais = "SELECT pai_id,pai_nom,DATE_FORMAT(pai_fecha_cre,'%d/%m/%Y %h:%i %p') AS 'pai_fecha_cre' FROM pais ORDER BY pai_id ";
 		$res = $conexion->execSelect($selPais);
 		$headers = array(
 			"Nombre",
@@ -29,11 +29,11 @@ switch ($accion) {
 			$i=0;
 			while($iPais = $conexion->fetchArray($res["result"])){
 				//Iconos
-				$editar = "<a href='#' onClick='manto.editar({$iPais["id"]});' title='Editar' ><i class='icon-edit'></i></a>";
-				$borrar = "<a href='#' onClick='manto.borrar({$iPais["id"]});' title='Borrar' ><i class='icon-remove'></i></a>";
+				$editar = "<a href='#' onClick='manto.editar({$iPais["pai_id"]});' title='Editar' ><i class='icon-edit'></i></a>";
+				$borrar = "<a href='#' onClick='manto.borrar({$iPais["pai_id"]});' title='Borrar' ><i class='icon-remove'></i></a>";
 				
-				$valoresFila = array(utf8_encode($iPais["nombre"]),$iPais["creacion"],$editar,$borrar);
-				$fila = array("id"=>$iPais["id"],"valores"=>$valoresFila);
+				$valoresFila = array(utf8_encode($iPais["pai_nom"]),$iPais["pai_fecha_cre"],$editar,$borrar);
+				$fila = array("pai_id"=>$iPais["pai_id"],"valores"=>$valoresFila);
 				$tabla->nuevaFila($fila);
 			}
 		}
@@ -44,18 +44,18 @@ switch ($accion) {
 	break;
 
 	case 'pais':
-		if(!isset($_POST["nombre"])) exit();
+		if(!isset($_POST["pai_nom"])) exit();
 
-		$tipo = ($_POST["id"]=="")?'nuevo':'editar';
+		$tipo = ($_POST["pai_id"]=="")?'nuevo':'editar';
 
-		$id = (int)$conexion->escape($_POST["id"]);
-		$nombre = $conexion->escape(utf8_decode($_POST["nombre"]));
+		$id = (int)$conexion->escape($_POST["pai_id"]);
+		$nombre = $conexion->escape(utf8_decode($_POST["pai_nombre"]));
 		
 		$nuevoPais = "";
 		if($tipo=='nuevo'){
-			$mantoPais = "INSERT INTO pais(nombre,creacion) VALUES('{$nombre}',NOW()) ";
+			$mantoPais = "INSERT INTO pais(pai_nom,pai_fecha_cre) VALUES('{$nombre}',NOW()) ";
 		}else{
-			$mantoPais = "UPDATE pais SET nombre='{$nombre}' WHERE id = {$id} ";
+			$mantoPais = "UPDATE pais SET pai_nom ='{$nombre}' WHERE pai_id = {$id} ";
 		}
 		
 		$res = 0;
@@ -73,15 +73,15 @@ switch ($accion) {
 	case 'rt_pais':
 		$result = array("success"=>"false","msg"=>"");
 
-		if(!isset($_POST["id"])){ exit(); }
-		$id = $conexion->escape($_POST["id"]);
+		if(!isset($_POST["pai_id"])){ exit(); }
+		$id = $conexion->escape($_POST["pai_id"]);
 
-		$selPais = "SELECT id,nombre FROM pais WHERE id = {$id} ";
+		$selPais = "SELECT pai_id,pai_nom FROM pais WHERE pai_id = {$id} ";
 		$res = $conexion->execSelect($selPais);
 
 		if($res["num"]>0){
 			$iPais = $conexion->fetchArray($res["result"]);
-			$result = array("id"=>$iPais["id"],"nombre"=>utf8_encode($iPais["nombre"]));
+			$result = array("pai_id"=>$iPais["pai_id"],"pai_nombre"=>utf8_encode($iPais["pai_nombre"]));
 		}
 
 		echo json_encode($result);
@@ -91,10 +91,10 @@ switch ($accion) {
 	case 'br_pais':
 		$result = array("success"=>"false","msg"=>"");
 
-		if(!isset($_POST["id"])){ exit(); }
-		$id = json_decode($_POST["id"],true);
+		if(!isset($_POST["pai_id"])){ exit(); }
+		$id = json_decode($_POST["pai_id"],true);
 
-		$borrarPais = "DELETE FROM pais WHERE id = {$id} ";
+		$borrarPais = "DELETE FROM pais WHERE pai_id = {$id} ";
 		$res = $conexion->execManto($borrarPais);
 		if($res>0){
 			$result = array("success"=>"true","msg"=>"El pais se ha borrado");
@@ -108,8 +108,8 @@ switch ($accion) {
 	case 'br_variospais':
 		$result = array("success"=>"false","msg"=>"");
 
-		if(!isset($_POST["id"])){ exit(); }
-		$ids = json_decode($_POST["id"],true);
+		if(!isset($_POST["pai_id"])){ exit(); }
+		$ids = json_decode($_POST["pai_id"],true);
 		$tot = count($ids);
 
 		$errores=0;
@@ -118,7 +118,7 @@ switch ($accion) {
 		for($i=0;$i<$tot;$i++){
 			$id = $ids[$i];
 
-			$borrarPais = "DELETE FROM pais WHERE id = {$id} ";
+			$borrarPais = "DELETE FROM pais WHERE pai_id = {$id} ";
 			$res = $conexion->execManto($borrarPais);
 			if(!($res>0)) $errores++;
 		}
