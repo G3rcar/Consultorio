@@ -31,6 +31,7 @@ DROP TABLE IF EXISTS `consultorio`.`pais` ;
 CREATE  TABLE IF NOT EXISTS `consultorio`.`pais` (
   `pai_id` INT(8) NOT NULL AUTO_INCREMENT ,
   `pai_nom` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_spanish2_ci' NOT NULL ,
+  `pai_fecha_cre` DATETIME NOT NULL ,
   PRIMARY KEY (`pai_id`) )
 ENGINE = InnoDB
 
