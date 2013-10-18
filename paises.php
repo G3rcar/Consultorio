@@ -152,7 +152,7 @@ include("res/partes/encabezado.php");
 				var nombre = $('#nombrePais').val();
 				
 				if(this.estado=='agregar'){ this.id=''; }
-				var datos = 'action=pais&nombre='+nombre+'&id='+this.id;
+				var datos = 'action=sv_pais&nombre='+nombre+'&id='+this.id;
 
 				$.ajax({
 					url:'stores/paises.php',
