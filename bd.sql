@@ -757,7 +757,7 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 
-INSERT INTO `pais`(`pai_id`,`pai_nom`) VALUES(1,'El Salvador');
+INSERT INTO `pais`(`pai_id`,`pai_nom`,`pai_fecha_cre`) VALUES(1,'El Salvador',NOW());
 INSERT INTO `departamento`(`dep_id`,`dep_nom`,`dep_idpai`) VALUES(1,'La Libertad',1);
 INSERT INTO `municipio`(`mun_id`,`mun_nom`,`mun_iddep`) VALUES(1,'Santa Tecla',1);
 
@@ -765,7 +765,7 @@ INSERT INTO `direccion`(`dir_id`,`dir_calle`,`dir_fecha_cre`,`dir_idmun`) VALUES
 INSERT INTO `sucursal`(`suc_id`,`suc_nom`,`suc_iddir`) VALUES(1,'Armenia',1);
 
 
-INSERT INTO `cargo`(`car_id`,`car_nom`,`car_fecha_cre`) VALUES(1,'Doctor',NOW());
+INSERT INTO `cargo`(`car_id`,`car_nom`,`car_es_doctor`,`car_fecha_cre`) VALUES(1,'Doctor','true',NOW());
 INSERT INTO `direccion`(`dir_id`,`dir_calle`,`dir_fecha_cre`,`dir_idmun`) VALUES(2,'Colonia',NOW(),1);
 INSERT INTO `empleado`(`emp_id`,`emp_nom`,`emp_ape`,`emp_fecha_nac`,`emp_gen`,`emp_idsuc`,`emp_idcar`,`emp_iddir`,`emp_fecha_cre`) 
 VALUES(1,'Arturo','Cerna','1970-02-04','M',1,1,2,NOW());
