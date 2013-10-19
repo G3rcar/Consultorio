@@ -23,11 +23,6 @@ $horai_form = date("h:i a",$hora_inicio);
 
 $fecha_inicial = strtotime("-{$diaSemana} days",$fecha_actual);
 
-//- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
-include("res/partes/encabezado.php");
-
-
-
 //----Impresion de tabla agenda
 //----Aqui se imprimen los bloques HTML de la tabla de agenda donde se insertarán las citas posteriormente
 $hora_contador=$hora_inicio;
@@ -68,7 +63,8 @@ $fecha_impresion=$fecha_inicial;
 
 
 //----Listado de empleados-doctores
-$selDoctores = "SELECT id,CONCAT(nombres,' ',apellidos) AS 'nombre' FROM empleado WHERE idcargo = 1";
+$selDoctores = "SELECT e.emp_id AS 'id',CONCAT(e.emp_nom,' ',e.emp_ape) AS 'nombre',c.car_nom 
+				FROM empleado AS e INNER JOIN cargo AS c ON e.emp_idcar = c.car_id WHERE c.car_es_doctor = 'true'";
 $res = $conexion->execSelect($selDoctores);
 
 $lsDoctores=""; //Almacenará la lista html de los doctores
@@ -88,14 +84,15 @@ if($res["num"]>0){
 			$seleccion="";
 		}
 		$lsDoctores.="<option {$seleccion} value='".$iDoc["id"]."' >".utf8_encode($iDoc["nombre"])."</option>";
-		$lsDoctoresWin.="<option {$seleccion} value='".$iDoc["id"]."' >".utf8_encode($iDoc["nombre"])."</option>";
+		$lsDoctoresWin.="<option {$seleccion} value='".$iDoc["id"]."' >".utf8_encode($iDoc["nombre"])." (".utf8_encode($iDoc["car_nom"]).")</option>";
 		$i++;
 	}
 }
 //----Listado de empleados-doctores
 
 
-
+//- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
+include("res/partes/encabezado.php");
 
 ?>
 	<link href="res/css/agenda.css" rel="stylesheet" />
@@ -209,6 +206,8 @@ if($res["num"]>0){
 					<select id="empleado" style="width:100%">
 						<?php echo $lsDoctoresWin; ?>
 					</select>
+					<label id="comentario_label" style="margin-top:10px;">Motivo&nbsp;<small>(M&aacute;x. 50)</small></label>
+					<textarea id="comentario" style="width:96%;height:50px;" placeholder="Escriba una breve descripci&oacute;n del motivo de la cita"></textarea>
 				</fieldset>
 			</form>
 		</div>
@@ -240,6 +239,7 @@ if($res["num"]>0){
 				$("#empleado").select2({ allowClear:true });
 				$("#paciente").select2({
 					placeholder: "Seleccionar",
+					escapeMarkup: function(m) { return m; },
 					ajax: {
 						url: "stores/agenda.php", dataType: 'json', type:'POST',
 						data: function (term, page) {
@@ -258,6 +258,7 @@ if($res["num"]>0){
 				/*$('#hora_fin').timepicker({ 
 					minuteStep: dr_ci, showInputs: true, showSeconds: false, showMeridian: true 
 				}).on("changeTime.timepicker",function(e){ _t.procesarMinutos(e.time,"fin"); });*/
+				$('#comentario').val('').removeClass('error_requerido').attr('title','');
 			},
 			
 			guardar:function(){
@@ -265,16 +266,18 @@ if($res["num"]>0){
 
 				if(!_t.validarForm()){ return; }
 				$('#s2id_paciente').removeClass('error_requerido_sel2');
+				$('#comentario').removeClass('error_requerido').attr('title','');
 
 				_t.toggle(false);
-				var idPaciete = $('#paciente').val();
+				var idPaciente = $('#paciente').val();
 				var hi = _t.hora_inicio;
 				var hf = _t.hora_fin;
 				var fecha = _t.fecha_seleccionada;
 				var idEmpleado = $('#empleado').val();
+				var comentario = $('#comentario').val();
 				
 				if(this.estado=='agregar'){ this.id=''; }
-				var datos = 'action=sv_cita&idpaciente='+idPaciete+'&hinicio='+hi+'&idempleado='+idEmpleado+'&fecha='+fecha+'&id='+this.id;
+				var datos = 'action=sv_cita&idpaciente='+idPaciente+'&hinicio='+hi+'&idempleado='+idEmpleado+'&fecha='+fecha+'&comentario='+comentario+'&id='+this.id;
 				//+'&hfin='+hf
 
 				$.ajax({
@@ -334,11 +337,19 @@ if($res["num"]>0){
 			validarForm:function(){
 				var _t = this;
 				var errores=0;
+				var maximo = 50;
 				var iv1 = $('#paciente').val();
+				var iv2 = $('#comentario').val();
 				var hi = _t.hora_inicio;
 				//var hf = _t.hora_fin;
 
+				//--remover
+				$('#s2id_paciente').removeClass('error_requerido_sel2');
+				$('#comentario').removeClass('error_requerido').attr('title','');
+				//--/remover
+
 				if(iv1==''){ $('#s2id_paciente').addClass('error_requerido_sel2'); errores++; }
+				if(iv2.length>maximo){ $('#comentario').addClass('error_requerido').attr('title','No debe sobrepasar de 50 caracteres'); errores++; }
 				//if(hi>=hf){ $('#hora_fin').addClass('error_requerido'); errores++; }
 				if(errores>0){
 					humane.log('Complete los campos requeridos');

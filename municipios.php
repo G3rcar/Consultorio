@@ -78,16 +78,33 @@ include("res/partes/encabezado.php");
 
 		function validarForm(){
 			var errores=0;
-			var iv1 = $('#idDepto').val();
-			var iv2 = $('#nombreMuni').val();
-			if(iv1==''){ $('#s2id_idDepto').addClass('error_requerido_sel2'); errores++; }
-			if(iv2==''){ $('#nombreMuni').addClass('error_requerido'); errores++; }
+			limpiarValidacion(false);
+
+			var iv1 = $('#idPais').val();
+			var iv2 = $('#idDepto').val();
+			var iv3 = $('#nombreMuni').val();
+			
+			if(iv1==''){ $('#s2id_idPais').addClass('error_requerido_sel2'); errores++; }
+			if(iv2==''){ $('#s2id_idDepto').addClass('error_requerido_sel2'); errores++; }
+			if(iv3==''){ $('#nombreMuni').addClass('error_requerido'); errores++; }
+			if(iv3.length>45){ $('#nombreMuni').addClass('error_requerido').attr('title','No debe sobrepasar los 45 caracteres'); errores++; }
 			if(errores>0){
 				humane.log('Complete los campos requeridos');
 				return false;
 			}else{
 				return true;
 			}
+		}
+		function limpiarValidacion(conTexto){
+			$('#s2id_idPais').removeClass('error_requerido_sel2');
+			$('#s2id_idDepto').removeClass('error_requerido_sel2');
+			$('#nombreMuni').removeClass('error_requerido');
+			if(conTexto){
+				$('#idPais').val('');
+				$('#idDepto').val('');
+				$('#nombreMuni').val('');
+			}
+			manto.toggle(true);
 		}
 
 		function cargarTabla(){
@@ -109,13 +126,40 @@ include("res/partes/encabezado.php");
 			agregar:function(){
 				this.estado = 'agregar';
 				this.id = '';
-				$('#s2id_idDepto').removeClass('error_requerido_sel2');
-				$('#nombreMuni').removeClass('error_requerido');
-				$('#idDepto').val('');
-				$('#nombreMuni').val('');
+				limpiarValidacion(true);
+				
 				$('#AgregarMuni').modal('show');
-				$("#idDepto").select2({
+				$("#idPais").select2({
 					placeholder: "Seleccionar",
+					ajax: {
+						url: "stores/municipios.php", dataType: 'json', type:'POST',
+						data: function (term, page) {
+							return { q: term, action:'ls_pais' };
+						},
+						results: function (data, page) {
+							return {results: data.results};
+						}
+					}
+				});
+				$("#idPais").change(function(){
+					var idPais = $("#idPais").val();
+					$("#idDepto").select2({
+						placeholder: "Seleccionar",
+						ajax: {
+							url: "stores/municipios.php", dataType: 'json', type:'POST',
+							data: function (term, page) {
+								return { q: term, action:'ls_depto', pais:idPais };
+							},
+							results: function (data, page) {
+								return {results: data.results};
+							}
+						}
+					});
+					$("#idDepto").select2("enable",true);
+				});
+
+				$("#idDepto").select2({
+					placeholder: "Seleccionar", enable:false,
 					ajax: {
 						url: "stores/municipios.php", dataType: 'json', type:'POST',
 						data: function (term, page) {
@@ -126,7 +170,7 @@ include("res/partes/encabezado.php");
 						}
 					}
 				});
-
+				$("#idDepto").select2("enable",false);
 
 			},
 			editar:function(id){
@@ -138,22 +182,52 @@ include("res/partes/encabezado.php");
 					complete:function(datos){
 						var T = jQuery.parseJSON(datos.responseText);
 						
-						$('#s2id_idDepto').removeClass('error_requerido_sel2');
-						$('#nombreMuni_label').removeClass('error_requerido');
+						limpiarValidacion(true);
+						
 						$('#nombreMuni').val(T.nombre);
 						$('#AgregarMuni').modal('show');
-						$("#idDepto").select2({
+						$("#idPais").select2({
 							placeholder: "Seleccionar",
 							ajax: {
 								url: "stores/municipios.php", dataType: 'json', type:'POST',
 								data: function (term, page) {
-									return { q: term, action:'ls_depto' };
+									return { q: term, action:'ls_pais' };
 								},
 								results: function (data, page) {
 									return {results: data.results};
 								}
 							}
 						});
+						$("#idPais").change(function(){
+							var idPais = $("#idPais").val();
+							$("#idDepto").select2({
+								placeholder: "Seleccionar",
+								ajax: {
+									url: "stores/municipios.php", dataType: 'json', type:'POST',
+									data: function (term, page) {
+										return { q: term, action:'ls_depto', pais:idPais };
+									},
+									results: function (data, page) {
+										return {results: data.results};
+									}
+								}
+							});
+							$("#idDepto").select2("enable",true);
+						});
+
+						$("#idDepto").select2({
+							placeholder: "Seleccionar",
+							ajax: {
+								url: "stores/municipios.php", dataType: 'json', type:'POST',
+								data: function (term, page) {
+									return { q: term, action:'ls_depto',pais:T.idPais };
+								},
+								results: function (data, page) {
+									return {results: data.results};
+								}
+							}
+						});
+						$("#idPais").select2("data",{id:T.idPais,text:T.pais});
 						$("#idDepto").select2("data",{id:T.idDepto,text:T.depto});
 					}
 				});
@@ -234,6 +308,8 @@ include("res/partes/encabezado.php");
 		<div class="modal-body">
 			<form>
 				<fieldset>
+					<label id="idPais_label" class="requerido">Pais</label>
+					<input id="idPais" type="hidden" style="width:100%" >
 					<label id="idDepto_label" class="requerido">Departamento</label>
 					<input id="idDepto" type="hidden" style="width:100%" >
 					<label id="nombreMuni_label" class="requerido" style="margin-top:5px;">Nombre</label>
