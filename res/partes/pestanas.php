@@ -3,13 +3,16 @@
 		<div class="container">
 			<a class="brand" href="#">Consultorio</a>
 			<ul class="nav pull-right">
+				<li> <a href="#"> <i class="icon-question-sign icon-white"> </i> </a> </li>
+				
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						<?php echo $_SESSION["user"]; ?> <b class="caret"></b>
+						<i class="icon-user icon-white"></i> <b class="caret"></b>
 					</a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
-						<li><a tabindex="-1" href="cuenta.php"><i class="icon-user"></i> Cuenta</a></li>
+						<li class="disabled"><a tabindex="-1" class="username"> <?php echo $_SESSION["nombre"]; ?> </a></li>
 						<li class="divider"></li>
+						<li><a tabindex="-1" href="cuenta.php"><i class="icon-wrench"></i> Cuenta</a></li>
 						<li><a tabindex="-1" href="logout.php"><i class="icon-off"></i> Salir</a></li>
 					</ul>
 				</li>
