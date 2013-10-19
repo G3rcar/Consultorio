@@ -33,7 +33,7 @@ include("res/partes/encabezado.php");
 <!-- /Scripts extra -->
 
 
-	<h3>Cat&aacute;logos: departamentos</h3>
+	<h3>Pacientes</h3>
 
 	<div class="container-fluid">
 		<div class="row-fluid">
