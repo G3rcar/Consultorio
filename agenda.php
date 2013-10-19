@@ -237,6 +237,8 @@ include("res/partes/encabezado.php");
 				$('#ManntoCita').modal('show');
 				
 				$("#empleado").select2({ allowClear:true });
+				$("#paciente").select2("val","");
+
 				$("#paciente").select2({
 					placeholder: "Seleccionar",
 					escapeMarkup: function(m) { return m; },
