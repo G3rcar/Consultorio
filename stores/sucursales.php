@@ -56,13 +56,21 @@ switch ($accion) {
 
 		$id = (int)$conexion->escape($_POST["id"]);
 		$nombre = $conexion->escape(utf8_decode($_POST["nombre"]));
-		
+		$condominio = $conexion->escape(utf8_decode($_POST["condominio"]));
+		$condominio2 = $conexion->escape(utf8_decode($_POST["condominio2"]));
+		$calle = $conexion->escape(utf8_decode($_POST["calle"]));
+		$calleComplemento = $conexion->escape(utf8_decode($_POST["calleComplemento"]));
+		$casa = $conexion->escape(utf8_decode($_POST["casa"]));
+		$colonia = $conexion->escape(utf8_decode($_POST["colonia"]));
+		$distrito = $conexion->escape(utf8_decode($_POST["distrito"]));
+		$referencia = $conexion->escape(utf8_decode($_POST["referencia"]));
 		$nuevoSuc = "";
 		if($tipo=='nuevo'){
-			$mantoSuc = "INSERT INTO direccion(nombre,creacion) VALUES('{$nombre}',NOW()) ";
-			"INSERT INTO sucursal(nombre,creacion) VALUES('{$nombre}',NOW()) ";
+			$mantoSuc = "INSERT INTO direccion(dir_cond,dir_cond2,dir_calle,dir_compcalle, dir_casa, dir_col, dir_dist, dir_ref, dir_fecha_cre) VALUES('{$condominio}','{$condominio2}','{$calle}','{$calleComplemento}','{$casa}','{$colonia}','{$distrito}','{$referencia}',NOW()) ";
+			"INSERT INTO sucursal(suc_nom) VALUES('{$nombre}') ";
 		}else{
 			$mantoSuc = "UPDATE sucursal SET nombre='{$nombre}' WHERE id = {$id} ";
+			"UPDATE sucursal SET nombre='{$nombre}' WHERE id = {$id} ";
 		}
 		
 		$res = 0;
