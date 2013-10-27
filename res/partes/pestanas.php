@@ -42,11 +42,10 @@
 						<b class="caret"></b>
 					</a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
-						<li><a tabindex="-1" href="horarios.php">Horario de atenci&oacute;n</a></li>
+						<li><a tabindex="-1" href="configuracion.php">Configuraciones globales</a></li>
 						<li><a tabindex="-1" href="cargos.php">Cargos</a></li>
 						<li><a tabindex="-1" href="roles.php">Roles</a></li>
 						<li><a tabindex="-1" href="empleados.php">Empleados/Usuarios</a></li>
-						<li><a tabindex="-1" href="configuracion.php">Configuraciones globales</a></li>
 						<li class="divider"></li>
 						<li><a tabindex="-1" href="productos.php">Productos/Servicios</a></li>
 						<li><a tabindex="-1" href="proveedores.php">Proveedores</a></li>
