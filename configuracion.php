@@ -23,11 +23,13 @@ include("res/partes/encabezado.php");
 
 </style>
 <link href="res/css/select2/select2.css" rel="stylesheet"/>
+<link href="res/css/bootstrap/css/bootstrap-timepicker.css" rel="stylesheet"/>
 <!-- /Estilo extra -->
 
 <!-- Scripts extra -->
 <script type="text/javascript" src="libs/js/select2/select2.js"></script>
 <script type="text/javascript" src="libs/js/select2/select2_locale_es.js"></script>
+    <script type="text/javascript" src="libs/js/bootstrap-timepicker.js"></script>
 <script type="text/javascript" src="libs/js/custom/objetos-comunes.js"></script>
 
 <!-- /Scripts extra -->
@@ -47,7 +49,50 @@ include("res/partes/encabezado.php");
 
 			<!-- Columna fluida con peso 9/12 -->
 			<div id="contenedorTabla" class="span9">
-				
+				<form>
+					<fieldset>
+						<legend>General</legend>
+						<div class="span5">
+							<label>Nombre de la Empresa</label>
+							<input type="text" placeholder="Escriba el nombre" style="width:100%;">
+							<span class="help-block">Aparecer&aacute; al momento de iniciar sesi&oacute;n</span>
+
+						</div>
+						<div class="span5">
+							<label>Nombre del Sistema</label>
+							<input type="text" placeholder="Escriba el nombre" style="width:100%;">
+							<span class="help-block">Aparecer&aacute; en la parte superior del sistema</span>
+						</div>
+					</fieldset>
+					<br>
+					<fieldset>
+
+						<legend>Horario</legend>
+						<div class="span5">
+							<label>Hora de inicio</label>
+							<div class="input-append bootstrap-timepicker">
+								<input id="hora_inicio" type="text" class="input-small" style="width:90%">
+								<span class="add-on"><i class="icon-time"></i></span>
+							</div>
+							<span class="help-block">Usado para construir la agenda semanal</span>
+
+							<label>Duraci&oacute;n de las citas</label>
+							<div class="input-append">
+								<input type="number" placeholder="Escriba la duraci&oacute;n..." style="width:81%;">
+								<span class="add-on">minutos</span>
+							</div>
+							
+						</div>
+						<div class="span5">
+							<label>Hora de fin</label>
+							<div class="input-append bootstrap-timepicker">
+								<input id="hora_fin" type="text" class="input-small" style="width:90%">
+								<span class="add-on"><i class="icon-time"></i></span>
+							</div>
+							<span class="help-block">Usado para construir la agenda semanal</span>
+						</div>
+					</fieldset>
+				</form>
 			</div>
 			<!-- /Columna fluida con peso 9/12 -->
 			
@@ -66,6 +111,14 @@ include("res/partes/encabezado.php");
 			$('#lnkAgregar').click(function(){ manto.agregar(); });
 			$('#lnkBorrar').click(function(){ manto.borrar(); });
 			$('#guardarBtn').click(function(){ manto.guardar(); });
+
+			$('#hora_inicio').timepicker({ 
+				minuteStep: 1, showInputs: true, showSeconds: false, showMeridian: true 
+			}).on("changeTime.timepicker",function(e){ manto.procesarMinutos(e.time,"inicio"); });
+			$('#hora_fin').timepicker({ 
+				minuteStep: 1, showInputs: true, showSeconds: false, showMeridian: true 
+			}).on("changeTime.timepicker",function(e){ manto.procesarMinutos(e.time,"fin"); });
+			
 			
 		});
 
@@ -97,6 +150,27 @@ include("res/partes/encabezado.php");
 		var manto = {
 			estado: 'agregar',
 			id:'',
+
+			hora_inicio:0,
+			hora_fin:0,
+
+			procesarMinutos:function(tiempo,tipo){
+				var _t = this;
+				var h = tiempo.hours;
+				var m = tiempo.minutes;
+				var p = tiempo.meridian;
+				h += (p=="PM")?12:0;
+				h = (p=="AM"&&h==12)?0:h;
+				h = h*60;
+				h += m;
+				if(tipo=="inicio"){ _t.hora_inicio = h; }
+				else{ _t.hora_fin = h; }
+			},
+
+
+
+
+
 
 			agregar:function(){
 				this.estado = 'agregar';
