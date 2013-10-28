@@ -66,4 +66,78 @@ class GridCheck{
 }
 
 
+
+
+
+
+
+
+
+
+class Configuracion{
+	private $duracionDefecto = 40;
+	private $inicioDefecto = 1379854800;
+	private $finDefecto = 1379887200;
+	private $empresaDefecto = "Sistema de Control de Citas";
+	private $nombreDefecto = "Consultorio";
+	private $urlArchivo = "libs/config/main.conf";
+	private $configuracion;
+	//--
+	public function __construct(){
+		if(strpos($_SERVER["PHP_SELF"],"stores") !== false){ $this->urlArchivo = "../".$this->urlArchivo; }
+		if(!file_exists($this->urlArchivo)){
+			$this->inicializarArchivo();
+		}
+
+		$this->configuracion = $this->retornarArchivo();
+	}
+
+	public function obtenerConfiguracion(){ return $this->configuracion; }
+	public function guardarConfiguracion($conf){
+		if(!$this->guardar($conf)){
+			echo "Error guardando";
+		}
+	}
+	
+
+
+	private function inicializarArchivo(){
+		if(file_exists($this->urlArchivo)) return false;
+
+		$conf = array(
+			"nombreEmpresa"=>$this->empresaDefecto,
+			"nombreSistema"=>$this->nombreDefecto,
+			"horaInicio"=>$this->inicioDefecto,
+			"horaFin"=>$this->finDefecto,
+			"duracion"=>$this->duracionDefecto
+		);
+
+		$this->guardar($conf);
+		
+	}
+
+
+	private function guardar($conf){
+		if(gettype($conf)!="array") return false;
+		$contenido = json_encode($conf);
+		if(!file_exists($this->urlArchivo)){
+			$archivo = fopen($this->urlArchivo, 'w');
+			fwrite($archivo, $contenido);
+			fclose($archivo);
+		}else{
+			file_put_contents($this->urlArchivo,$contenido);
+		}
+		return true;
+	}
+
+	private function retornarArchivo(){
+		if(file_exists($this->urlArchivo)) $this->inicializarArchivo(); 
+		$contenido = file_get_contents($this->urlArchivo);
+		return json_decode($contenido,true);
+	}
+
+	
+}
+
+
 ?>
