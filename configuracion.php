@@ -2,6 +2,7 @@
 include("sesion.php");
 //- Incluimos la clase de conexion e instanciamos del objeto principal
 include_once("libs/php/class.connection.php");
+include_once("libs/php/class.objetos.base.php");
 
 $botones_menu["limpio"]=true;
 $botones_configuracion["configuracion"]=true;
@@ -9,6 +10,9 @@ $botones_configuracion["configuracion"]=true;
 
 //- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
 include("res/partes/encabezado.php");
+
+$hora_inicio = strtoupper(date("h:i a",$conf["horaInicio"]));
+$hora_fin = strtoupper(date("h:i a",$conf["horaFin"]));
 
 ?>
 <!-- Estilo extra -->
@@ -54,13 +58,13 @@ include("res/partes/encabezado.php");
 						<legend>General</legend>
 						<div class="span5">
 							<label>Nombre de la Empresa</label>
-							<input type="text" placeholder="Escriba el nombre" style="width:100%;">
+							<input id="txtNombreEmpresa" type="text" placeholder="Escriba el nombre" style="width:100%;" value="<?php echo $conf["nombreEmpresa"]; ?>" >
 							<span class="help-block">Aparecer&aacute; al momento de iniciar sesi&oacute;n</span>
 
 						</div>
 						<div class="span5">
 							<label>Nombre del Sistema</label>
-							<input type="text" placeholder="Escriba el nombre" style="width:100%;">
+							<input id="txtNombreSistema" type="text" placeholder="Escriba el nombre" style="width:100%;" value="<?php echo $conf["nombreSistema"]; ?>" >
 							<span class="help-block">Aparecer&aacute; en la parte superior del sistema</span>
 						</div>
 					</fieldset>
@@ -71,14 +75,14 @@ include("res/partes/encabezado.php");
 						<div class="span5">
 							<label>Hora de inicio</label>
 							<div class="input-append bootstrap-timepicker">
-								<input id="hora_inicio" type="text" class="input-small" style="width:90%">
+								<input id="timeHoraInicio" type="text" class="input-small" style="width:90%" value="<?php echo $hora_inicio; ?>" >
 								<span class="add-on"><i class="icon-time"></i></span>
 							</div>
 							<span class="help-block">Usado para construir la agenda semanal</span>
 
 							<label>Duraci&oacute;n de las citas</label>
 							<div class="input-append">
-								<input type="number" placeholder="Escriba la duraci&oacute;n..." style="width:81%;">
+								<input id="txtDuracion" type="text" placeholder="Escriba la duraci&oacute;n..." style="width:81%;" value="<?php echo $conf["duracion"]; ?>" >
 								<span class="add-on">minutos</span>
 							</div>
 							
@@ -86,7 +90,7 @@ include("res/partes/encabezado.php");
 						<div class="span5">
 							<label>Hora de fin</label>
 							<div class="input-append bootstrap-timepicker">
-								<input id="hora_fin" type="text" class="input-small" style="width:90%">
+								<input id="timeHoraFin" type="text" class="input-small" style="width:90%" value="<?php echo $hora_fin; ?>" >
 								<span class="add-on"><i class="icon-time"></i></span>
 							</div>
 							<span class="help-block">Usado para construir la agenda semanal</span>
@@ -106,51 +110,21 @@ include("res/partes/encabezado.php");
 
 	<script>
 		$(document).ready(function(){
-			//cargarTabla();
-
-			$('#lnkAgregar').click(function(){ manto.agregar(); });
-			$('#lnkBorrar').click(function(){ manto.borrar(); });
-			$('#guardarBtn').click(function(){ manto.guardar(); });
-
-			$('#hora_inicio').timepicker({ 
+			$('#lnkGuardar').click(function(){ manto.guardar(); });
+			
+			$('#timeHoraInicio').timepicker({ 
 				minuteStep: 1, showInputs: true, showSeconds: false, showMeridian: true 
 			}).on("changeTime.timepicker",function(e){ manto.procesarMinutos(e.time,"inicio"); });
-			$('#hora_fin').timepicker({ 
+			$('#timeHoraInicio').timepicker('setTime','<?php echo $hora_inicio; ?>');
+
+			$('#timeHoraFin').timepicker({ 
 				minuteStep: 1, showInputs: true, showSeconds: false, showMeridian: true 
 			}).on("changeTime.timepicker",function(e){ manto.procesarMinutos(e.time,"fin"); });
-			
-			
+			$('#timeHoraFin').timepicker('setTime','<?php echo $hora_fin; ?>');
 		});
-
-		function validarForm(){
-			var errores=0;
-			var iv1 = $('#nombreTipo').val();
-			if(iv1==''){ $('#nombreTipo').addClass('error_requerido'); errores++; }
-			if(iv1.length>45){ $('#nombreTipo').addClass('error_requerido').attr('title','No debe sobrepasar de 45 caracteres'); errores++; }
-			if(errores>0){
-				humane.log('Complete los campos requeridos');
-				return false;
-			}else{
-				return true;
-			}
-		}
-
-		function cargarTabla(){
-			$.ajax({
-				url:'stores/documentos.php',
-				data:'action=gd_tipo', dataType:'json', type:'POST',
-				complete:function(datos){
-					$("#contenedorTabla").html(datos.responseText);
-				}
-			});
-		}
-
 
 
 		var manto = {
-			estado: 'agregar',
-			id:'',
-
 			hora_inicio:0,
 			hora_fin:0,
 
@@ -168,83 +142,51 @@ include("res/partes/encabezado.php");
 			},
 
 
+			validarForm:function(){
+				var errores=0;
+				var iv1 = $('#txtNombreEmpresa').val();
+				var iv2 = $('#txtNombreSistema').val();
+				var iv3 = parseInt($('#txtDuracion').val());$('#txtDuracion').val(iv3);
+				var iv4 = manto.hora_inicio;
+				var iv5 = manto.hora_fin;
 
-
-
-
-			agregar:function(){
-				this.estado = 'agregar';
-				$('#modalHead').html("Agregar Tipo de Documento");
-				this.id = '';
-				$('#nombreTipo').removeClass('error_requerido');
-				$('#nombreTipo').val('');
-				$('#AgregarTipo').modal('show');
-			},
-			editar:function(id){
-				this.estado = 'editar';
-				$('#modalHead').html("Editar Tipo de Documento");
-				this.id = id;
-				$.ajax({
-					url:'stores/documentos.php',
-					data:'action=rt_tipo&id='+id, dataType:'json', type:'POST',
-					complete:function(datos){
-						var T = jQuery.parseJSON(datos.responseText);
-						
-						$('#nombreTipo_label').removeClass('error_requerido');
-						$('#nombreTipo').val(T.nombre);
-						$('#AgregarTipo').modal('show');
-					}
-				});
-
-			},
-			borrar:function(id){
-				var tipo = (id)?'uno':'varios';
-				var seleccion = gridCheck.getSelectionJSON('gridTipos');
-				if(tipo=='varios' && seleccion==false){
-					humane.log('No ha seleccionado ning&uacute;n registro');
-					return;
+				if(iv1==''){ $('#txtNombreEmpresa').addClass('error_requerido'); errores++; }
+				if(iv2==''){ $('#txtNombreSistema').addClass('error_requerido'); errores++; }
+				if(iv3==''){ $('#txtDuracion').addClass('error_requerido'); errores++; }
+				if(iv1.length>50){ $('#txtNombreEmpresa').addClass('error_requerido').attr('title','No debe sobrepasar de 50 caracteres'); errores++; }
+				if(iv2.length>50){ $('#txtNombreSistema').addClass('error_requerido').attr('title','No debe sobrepasar de 50 caracteres'); errores++; }
+				if(iv3>720){ $('#txtDuracion').addClass('error_requerido').attr('title','Una cita no debe sobrepasar 12 horas de duracion'); errores++; }
+				if(errores>0){
+					humane.log('Complete los campos requeridos');
+					return false;
+				}else{
+					return true;
 				}
-
-				var ids = (tipo=='uno')?id:seleccion;
-				var action = (tipo=='uno')?'br_tipo':'br_variostipos' ;
-				
-				bootbox.confirm("¿Esta seguro de eliminar los registros?", function(confirm) {
-					if(confirm){
-						$.ajax({
-							url:'stores/documentos.php',
-							data:'action='+action+'&id='+ids, dataType:'json', type:'POST',
-							complete:function(datos){
-								var T = jQuery.parseJSON(datos.responseText);
-								
-								humane.log(T.msg)
-								if(T.success=='true') cargarTabla();
-							}
-						});
-					}
-				}); 
 			},
+
+
+
 
 			guardar:function(){
-				if(!validarForm()){ return; }
-				manto.toggle(false);
-				var nombre = $('#nombreTipo').val();
+				var _t = this;
+				if(!_t.validarForm()){ return; }
+				
+				var empresa = $('#txtNombreEmpresa').val();
+				var sistema = $('#txtNombreSistema').val();
+				var duracion = parseInt($('#txtDuracion').val());
+				var hi = _t.hora_inicio;
+				var hf = _t.hora_fin;
 				
 				if(this.estado=='agregar'){ this.id=''; }
-				var datos = 'action=sv_tipo&nombre='+nombre+'&id='+this.id;
+				var datos = 'action=sv_conf&empresa='+empresa+'&sistema='+sistema+'&duracion='+duracion+'&hinicio='+hi+'&hfin='+hf;
 
 				$.ajax({
-					url:'stores/documentos.php',
+					url:'stores/configuracion.php',
 					data:datos, dataType:'json', type:'POST',
 					complete:function(datos){
 						var T = jQuery.parseJSON(datos.responseText);
 
 						humane.log(T.msg);
-						if(T.success=="true"){
-							$('#AgregarTipo').modal('hide');
-							manto.toggle(true);
-							cargarTabla();
-						}
-						manto.toggle(true);
 					}
 				});
 			},

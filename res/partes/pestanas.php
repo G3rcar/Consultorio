@@ -1,7 +1,7 @@
 <div class="navbar navbar-inverse navbar-fixed-top">
 	<div class="navbar-inner">
 		<div class="container">
-			<a class="brand" href="#">Consultorio</a>
+			<a class="brand" href="#"><?php echo $conf["nombreSistema"]; ?></a>
 			<ul class="nav pull-right">
 				<li> <a href="#"> <i class="icon-question-sign icon-white"> </i> </a> </li>
 				

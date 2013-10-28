@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 	<meta charset="utf-8">
-	<title><?php echo TITULO_SISTEMA; ?></title>
+	<title><?php echo $titulo_sistema; ?></title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="Proyecto ASI 2">
 	<meta name="author" content="@G3rcar">

@@ -11,6 +11,7 @@ $minutos_citas = 40;
 $hora_inicio = 1379854800;
 $hora_fin = 1379887200;
 
+$data = new Configuracion();
 
 //- Si la variable action no viene se detenemos la ejecucion
 if(!isset($_POST["action"])){ exit(); }
@@ -18,110 +19,35 @@ if(!isset($_POST["action"])){ exit(); }
 $accion = $_POST["action"];
 
 switch ($accion) {
-	case 'ls_pacientes':
-		$query = "";
-		if(isset($_POST["q"]) && $_POST["q"]!=""){
-			$q = $conexion->escape($_POST["q"]);
-			$query = " WHERE CONCAT(pac_nom,' ',pac_ape) LIKE '%{$q}%' ";
-		}
-		$selPacientes = "SELECT pac_id AS 'id',CONCAT(pac_nom,' ',pac_ape) AS 'nombre',pac_correo AS 'mail' FROM paciente {$query} ORDER BY pac_nom,pac_ape";
-		$res = $conexion->execSelect($selPacientes);
-		
-		$registros=array();
-		if($res["num"]>0){
-			$i=0;
-			while($iPaci = $conexion->fetchArray($res["result"])){
-				$registros[]=array("id"=>$iPaci["id"],"text"=>utf8_encode($iPaci["nombre"]."<br />".$iPaci["mail"]));
-			}
-		}
 
-		$results = array("results"=>$registros,"more"=>false);
-		echo json_encode($results);
-		
-	break;
+	case 'sv_conf':
+		if(
+			!isset($_POST["empresa"])||
+			!isset($_POST["sistema"])||
+			!isset($_POST["duracion"])||
+			!isset($_POST["hinicio"])||
+			!isset($_POST["hfin"])
+		) exit();
 
-	case 'rt_agenda':
+		$fe = strtotime(date('Y-m-d'));
+		$hi = $fe+(((int)$_POST["hinicio"])*60);
+		$hf = $fe+(((int)$_POST["hfin"])*60	);
 
-		$selCitas = "SELECT c.cit_id AS 'id',CONCAT(p.pac_nom,' ',p.pac_ape) AS 'nombre', DATE_FORMAT(c.cit_fecha_cita,'%Y/%m/%d') AS 'fecha',
-						DATE_FORMAT(c.cit_fecha_cita,'%H:%i') AS 'hora'
-						FROM cita AS c INNER JOIN paciente AS p ON c.cit_idpac = p.pac_id";
-		
-		$res = $conexion->execSelect($selCitas);
-		$citas = array();
+		$conf = array(
+			"nombreEmpresa"=>htmlentities($_POST["empresa"]),
+			"nombreSistema"=>htmlentities($_POST["sistema"]),
+			"horaInicio"=>$hi,
+			"horaFin"=>$hf,
+			"duracion"=>((int)$_POST["duracion"])
+		);
 
-		$registros=array();
-		$i=0;
-		if($res["num"]>0){
-			while($iCita = $conexion->fetchArray($res["result"])){
+		$data->guardarConfiguracion($conf);
 
-				$posicion = calcularCuadroAgenda($iCita["fecha"],$iCita["hora"]);
-
-				$registros[]=array(
-					"id_cita"=>$iCita["id"],
-					"posicion"=>$posicion,
-					"texto_uno"=>utf8_encode($iCita["nombre"]),
-					"texto_dos"=>"&nbsp;"
-				);
-				$i++;
-			}
-		}
-
-		$results = array("citas"=>$registros,"total"=>$i);
-		echo json_encode($results);
-
-	break;
-
-	case 'sv_cita':
-		if(!isset($_POST["idpaciente"])||!isset($_POST["hinicio"])||!isset($_POST["idempleado"])) exit();
-
-		$tipo = ($_POST["id"]=="")?'nuevo':'editar';
-
-		$id = (int)$conexion->escape($_POST["id"]);
-		$idPaciente = (int)$conexion->escape($_POST["idpaciente"]);
-		$idEmpleado = (int)$conexion->escape($_POST["idempleado"]);
-		$comentario = utf8_decode((string)$conexion->escape($_POST["comentario"]));
-		$hi = ((int)$_POST["hinicio"])*60;
-		//$hf = (int)$_POST["hfin"]);
-		$fe = (int)$_POST["fecha"];
-		$fecha = date("Y-m-d H:i:s",$fe+$hi);
-		$idSucursal = $_SESSION["idsucursal"];
-
-		$mantoCita = "";
-		if($tipo=='nuevo'){
-			$mantoCita = "INSERT INTO cita(cit_idpac,cit_fecha_cita,cit_idemp,cit_com,cit_estado,cit_idsuc,cit_fecha_cre) VALUES('{$idPaciente}','{$fecha}','{$idEmpleado}','{$comentario}','1','{$idSucursal}',NOW()) ";
-		}else{
-			$mantoCita = "UPDATE cita SET cit_idpac='{$idPaciente}',cit_idemp='{$idEmpleado}',cit_fecha_cita='{$fecha}',cit_com='{$comentario}' WHERE cit_id = {$id} ";
-		}
-		
-		$res = 0;
-		$res = $conexion->execManto($mantoCita);
-
-		if($res>0){
-			$success = array("success"=>"true","msg"=>"La cita se ha guardado");
-		}else{
-			$success = array("success"=>"false","msg"=>"Ha ocurrido un error");
-		}
+		$success = array("success"=>"true","msg"=>"La configuracion se ha guardado");
 		echo json_encode($success);
+
+
 	break;
-
-
-
-	case 'br_cita':
-		$result = array("success"=>"false","msg"=>"");
-
-		if(!isset($_POST["id"])){ exit(); }
-		$id = json_decode($_POST["id"],true);
-
-		$borrarCita = "DELETE FROM cita WHERE cit_id = {$id} ";
-		$res = $conexion->execManto($borrarCita);
-		if($res>0){
-			$result = array("success"=>"true","msg"=>"La cita se ha borrado");
-		}else{
-			$result = array("success"=>"false","msg"=>"La cita tiene una consulta relacionada");
-		}
-		echo json_encode($result);
-	break;
-
 
 }
 
