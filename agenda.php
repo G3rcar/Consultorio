@@ -9,9 +9,9 @@ $botones_menu["citas"]=true;
 $idUsuario = $_SESSION["iduser"];
 $esDoctor = $_SESSION["esDoctor"];
 
-$minutos_citas = 40;
-$hora_inicio = 1379854800;
-$hora_fin = 1379887200;
+$minutos_citas = $conf["duracion"]; //40;
+$hora_inicio = $conf["horaInicio"]; //1379854800;
+$hora_fin = $conf["horaFin"]; //1379887200;
 $arrayDias = array("1"=>"Lunes","2"=>"Martes","3"=>"Mi&eacute;rcoles","4"=>"Jueves","5"=>"Viernes","6"=>"S&aacute;bado","7"=>"Domingo");
 $fecha_actual = strtotime(date("Y-m-d"));
 
@@ -102,6 +102,9 @@ include("res/partes/encabezado.php");
 		}
 		.headGrid th{
 			color: #FFF;
+		}
+		.item-agenda{
+			transition: all 3s;
 		}
 		
 	</style>
@@ -237,6 +240,8 @@ include("res/partes/encabezado.php");
 				$('#ManntoCita').modal('show');
 				
 				$("#empleado").select2({ allowClear:true });
+				$("#paciente").select2("val","");
+
 				$("#paciente").select2({
 					placeholder: "Seleccionar",
 					escapeMarkup: function(m) { return m; },
@@ -267,8 +272,9 @@ include("res/partes/encabezado.php");
 				if(!_t.validarForm()){ return; }
 				$('#s2id_paciente').removeClass('error_requerido_sel2');
 				$('#comentario').removeClass('error_requerido').attr('title','');
-
+				
 				_t.toggle(false);
+				
 				var idPaciente = $('#paciente').val();
 				var hi = _t.hora_inicio;
 				var hf = _t.hora_fin;
@@ -360,8 +366,8 @@ include("res/partes/encabezado.php");
 			},
 
 			toggle:function(v){
-				if(v){ $('#guardarCita').removeClass('disabled').html('Guardar'); }
-				else{ $('#guardarCita').addClass('disabled').html('Guardando...'); }
+				if(v){ $('#guardarCita').removeAttr('disabled').html('Guardar'); }
+				else{ $('#guardarCita').attr('disabled','disabled').html('Guardando...'); }
 			}
 		}
 

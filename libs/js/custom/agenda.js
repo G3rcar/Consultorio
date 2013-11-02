@@ -32,7 +32,7 @@ var mainAgenda = {
 	},
 
 	obtenerEvento:function(id,texto_uno,texto_dos){
-		return '<table id="contenedor_'+id+'" class="has-events" height="90%" width="100%"><tr><td><div id="evento_'+id+'" p:id="'+id+'" class="has-events row-fluid practice">'+
+		return '<table id="contenedor_'+id+'" class="item-agenda has-events" height="90%" width="100%"><tr><td><div id="evento_'+id+'" p:id="'+id+'" class="has-events row-fluid practice">'+
 		'<span class="title">'+texto_uno+'</span>'+
 		'<span class="lecturer">'+texto_dos+'</span> '+
 		'<span class="buttons">'+
