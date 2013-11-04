@@ -272,8 +272,9 @@ include("res/partes/encabezado.php");
 				if(!_t.validarForm()){ return; }
 				$('#s2id_paciente').removeClass('error_requerido_sel2');
 				$('#comentario').removeClass('error_requerido').attr('title','');
-
+				
 				_t.toggle(false);
+				
 				var idPaciente = $('#paciente').val();
 				var hi = _t.hora_inicio;
 				var hf = _t.hora_fin;
@@ -365,8 +366,8 @@ include("res/partes/encabezado.php");
 			},
 
 			toggle:function(v){
-				if(v){ $('#guardarCita').removeClass('disabled').html('Guardar'); }
-				else{ $('#guardarCita').addClass('disabled').html('Guardando...'); }
+				if(v){ $('#guardarCita').removeAttr('disabled').html('Guardar'); }
+				else{ $('#guardarCita').attr('disabled','disabled').html('Guardando...'); }
 			}
 		}
 
