@@ -50,15 +50,13 @@ include("res/partes/encabezado.php");
 					</ul>
 				</div>
 			</div>
-			<!-- /Columna fluida con peso 3/12 -->
-
-
-			<!-- Columna fluida con peso 9/12 -->
-			<div id="contenedorTabla" class="span9">
-				<!-- Aqui se cargaran los datos del catalogo -->
-			</div>
-			<!-- /Columna fluida con peso 9/12 -->
+			
 			
 
 		</div>
 	</div>
+
+
+			
+			
+		

@@ -3,9 +3,12 @@ include("sesion.php");
 //- Incluimos la clase de conexion e instanciamos del objeto principal
 include_once("libs/php/class.connection.php");
 
+
+
 $botones_menu["limpio"]=true;
 $botones_herramientas["pacientes"]=true;
-
+$consulta="SELECT pai_id,pai_nom FROM pais ORDER BY pai_id ASC ";
+$result=mysql_query($consulta);
 
 //- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
 include("res/partes/encabezado.php");
@@ -49,26 +52,79 @@ include("res/partes/encabezado.php");
 			</div>
 			<!-- /Columna fluida con peso 3/12 -->
 
-
 			
-
-
 			<div class="span9">
 			
 				<form action= "#" method ="POST">
 					<label>Nombres</label> 
-					<input type="text" name="nombres" class="span7"><br>
+					<input type="text" name="nombres" class="span8"><br>
+
 					<label>Apellidos</label>
-					<input type="text" name ="apellido" class="span7"><br>
-	                <label>Fecah de Nacimiento</label>
+					<input type="text" name ="apellido" class="span8"><br>
+	                <label>Fecha de Nacimiento</label>
 					<input type="date" name="fecha nac">
+
+					 <fieldset>
+					 <div class="span5">
 					<label>Peso</label>
-					<input type="text" name="peso" class="span2"><br>
-                    <label>Genero</label>
-                    <input type="radio" name="genero" value="masculino" calss="span2">Masculino 
-					<input type="radio" name="genero" value="femenino" >Femenino 
-  					
-  					<label>Departamento</label>
-  					
+					<input type="text" name="peso" ><br>
+					</div>
+					<div class="span5">
+					<label>Altura</label>
+					<input type="text" name="pac_alt">
+				    </div>
+					</fieldset>
+				
 					
-			</div>
+					<label>Alergias</label>
+  					<textarea rows="3"  cols= 50 class="span9"  ></textarea>
+  				    
+  				   
+                    <label>Genero</label>
+                    <input type="radio" name="genero" value="masculino" > Masculino 
+					<input type="radio" name="genero" value="femenino" >  Femenino <br>
+  					<br>
+  					
+  				  <!--<label>Pais</label>-->
+  				  	<fieldset>
+	  				  <div class="span5">
+	  				  <label>Pais</label>
+					  <select >
+					  <option>El Salvador </option>
+					  <option>Hondura</option>
+					  <option>Costa Rica</option>
+					  <option>Panama</option>
+					  <option>Estados Unidos</option>
+					</select>
+					</div>
+
+					<div calss="span5">
+					<label>Municipio</label>
+					<select>
+					<option>Mejicanos</option>
+					<otion>Ayutuxtepeque</option>
+			    	</select>
+					</div>
+					</fieldset>
+
+					<label>Dirección</label>
+				    <textarea rows="3"  cols= 50 class="span9"></textarea>
+ 					
+
+  					<fieldset>
+  					<div class="span5">
+  				 	 <label>Telefono Casa</label>
+  				 	 <input type="text" name="telefono_paciente">
+					</div>
+					<div class="span5">
+                 	 <label>Telefono Celular</label>
+			     	 <input type="text" name="Celular_paciete">
+		          	 </select>
+  				  	</div>
+
+  				  				
+				
+					 </ul>
+					</div>
+
+  				  
