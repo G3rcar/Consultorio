@@ -2,19 +2,20 @@
 include("sesion.php");
 //- Incluimos la clase de conexion e instanciamos del objeto principal
 include_once("libs/php/class.connection.php");
+include_once("libs/php/class.objetos.base.php");
 
 $botones_menu["limpio"]=true;
-$botones_herramientas["sucursales"]=true;
+$botones_configuracion["configuracion"]=true;
 
 
 //- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
 include("res/partes/encabezado.php");
 
+
 ?>
 <!-- Estilo extra -->
 <style>
 .sidebar-nav { padding: 9px 0; }
-
 .headGrid{
 	background-color: #33b5e5;
 }
@@ -23,47 +24,89 @@ include("res/partes/encabezado.php");
 }
 
 </style>
+<link href="res/css/select2/select2.css" rel="stylesheet"/>
+<link href="res/css/bootstrap/css/bootstrap-timepicker.css" rel="stylesheet"/>
 <!-- /Estilo extra -->
 
 <!-- Scripts extra -->
+<script type="text/javascript" src="libs/js/select2/select2.js"></script>
+<script type="text/javascript" src="libs/js/select2/select2_locale_es.js"></script>
+    <script type="text/javascript" src="libs/js/bootstrap-timepicker.js"></script>
 <script type="text/javascript" src="libs/js/custom/objetos-comunes.js"></script>
 
 <!-- /Scripts extra -->
 
 
-	<h3>Cat&aacute;logos: sucursales</h3>
+	<h3>Sucursales</h3>
 
 	<div class="container-fluid">
 		<div class="row-fluid">
 			
 			<!-- Columna fluida con peso 3/12 -->
 			<div class="span3">
-			<div class="well sidebar-nav">
-	<img id="progressBar_main" src="res/img/loading.gif" class="loading_indicator_mannto" />
-	<ul class="nav nav-list">
-		<li class="nav-header">Opciones</li>
-		<li><a id="lnkAgregar" href="agenda.php"><i class="icon-plus"></i> Agregar</a></li>
-		<li><a id="lnkBorrar" href="#"><i class="icon-remove"></i> Borrar</a></li>
-		
-		<li class="nav-header">Cat&aacute;logos</li>
-		<li <?php echo ($botones_herramientas["paises"]?'class="active" ':''); ?> ><a href="paises.php">Paises</a></li>
-		<li <?php echo ($botones_herramientas["departamentos"]?'class="active" ':''); ?> ><a href="departamentos.php">Departamentos</a></li>
-		<li <?php echo ($botones_herramientas["municipios"]?'class="active" ':''); ?> ><a href="municipios.php">Municipios</a></li>
-		<li <?php echo ($botones_herramientas["sucursales"]?'class="active" ':''); ?> ><a href="sucursales.php">Sucursales</a></li>
-		<hr />
-		<li <?php echo ($botones_herramientas["documentos"]?'class="active" ':''); ?> ><a href="documentos.php">Tipos de documento</a></li>
-		<li <?php echo ($botones_herramientas["movimientos"]?'class="active" ':''); ?> ><a href="movimientos.php">Tipos de movimiento</a></li>
-		<li <?php echo ($botones_herramientas["tiposangre"]?'class="active" ':''); ?> ><a href="tipos.sangre.php">Tipos de sangre</a></li>
-	</ul>
-</div>
+				<?php include('res/partes/herramientas.catalogos.php'); ?>
 			</div>
 			<!-- /Columna fluida con peso 3/12 -->
 
 
 			<!-- Columna fluida con peso 9/12 -->
-
-			<div id="contenedorTabla" class="span9">
+			<div id="AgregarSuc" class="span9">
+				<form>
+					<fieldset>
+						<legend>General</legend>
+						<div class="span5">
+							<label id="nombreSuc_label" class="requerido">Nombre de la Sucursal</label>
 				
+					  <input id="nombreSuc" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
+
+						</div>
+						
+					</fieldset>
+					<br>
+					<fieldset>
+
+						<legend>Direccion</legend>
+							<div class="span5">
+							<label id="condominioDir_label">Condominio</label>
+					<input id="condominioDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
+					</div>
+						<div class="span5">
+					<label id="condominio2Dir_label" >Condominio 2</label>
+					<input id="condominio2Dir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
+					</div>
+						<div class="span5">
+					</div>
+						<div class="span5">
+					<label id="calleDir_label" class="requerido">Calle</label>
+					<input id="calleDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
+					</div>
+						<div class="span5">
+					<label id="complementocalleDir_label" >Complemento Calle</label>
+					<input id="complementocalleDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
+					</div>
+						<div class="span5">
+					<label id="casaDir_label" class="requerido">Casa</label>
+					<input id="casaDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
+					</div>
+						<div class="span5">
+					<label id="coloniaDir_label" >Colonia</label>
+					<input id="coloniaDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
+					</div>
+						<div class="span5">
+					<label id="distritoDir_label">Distrito</label>
+					<input id="distritoDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
+					</div>
+						<div class="span5">
+					<label id="referenciaDir_label">Referencia</label>
+					<input id="referenciaDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
+				</div>
+						<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+			<button id="guardarBtn" class="btn btn-primary">Guardar</button>
+		</div>
+					</fieldset>
+					<br>
+				</form>
 			</div>
 			<!-- /Columna fluida con peso 9/12 -->
 			
@@ -72,6 +115,8 @@ include("res/partes/encabezado.php");
 	</div>
 
 	<!-- Scripts -->
+
+	
 
 	<script>
 		$(document).ready(function(){
@@ -209,45 +254,7 @@ include("res/partes/encabezado.php");
 	<!-- Modales -->
 
 	<!-- Agregar -->
-	<div id="AgregarSuc" class="modal hide fade modalPequena" tabindex="-1" role="dialog" aria-labelledby="AgregarSuc" aria-hidden="true">
-		
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">Ã—</button>
-			<h3 id="modalHead">Agregar sucursal</h3>
-		</div>
-		<div class="modal-body">
-			<form>
-				<fieldset>
-					<label id="nombreSuc_label" class="requerido">Nombre</label>
-					<input id="nombreSuc" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-					<label id="condominioDir_label">Condominio</label>
-					<input id="condominioDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-					<label id="condominio2Dir_label" >Condominio 2</label>
-					<input id="condominio2Dir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-					<label id="calleDir_label" class="requerido">Calle</label>
-					<input id="calleDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-					<label id="complementocalleDir_label" >Complemento Calle</label>
-					<input id="complementocalleDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-					<label id="casaDir_label" class="requerido">Casa</label>
-					<input id="casaDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-					<label id="coloniaDir_label" >Colonia</label>
-					<input id="coloniaDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-					<label id="distritoDir_label">Distrito</label>
-					<input id="distritoDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-					<label id="referenciaDir_label">Referencia</label>
-					<input id="referenciaDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-					
-					
-				</fieldset>
-			</form>
-		</div>
-		<div class="modal-footer">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-			<button id="guardarSuc" class="btn btn-primary">Guardar</button>
-		</div>
-
-	</div>
-
+	
 
 
 <?php include('res/partes/pie.pagina.php'); ?>
