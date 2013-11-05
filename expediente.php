@@ -7,7 +7,7 @@ include_once("libs/php/class.connection.php");
 
 $botones_menu["limpio"]=true;
 $botones_herramientas["pacientes"]=true;
-$consulta="SELECT pai_id,pai_nom FROM pais ORDER BY pai_id ASC ";
+$consulta="SELECT pac_id,pac_nom FROM paciente ORDER BY pac_id ASC ";
 $result=mysql_query($consulta);
 
 //- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
@@ -55,23 +55,24 @@ include("res/partes/encabezado.php");
 			
 			<div class="span9">
 			
-				<form action= "#" method ="POST">
+				<form action= "#" method ="POST" onsubmit="return  validacion()" >
 					<label>Nombres</label> 
-					<input type="text" name="nombres" class="span8"><br>
+					<input id="txtNompaciente" type="text" placeholder="Escriba el nombre" style="width:70%;">
 
-					<label>Apellidos</label>
-					<input type="text" name ="apellido" class="span8"><br>
+					<!--<input type="text" name="pac_nom" class="span8"><br>-->
+                    <label>Apellidos</label>
+					<input id="txtApellidoPac" type="text" placeholder="Escriba el Apellido" style="width:70%;">
 	                <label>Fecha de Nacimiento</label>
-					<input type="date" name="fecha nac">
+					<input type="date" name="pac_fecha_nac">
 
 					 <fieldset>
 					 <div class="span5">
 					<label>Peso</label>
-					<input type="text" name="peso" ><br>
+					<input id="txtPesopac" type="text" placeholder="Escriba el peso" ><br>
 					</div>
 					<div class="span5">
 					<label>Altura</label>
-					<input type="text" name="pac_alt">
+					<input id="txtAltpac" type="text" placeholder="Escriba la altura" >
 				    </div>
 					</fieldset>
 				
@@ -81,8 +82,8 @@ include("res/partes/encabezado.php");
   				    
   				   
                     <label>Genero</label>
-                    <input type="radio" name="genero" value="masculino" > Masculino 
-					<input type="radio" name="genero" value="femenino" >  Femenino <br>
+                    <input type="radio" name="pac_gen" value="masculino" > Masculino 
+					<input type="radio" name="pac_gen" value="femenino" >  Femenino <br>
   					<br>
   					
   				  <!--<label>Pais</label>-->
@@ -102,29 +103,47 @@ include("res/partes/encabezado.php");
 					<label>Municipio</label>
 					<select>
 					<option>Mejicanos</option>
-					<otion>Ayutuxtepeque</option>
+					<option>Ayutuxtepeque</option>
 			    	</select>
 					</div>
 					</fieldset>
 
 					<label>Dirección</label>
-				    <textarea rows="3"  cols= 50 class="span9"></textarea>
- 					
+				    <textarea rows="3"  cols= 50 class="span9" placeholder="Escriba la direccion"></textarea>
+				  
+ 	
 
   					<fieldset>
   					<div class="span5">
   				 	 <label>Telefono Casa</label>
-  				 	 <input type="text" name="telefono_paciente">
+  				 	<input id="txtTelpac" type="text" placeholder="Escriba el telefono" >
 					</div>
 					<div class="span5">
                  	 <label>Telefono Celular</label>
-			     	 <input type="text" name="Celular_paciete">
+			     	<input id="txtCelc" type="text" placeholder="Escriba el telefono" >
 		          	 </select>
   				  	</div>
-
-  				  				
-				
-					 </ul>
+  				  	</fieldset>
+					
+				<div calss="span5">
+  				  	<label>Fecha de Creación Expediente</label>
+					<input type="date" name="pac_fecha_cre">
 					</div>
 
-  				  
+				
+					</div>
+
+			
+		
+
+			
+
+
+<?php include('res/partes/pie.pagina.php'); ?>
+
+
+
+
+			
+			
+				

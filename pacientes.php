@@ -10,6 +10,20 @@ $botones_herramientas["pacientes"]=true;
 //- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
 include("res/partes/encabezado.php");
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ?>
 <!-- Estilo extra -->
 <style>
@@ -56,7 +70,3 @@ include("res/partes/encabezado.php");
 		</div>
 	</div>
 
-
-			
-			
-		
