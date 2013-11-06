@@ -3,8 +3,8 @@ include("sesion.php");
 //- Incluimos la clase de conexion e instanciamos del objeto principal
 include_once("libs/php/class.connection.php");
 
-$botones_menu["limpio"]=true;
-$botones_herramientas["departamentos"]=true;
+$botones_menu["reportes"]=true;
+$botones_herramientas["consolidadoFactura"]=true;
 
 
 //- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
@@ -33,14 +33,14 @@ include("res/partes/encabezado.php");
 <!-- /Scripts extra -->
 
 
-	<h3>Cat&aacute;logos: departamentos</h3>
+	<h3>Reporte: Consolidado Factura</h3>
 
 	<div class="container-fluid">
 		<div class="row-fluid">
 			
 			<!-- Columna fluida con peso 3/12 -->
 			<div class="span3">
-				<?php include('res/partes/herramientas.catalogos.php'); ?>
+				<?php include('res/partes/herramientas.reporte.php'); ?>
 			</div>
 			<!-- /Columna fluida con peso 3/12 -->
 
@@ -66,12 +66,12 @@ include("res/partes/encabezado.php");
 			$('#lnkAgregar').click(function(){ manto.agregar(); });
 			$('#lnkBorrar').click(function(){ manto.borrar(); });
 			$('#guardarDepto').click(function(){ manto.guardar(); });
-//			cargarLista();
+			cargarLista();
 
 		});
 
 		function cargarLista(){
-			$.ajax("stores/departamentos.php", {
+			$.ajax("reportes/consolidadoFactura.php", {
 				data:'action=ls_depto', dataType:'json', type:'POST'
 			}).success(function(data) { preloadedPaises = data.results; console.log(preloadedPaises); });
 		}
@@ -163,7 +163,7 @@ include("res/partes/encabezado.php");
 			},
 			borrar:function(id){
 				var tipo = (id)?'uno':'varios';
-				var seleccion = gridCheck.getSelectionJSON('gridDepto');
+				var seleccion = gridCheck.getSelectionJSON('gridDeptos');
 				if(tipo=='varios' && seleccion==false){
 					humane.log('No ha seleccionado ning&uacute;n registro');
 					return;
@@ -172,7 +172,7 @@ include("res/partes/encabezado.php");
 				var ids = (tipo=='uno')?id:seleccion;
 				var action = (tipo=='uno')?'br_depto':'br_variosdepto' ;
 				
-				bootbox.confirm("Â¿Esta seguro de eliminar los registros?", function(confirm) {
+				bootbox.confirm("¿Esta seguro de eliminar los registros?", function(confirm) {
 					if(confirm){
 						$.ajax({
 							url:'stores/departamentos.php',

@@ -68,9 +68,8 @@ $fecha_impresion=$fecha_inicial;
 
 
 //----Listado de empleados-doctores
-$selDoctores = "SELECT id,CONCAT(emp_nom,' ',emp_ape) AS 'nombre' FROM empleado WHERE idcargo = 1";
+$selDoctores = "SELECT id, CONCAT(emp_nom,' ',emp_ape) AS 'nombre' FROM empleado WHERE idcargo = 1";
 $res = $conexion->execSelect($selDoctores);
-
 $lsDoctores=""; //Almacenará la lista html de los doctores
 $lsDoctoresWin=""; //Almacenará la lista html de los doctores para la ventana
 $seleccion=""; //Decidirá si un registro será autoseleccionado o no
