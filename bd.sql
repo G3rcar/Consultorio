@@ -13,6 +13,7 @@ DROP TABLE IF EXISTS `consultorio`.`cargo` ;
 
 CREATE  TABLE IF NOT EXISTS `consultorio`.`cargo` (
   `car_id` INT(8) NOT NULL AUTO_INCREMENT ,
+  `car_es_doctor` ENUM('true','false') CHARACTER SET 'utf8' COLLATE 'utf8_spanish2_ci' NOT NULL DEFAULT 'false' ,
   `car_nom` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_spanish2_ci' NOT NULL ,
   `car_fecha_cre` DATETIME NOT NULL ,
   PRIMARY KEY (`car_id`) )
@@ -30,6 +31,7 @@ DROP TABLE IF EXISTS `consultorio`.`pais` ;
 CREATE  TABLE IF NOT EXISTS `consultorio`.`pais` (
   `pai_id` INT(8) NOT NULL AUTO_INCREMENT ,
   `pai_nom` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_spanish2_ci' NOT NULL ,
+  `pai_fecha_cre` DATETIME NOT NULL ,
   PRIMARY KEY (`pai_id`) )
 ENGINE = InnoDB
 
@@ -221,17 +223,17 @@ COLLATE = utf8_spanish2_ci;
 
 
 -- -----------------------------------------------------
--- Table `consultorio`.`accesso`
+-- Table `consultorio`.`acceso`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `consultorio`.`accesso` ;
+DROP TABLE IF EXISTS `consultorio`.`acceso` ;
 
-CREATE  TABLE IF NOT EXISTS `consultorio`.`accesso` (
+CREATE  TABLE IF NOT EXISTS `consultorio`.`acceso` (
   `acc_id` INT(8) NOT NULL AUTO_INCREMENT ,
   `acc_ult` DATETIME NOT NULL ,
   `acc_idlog` INT(8) NOT NULL ,
   PRIMARY KEY (`acc_id`) ,
-  INDEX `fk_accesso_login_idx` (`acc_idlog` ASC) ,
-  CONSTRAINT `fk_accesso_login`
+  INDEX `fk_acceso_login_idx` (`acc_idlog` ASC) ,
+  CONSTRAINT `fk_acceso_login`
     FOREIGN KEY (`acc_idlog` )
     REFERENCES `consultorio`.`login` (`log_id` )
     ON DELETE NO ACTION
@@ -267,7 +269,7 @@ CREATE  TABLE IF NOT EXISTS `consultorio`.`paciente` (
   `pac_fecha_nac` DATE NOT NULL ,
   `pac_peso` DECIMAL(8,2) NULL DEFAULT NULL ,
   `pac_alt` DECIMAL(8,2) NULL DEFAULT NULL ,
-  `pac_gen` VARCHAR(1) CHARACTER SET 'utf8' COLLATE 'utf8_spanish2_ci' NOT NULL ,
+  `pac_gen` ENUM('M','F') CHARACTER SET 'utf8' COLLATE 'utf8_spanish2_ci' NOT NULL ,
   `pac_ale` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_spanish2_ci' NULL DEFAULT NULL ,
   `pac_correo` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_spanish2_ci' NULL DEFAULT NULL ,
   `pac_est` VARCHAR(1) CHARACTER SET 'utf8' COLLATE 'utf8_spanish2_ci' NOT NULL ,
@@ -299,7 +301,7 @@ DROP TABLE IF EXISTS `consultorio`.`cita` ;
 
 CREATE  TABLE IF NOT EXISTS `consultorio`.`cita` (
   `cit_id` INT(8) NOT NULL AUTO_INCREMENT ,
-  `cit_fecha_cita` DATE NOT NULL ,
+  `cit_fecha_cita` DATETIME NOT NULL ,
   `cit_com` VARCHAR(50) CHARACTER SET 'utf8' COLLATE 'utf8_spanish2_ci' NULL DEFAULT NULL ,
   `cit_estado` VARCHAR(1) CHARACTER SET 'utf8' COLLATE 'utf8_spanish2_ci' NOT NULL ,
   `cit_fecha_cre` DATETIME NOT NULL ,
@@ -755,7 +757,7 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 
-INSERT INTO `pais`(`pai_id`,`pai_nom`) VALUES(1,'El Salvador');
+INSERT INTO `pais`(`pai_id`,`pai_nom`,`pai_fecha_cre`) VALUES(1,'El Salvador',NOW());
 INSERT INTO `departamento`(`dep_id`,`dep_nom`,`dep_idpai`) VALUES(1,'La Libertad',1);
 INSERT INTO `municipio`(`mun_id`,`mun_nom`,`mun_iddep`) VALUES(1,'Santa Tecla',1);
 
@@ -763,7 +765,7 @@ INSERT INTO `direccion`(`dir_id`,`dir_calle`,`dir_fecha_cre`,`dir_idmun`) VALUES
 INSERT INTO `sucursal`(`suc_id`,`suc_nom`,`suc_iddir`) VALUES(1,'Armenia',1);
 
 
-INSERT INTO `cargo`(`car_id`,`car_nom`,`car_fecha_cre`) VALUES(1,'Doctor',NOW());
+INSERT INTO `cargo`(`car_id`,`car_nom`,`car_es_doctor`,`car_fecha_cre`) VALUES(1,'Doctor','true',NOW());
 INSERT INTO `direccion`(`dir_id`,`dir_calle`,`dir_fecha_cre`,`dir_idmun`) VALUES(2,'Colonia',NOW(),1);
 INSERT INTO `empleado`(`emp_id`,`emp_nom`,`emp_ape`,`emp_fecha_nac`,`emp_gen`,`emp_idsuc`,`emp_idcar`,`emp_iddir`,`emp_fecha_cre`) 
 VALUES(1,'Arturo','Cerna','1970-02-04','M',1,1,2,NOW());

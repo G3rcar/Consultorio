@@ -9,9 +9,9 @@ $botones_menu["citas"]=true;
 $idUsuario = $_SESSION["iduser"];
 $esDoctor = $_SESSION["esDoctor"];
 
-$minutos_citas = 40;
-$hora_inicio = 1379854800;
-$hora_fin = 1379887200;
+$minutos_citas = $conf["duracion"]; //40;
+$hora_inicio = $conf["horaInicio"]; //1379854800;
+$hora_fin = $conf["horaFin"]; //1379887200;
 $arrayDias = array("1"=>"Lunes","2"=>"Martes","3"=>"Mi&eacute;rcoles","4"=>"Jueves","5"=>"Viernes","6"=>"S&aacute;bado","7"=>"Domingo");
 $fecha_actual = strtotime(date("Y-m-d"));
 
@@ -22,11 +22,6 @@ $anyo = date("Y");
 $horai_form = date("h:i a",$hora_inicio);
 
 $fecha_inicial = strtotime("-{$diaSemana} days",$fecha_actual);
-
-//- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
-include("res/partes/encabezado.php");
-
-
 
 //----Impresion de tabla agenda
 //----Aqui se imprimen los bloques HTML de la tabla de agenda donde se insertarán las citas posteriormente
@@ -68,7 +63,9 @@ $fecha_impresion=$fecha_inicial;
 
 
 //----Listado de empleados-doctores
-$selDoctores = "SELECT id, CONCAT(emp_nom,' ',emp_ape) AS 'nombre' FROM empleado WHERE idcargo = 1";
+$selDoctores = "SELECT e.emp_id AS 'id',CONCAT(e.emp_nom,' ',e.emp_ape) AS 'nombre',c.car_nom 
+				FROM empleado AS e INNER JOIN cargo AS c ON e.emp_idcar = c.car_id WHERE c.car_es_doctor = 'true'";
+
 $res = $conexion->execSelect($selDoctores);
 $lsDoctores=""; //Almacenará la lista html de los doctores
 $lsDoctoresWin=""; //Almacenará la lista html de los doctores para la ventana
@@ -87,14 +84,15 @@ if($res["num"]>0){
 			$seleccion="";
 		}
 		$lsDoctores.="<option {$seleccion} value='".$iDoc["id"]."' >".utf8_encode($iDoc["nombre"])."</option>";
-		$lsDoctoresWin.="<option {$seleccion} value='".$iDoc["id"]."' >".utf8_encode($iDoc["nombre"])."</option>";
+		$lsDoctoresWin.="<option {$seleccion} value='".$iDoc["id"]."' >".utf8_encode($iDoc["nombre"])." (".utf8_encode($iDoc["car_nom"]).")</option>";
 		$i++;
 	}
 }
 //----Listado de empleados-doctores
 
 
-
+//- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
+include("res/partes/encabezado.php");
 
 ?>
 	<link href="res/css/agenda.css" rel="stylesheet" />
@@ -104,6 +102,9 @@ if($res["num"]>0){
 		}
 		.headGrid th{
 			color: #FFF;
+		}
+		.item-agenda{
+			transition: all 3s;
 		}
 		
 	</style>
@@ -131,11 +132,23 @@ if($res["num"]>0){
 	
 
 	<h2>Agenda <img id="progressBar_main" src="res/img/loading.gif" class="loading_indicator_process" /></h2>
-	<select id="cmb_doctor" style="width:300px">
-		<?php echo $lsDoctores; ?>
-	</select>
-	
-	<br/>
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="span7">
+				<select id="cmb_doctor" style="width:300px">
+					<?php echo $lsDoctores; ?>
+				</select>
+			</div>
+			<div class="span5">
+				<ul class="pager" style="margin-top:0;margin-bottom:0;">
+					<li><a href="#">&larr; Anterior</a></li>
+					<span class="label label-info">Semana 10: 04/11 - 10/11</span>
+					<li><a href="#">Siguiente &rarr;</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
 	<br/>
 
 		<!-- Agenda -->
@@ -208,6 +221,8 @@ if($res["num"]>0){
 					<select id="empleado" style="width:100%">
 						<?php echo $lsDoctoresWin; ?>
 					</select>
+					<label id="comentario_label" style="margin-top:10px;">Motivo&nbsp;<small>(M&aacute;x. 50)</small></label>
+					<textarea id="comentario" style="width:96%;height:50px;" placeholder="Escriba una breve descripci&oacute;n del motivo de la cita"></textarea>
 				</fieldset>
 			</form>
 		</div>
@@ -237,8 +252,11 @@ if($res["num"]>0){
 				$('#ManntoCita').modal('show');
 				
 				$("#empleado").select2({ allowClear:true });
+				$("#paciente").select2("val","");
+
 				$("#paciente").select2({
 					placeholder: "Seleccionar",
+					escapeMarkup: function(m) { return m; },
 					ajax: {
 						url: "stores/agenda.php", dataType: 'json', type:'POST',
 						data: function (term, page) {
@@ -257,6 +275,7 @@ if($res["num"]>0){
 				/*$('#hora_fin').timepicker({ 
 					minuteStep: dr_ci, showInputs: true, showSeconds: false, showMeridian: true 
 				}).on("changeTime.timepicker",function(e){ _t.procesarMinutos(e.time,"fin"); });*/
+				$('#comentario').val('').removeClass('error_requerido').attr('title','');
 			},
 			
 			guardar:function(){
@@ -264,16 +283,19 @@ if($res["num"]>0){
 
 				if(!_t.validarForm()){ return; }
 				$('#s2id_paciente').removeClass('error_requerido_sel2');
-
+				$('#comentario').removeClass('error_requerido').attr('title','');
+				
 				_t.toggle(false);
-				var idPaciete = $('#paciente').val();
+				
+				var idPaciente = $('#paciente').val();
 				var hi = _t.hora_inicio;
 				var hf = _t.hora_fin;
 				var fecha = _t.fecha_seleccionada;
 				var idEmpleado = $('#empleado').val();
+				var comentario = $('#comentario').val();
 				
 				if(this.estado=='agregar'){ this.id=''; }
-				var datos = 'action=sv_cita&idpaciente='+idPaciete+'&hinicio='+hi+'&idempleado='+idEmpleado+'&fecha='+fecha+'&id='+this.id;
+				var datos = 'action=sv_cita&idpaciente='+idPaciente+'&hinicio='+hi+'&idempleado='+idEmpleado+'&fecha='+fecha+'&comentario='+comentario+'&id='+this.id;
 				//+'&hfin='+hf
 
 				$.ajax({
@@ -333,11 +355,19 @@ if($res["num"]>0){
 			validarForm:function(){
 				var _t = this;
 				var errores=0;
+				var maximo = 50;
 				var iv1 = $('#paciente').val();
+				var iv2 = $('#comentario').val();
 				var hi = _t.hora_inicio;
 				//var hf = _t.hora_fin;
 
+				//--remover
+				$('#s2id_paciente').removeClass('error_requerido_sel2');
+				$('#comentario').removeClass('error_requerido').attr('title','');
+				//--/remover
+
 				if(iv1==''){ $('#s2id_paciente').addClass('error_requerido_sel2'); errores++; }
+				if(iv2.length>maximo){ $('#comentario').addClass('error_requerido').attr('title','No debe sobrepasar de 50 caracteres'); errores++; }
 				//if(hi>=hf){ $('#hora_fin').addClass('error_requerido'); errores++; }
 				if(errores>0){
 					humane.log('Complete los campos requeridos');
@@ -348,8 +378,8 @@ if($res["num"]>0){
 			},
 
 			toggle:function(v){
-				if(v){ $('#guardarCita').removeClass('disabled').html('Guardar'); }
-				else{ $('#guardarCita').addClass('disabled').html('Guardando...'); }
+				if(v){ $('#guardarCita').removeAttr('disabled').html('Guardar'); }
+				else{ $('#guardarCita').attr('disabled','disabled').html('Guardando...'); }
 			}
 		}
 

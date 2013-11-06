@@ -1,9 +1,15 @@
-<?php include('libs/php/constantes.php'); ?>
+<?php 
+	include('libs/php/constantes.php'); 
+	include_once('libs/php/class.objetos.base.php'); 
+	$data = new Configuracion();
+	$conf = $data->obtenerConfiguracion();
+	$titulo_sistema = $conf["nombreEmpresa"];
+?>
 <!DOCTYPE html>
 <html lang="es">
 	<head>
 		<meta charset="utf-8">
-		<title><?php echo TITULO_SISTEMA; ?> - Login</title>
+		<title><?php echo $titulo_sistema; ?> - Login</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="description" content="Proyecto ASI 2">
 		<meta name="author" content="@G3rcar">
@@ -76,7 +82,7 @@
 		<div class="">
 
 			<div class="page-header encabezado">
-					<h2>Consultorio M&eacute;dico Cerna y Alvarado <small>Intranet</small></h2>
+					<h2><?php echo $titulo_sistema; ?> <small>Intranet</small></h2>
 			</div>
 
 			<br />
