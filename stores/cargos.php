@@ -16,9 +16,15 @@ $accion = $_POST["action"];
 switch ($accion) {
 	case 'gd_cargo':
 
-		$selRes = "SELECT * FROM cargo";
+		$selRes = "SELECT car_id,car_nom,car_es_doctor FROM cargo";
 		$res = $conexion->execSelect($selRes);
-		$headers = array( "Nombre", "Cargo", array("width"=>"15","text"=>"&nbsp;"),	array("width"=>"15","text"=>"&nbsp;"));
+		$headers = array( 
+			"Nombre", 
+			array("width"=>"250","text"=>"&nbsp;"),
+			array("width"=>"15","text"=>"&nbsp;"),
+			array("width"=>"15","text"=>"&nbsp;")
+		);
+
 		$tabla = new GridCheck($headers,"gridCargos");
 		if($res["num"]> 0){
 			$i=0;
@@ -26,8 +32,9 @@ switch ($accion) {
 				//Iconos
 				$editar = "<a href='#' onClick='manto.editar({$iCargo["car_id"]});' title='Editar' ><i class='icon-edit'></i></a>";
 				$borrar = "<a href='#' onClick='manto.borrar({$iCargo["car_id"]});' title='Borrar' ><i class='icon-remove'></i></a>";
-				
-				$valoresFila = array(utf8_encode($iCargo["car_nom"]),'',$editar,$borrar);
+				$visibilidad = ($iCargo["car_es_doctor"]=="true")?"<i class='icon-ok-circle'></i> &nbsp;Aparece en listado de doctores":"-";
+
+				$valoresFila = array(utf8_encode($iCargo["car_nom"]),$visibilidad,$editar,$borrar);
 				$fila = array("id"=>$iCargo["car_id"],"valores"=>$valoresFila);
 				$tabla->nuevaFila($fila);
 			}	
@@ -66,13 +73,13 @@ switch ($accion) {
 
 		$id = (int)$conexion->escape($_POST["id"]);
 		$nombre = $conexion->escape(utf8_decode($_POST["nombre"]));
-		$empleado = (int)$conexion->escape(utf8_decode($_POST["idEmpleado"]));
+		$esDoctor = $conexion->escape(utf8_decode($_POST["esDoctor"]));
 		
-		$nuevoCargo = "";
+		$mantoCargo = "";
 		if($tipo=='nuevo'){
-			$mantoCargo = "INSERT INTO cargo(cargo_nom,cargo_idemp) VALUES('{$nombre}','{$empleado}') ";
+			$mantoCargo = "INSERT INTO cargo(car_nom,car_es_doctor) VALUES('{$nombre}','{$esDoctor}') ";
 		}else{
-			$mantoCargo = "UPDATE cargo SET cargo_nom='{$nombre}', cargo_idpai='{$empleado}' WHERE cargo_id = {$id} ";
+			$mantoCargo = "UPDATE cargo SET car_nom='{$nombre}', car_es_doctor='{$esDoctor}' WHERE car_id = {$id} ";
 		}
 		
 		$res = 0;
@@ -93,13 +100,16 @@ switch ($accion) {
 		if(!isset($_POST["id"])){ exit(); }
 		$id = $conexion->escape($_POST["id"]);
 
-		$selCargo = "SELECT cargo_id,cargo_nom,emp_id,emp_nom FROM cargo AS d INNER JOIN empleado AS p 
-						WHERE emp_id = {$id} ";
+		$selCargo = "SELECT car_id,car_nom,car_es_doctor FROM cargo WHERE car_id = {$id} ";
 		$res = $conexion->execSelect($selCargo);
 
 		if($res["num"]>0){
 			$iCargo = $conexion->fetchArray($res["result"]);
-			$result = array("id"=>$iCargo["cargo_id"],"nombre"=>utf8_encode($iCargo["cargo_nom"]),"idEmpleado"=>$iCargo["emp_id"],"empleado"=>utf8_encode($iCargo["emp_nom"]));
+			$result = array(
+				"id"=>$iCargo["car_id"],
+				"nombre"=>utf8_encode($iCargo["car_nom"]),
+				"esDoctor"=>$iCargo["car_es_doctor"]
+			);
 		}
 
 		echo json_encode($result);
@@ -112,7 +122,7 @@ switch ($accion) {
 		if(!isset($_POST["id"])){ exit(); }
 		$id = json_decode($_POST["id"],true);
 
-		$borrarCargo = "DELETE FROM cargo WHERE id = {$id} ";
+		$borrarCargo = "DELETE FROM cargo WHERE car_id = {$id} ";
 		$res = $conexion->execManto($borrarCargo);
 		if($res>0){
 			$result = array("success"=>"true","msg"=>"El cargo se ha borrado");
@@ -136,7 +146,7 @@ switch ($accion) {
 		for($i=0;$i<$tot;$i++){
 			$id = $ids[$i];
 
-			$borrarCargo = "DELETE FROM cargo WHERE id = {$id} ";
+			$borrarCargo = "DELETE FROM cargo WHERE car_id = {$id} ";
 			$res = $conexion->execManto($borrarCargo);
 			if(!($res>0)) $errores++;
 		}

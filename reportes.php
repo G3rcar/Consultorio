@@ -40,20 +40,7 @@ include("res/partes/encabezado.php");
 			
 			<!-- Columna fluida con peso 3/12 -->
 			<div class="span3">
-				<div class="well sidebar-nav">
-					<img id="progressBar_main" src="res/img/loading.gif" class="loading_indicator_mannto" />
-					<ul class="nav nav-list">
-						<li class="nav-header">Opciones</li>
-						<li><a id="lnkAgregar" href="#"><i class="icon-print"></i> Versi&oacute;n de impresi&oacute;n</a></li>
-						
-						<li class="nav-header">Reportes</li>
-						<li><a id="rp_citas" href="#">Citas</a></li>
-						<li><a id="rp_entradas" href="#">Entradas y Salidas</a></li>
-						<li><a id="rp_cfacturas" href="#">Consolidado de Facturas</a></li>
-						<li><a id="rp_dfacturas" href="#">Detallado de Facturas</a></li>
-						<li><a id="rp_expedientes" href="#">Expedientes</a></li>
-					</ul>
-				</div>
+				<?php include('res/partes/herramientas.reporte.php'); ?>
 			</div>
 			<!-- /Columna fluida con peso 3/12 -->
 

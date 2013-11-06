@@ -8,11 +8,13 @@ $conexion = new Conexion();
 
 
 
-$selCitas = "SELECT c.id,CONCAT(e.nombres,' ',e.apellidos) AS 'empleado',CONCAT(p.nombres,' ',p.apellidos) AS 'paciente', 
-				DATE_FORMAT(c.fecha,'%d/%m/%Y %h:%i %p') AS 'fecha'
+$selCitas = "SELECT c.cit_id AS 'id',CONCAT(e.emp_nom,' ',e.emp_ape) AS 'empleado',
+				CONCAT(p.pac_nom,' ',p.pac_ape) AS 'paciente', 
+				DATE_FORMAT(c.cit_fecha_cita,'%d/%m/%Y %h:%i %p') AS 'fecha' 
 				FROM cita AS c 
-				INNER JOIN paciente AS p ON c.idpaciente = p.id
-				INNER JOIN empleado AS e ON c.idempleado = e.id ORDER BY c.fecha ASC ";
+				INNER JOIN paciente AS p ON c.cit_idpac= p.pac_id 
+				INNER JOIN empleado AS e ON c.cit_idemp= e.emp_id 
+				ORDER BY c.cit_fecha_cita ASC";
 
 $res = $conexion->execSelect($selCitas);
 

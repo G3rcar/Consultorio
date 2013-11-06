@@ -85,6 +85,8 @@ class Configuracion{
 	//--
 	public function __construct(){
 		if(strpos($_SERVER["PHP_SELF"],"stores") !== false){ $this->urlArchivo = "../".$this->urlArchivo; }
+		if(strpos($_SERVER["PHP_SELF"],"reportes/") !== false){ $this->urlArchivo = "../".$this->urlArchivo; }
+		
 		if(!file_exists($this->urlArchivo)){
 			$this->inicializarArchivo();
 		}
