@@ -7,7 +7,7 @@ include_once("../libs/php/class.connection.php");
 include_once("../libs/php/class.objetos.base.php");
 $conexion = new Conexion();
 
-echo "hello world";
+
 
 
 

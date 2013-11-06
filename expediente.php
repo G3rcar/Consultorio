@@ -55,15 +55,15 @@ include("res/partes/encabezado.php");
 			
 			<div class="span9">
 			
-				<form action= "#" method ="POST" onsubmit="return  validacion()" >
+				<form>
 					<label>Nombres</label> 
 					<input id="txtNompaciente" type="text" placeholder="Escriba el nombre" style="width:70%;">
 
 					<!--<input type="text" name="pac_nom" class="span8"><br>-->
                     <label>Apellidos</label>
-					<input id="txtApellidoPac" type="text" placeholder="Escriba el Apellido" style="width:70%;">
+					<input id="txtApellidoPac" type="text" placeholder="Escriba el Apellido" style="width:70%;" >
 	                <label>Fecha de Nacimiento</label>
-					<input type="date" name="pac_fecha_nac">
+					<input type="date" id="pac_fecha_nac" >
 
 					 <fieldset>
 					 <div class="span5">
@@ -72,18 +72,18 @@ include("res/partes/encabezado.php");
 					</div>
 					<div class="span5">
 					<label>Altura</label>
-					<input id="txtAltpac" type="text" placeholder="Escriba la altura" >
+					<input id="txtAltpac" type="text" placeholder="Escriba la altura"  >
 				    </div>
 					</fieldset>
 				
 					
 					<label>Alergias</label>
-  					<textarea rows="3"  cols= 50 class="span9"  ></textarea>
-  				    
+  					<textarea rows="3"  name="alergiaspac" cols= 50 class="span9" placeholder="Escriba Alergias" ></textarea>
+
   				   
                     <label>Genero</label>
-                    <input type="radio" name="pac_gen" value="masculino" > Masculino 
-					<input type="radio" name="pac_gen" value="femenino" >  Femenino <br>
+                    <input type="radio" id="pac_gen" value="masculino" > Masculino 
+					<input type="radio" id="pac_gen" value="femenino" >  Femenino <br>
   					<br>
   					
   				  <!--<label>Pais</label>-->
@@ -109,36 +109,113 @@ include("res/partes/encabezado.php");
 					</fieldset>
 
 					<label>Dirección</label>
-				    <textarea rows="3"  cols= 50 class="span9" placeholder="Escriba la direccion"></textarea>
+				    <textarea rows="3" id="dirpac" cols= 50 class="span9" placeholder="Escriba la direccion" value="<?php echo $conf["direccionPaciente"]; ?>"></textarea>
 				  
- 	
-
+					<label>Correo Electronico</label> 	
+					<input id="txtcorreo" type="text" placeholder="e-mail@ejemplo.com" value="<?php echo $conf["correoPaciente"]; ?>">
   					<fieldset>
   					<div class="span5">
   				 	 <label>Telefono Casa</label>
-  				 	<input id="txtTelpac" type="text" placeholder="Escriba el telefono" >
+  				 	<input id="txtTelpac" type="text" placeholder="Escriba el telefono" value="<?php echo $conf["telefonoCasa"]; ?>" >
 					</div>
 					<div class="span5">
                  	 <label>Telefono Celular</label>
-			     	<input id="txtCelc" type="text" placeholder="Escriba el telefono" >
+			     	<input id="txtCelc" type="text" placeholder="Escriba el telefono" value="<?php echo $conf["telefonocel"]; ?>">
 		          	 </select>
   				  	</div>
   				  	</fieldset>
 					
 				<div calss="span5">
   				  	<label>Fecha de Creación Expediente</label>
-					<input type="date" name="pac_fecha_cre">
+					<input type="date" id="pac_fecha_cre" value="<?php echo $conf["fecha_cre"]; ?>">
 					</div>
 
 				
 					</div>
 
+
+
+			 <script>
+		     $(document).ready(function(){
+			 $('#lnkGuardar').click(function(){ manto.guardar(); });
+                 
 			
-		
+			 	validarForm:function(){
+				var errores=0;
+				var iv1 = $('#txtNompaciente').val();
+				var iv2 = $('txtApellidoPac').val();
+				var iv3 = $('#date').val();
+				var iv4 = $('#txtPesopac').val();
+				var iv5 = $('#txtAltpac').val();
+				var iv6 = $('#alergiaspac').val();
+				var iv7 = $('#dirpac').val();
+				var iv8 = $('#txtTelpac').val();
+				
+
+				if(iv1==''){ $('#txtNompaciente').addClass('error_requerido'); errores++; }
+				if(iv2==''){ $('txtApellidoPac').addClass('error_requerido'); errores++; }
+				if(iv3==''){ $('#date').addClass('error_requerido'); errores++; }
+				if(iv4==''){ $('#txtPesopac').addClass('error_requerido'); errores++; }
+				if(iv5==''){ $('#txtAltpac').addClass('error_requerido'); errores++; }
+				if(iv6==''){ $('#alergiaspac').addClass('error_requerido'); errores++; }
+				if(iv7==''){ $('#dirpac').addClass('error_requerido'); errores++; }
+				if(iv8==''){ $('#txtTelpac').addClass('error_requerido'); errores++; }
 
 			
 
+				if(iv1.length>50){ $('#txtNompaciente').addClass('error_requerido').attr('title','No debe sobrepasar de 50 caracteres'); errores++; }
+				if(iv2.length>50){ $('txtApellidoPac').addClass('error_requerido').attr('title','No debe sobrepasar de 50 caracteres'); errores++; }
+				if(iv7.length>60){ $('#dirpac').addClass('error_requerido').attr('title','No debe sobrepasar de 60 caracteres'); errores++; }
+				if(errores>0){
+					humane.log('Complete los campos requeridos');
+					return false;
+				}else{
+					return true;
+				}
+			},
 
+
+			guardar:function(){
+				var _t = this;
+				if(!_t.validarForm()){ return; }
+				
+				var nombre = $('#txtNompaciente').val();
+				var apellido = $('txtApellidoPac').val();
+				var fecha_nac = $('#date').val();
+				var peso = $('#txtPesopac').val();
+				var altura = $('#txtAltpac').val();
+				var alergias = $('#alergiaspac').val();
+				var direccion = $('#dirpac').val();
+				var telcasa = $('#txtTelpac').val();
+				var telcel = $('#txtCelc').val();
+				var frecha_cre = $('#pac_fecha_cre').val();
+
+
+			
+				
+				if(this.estado=='agregar'){ thivar sistema = $('#alergiaspac').val();s.id=''; }
+				var datos = 'action=sv_conf&nombre='+nombre+'&apellido='+apellido+'&fecha_nac='+fecha_nac+'&peso='+peso+'&altura='+altura+'&alergias='+altura+
+				'&alergias='+alergias+'&direccion='+direccion+'&telcasa='+telcasa+'&telcel='+telcel+'&frecha_cre'+frecha_cre;
+
+				$.ajax({
+					url:'stores/expediente.php',
+					data:datos, dataType:'json', type:'POST',
+					complete:function(datos){
+						var T = jQuery.parseJSON(datos.responseText);
+
+						humane.log(T.msg);
+					}
+				});
+			},
+
+			toggle:function(v){
+				if(v){ $('#guardarBtn').removeClass('disabled').html('Guardar'); }
+				else{ $('#guardarBtn').addClass('disabled').html('Guardando...'); }
+			}
+		}
+
+
+	</script>
 <?php include('res/partes/pie.pagina.php'); ?>
 
 

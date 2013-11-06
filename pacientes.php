@@ -18,12 +18,6 @@ include("res/partes/encabezado.php");
 
 
 
-
-
-
-
-
-
 ?>
 <!-- Estilo extra -->
 <style>
