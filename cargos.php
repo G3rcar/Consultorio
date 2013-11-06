@@ -4,7 +4,7 @@ include("sesion.php");
 include_once("libs/php/class.connection.php");
 
 $botones_menu["limpio"]=true;
-$botones_herramientas["cargos"]=true;
+$botones_configuracion["cargos"]=true;
 
 
 //- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
@@ -40,7 +40,7 @@ include("res/partes/encabezado.php");
 			
 			<!-- Columna fluida con peso 3/12 -->
 			<div class="span3">
-				<?php include('res/partes/herramientas.catalogos.php'); ?>
+				<?php include('res/partes/herramientas.configuracion.php'); ?>
 			</div>
 			<!-- /Columna fluida con peso 3/12 -->
 
@@ -65,8 +65,8 @@ include("res/partes/encabezado.php");
 
 			$('#lnkAgregar').click(function(){ manto.agregar(); });
 			$('#lnkBorrar').click(function(){ manto.borrar(); });
-			$('#guardarCargoo').click(function(){ manto.guardar(); });
-//			cargarLista();
+			$('#guardarCargo').click(function(){ manto.guardar(); });
+			//cargarLista();
 
 		});
 
@@ -110,25 +110,12 @@ include("res/partes/encabezado.php");
 				this.estado = 'agregar';
 				$('#modalHead').html("Agregar Cargo");
 				this.id = '';
-				$('#s2id_idEmpleado').removeClass('error_requerido_sel2');
 				$('#nombreCargo').removeClass('error_requerido');
-				$('#idEmpleado').val('');
 				$('#nombreCargo').val('');
+				$('#esDoctor').removeAttr('checked');
+
 				$('#AgregarCargo').modal('show');
-				$("#idCargo").select2({
-					placeholder: "Seleccionar",
-					ajax: {
-						url: "stores/cargos.php", dataType: 'json', type:'POST',
-						data: function (term, page) {
-							return { q: term, action:'ls_cargo' };
-						},
-						results: function (data, page) {
-							return {results: data.results};
-						}
-					}
-				});
-
-
+				
 			},
 			editar:function(id){
 				this.estado = 'editar';
@@ -140,30 +127,20 @@ include("res/partes/encabezado.php");
 					complete:function(datos){
 						var T = jQuery.parseJSON(datos.responseText);
 						
-						$('#s2id_idEmpleado').removeClass('error_requerido_sel2');
 						$('#nombreCargo_label').removeClass('error_requerido');
 						$('#nombreCargo').val(T.nombre);
+						if(T.esDoctor){
+							$('#esDoctor').attr('checked','checked');
+						}
+						
 						$('#AgregarCargo').modal('show');
-						$("#idEmpleado").select2({
-							placeholder: "Seleccionar",
-							ajax: {
-								url: "stores/cargos.php", dataType: 'json', type:'POST',
-								data: function (term, page) {
-									return { q: term, action:'ls_empleado' };
-								},
-								results: function (data, page) {
-									return {results: data.results};
-								}
-							}
-						});
-						$("#idEmpleado").select2("data",{id:T.idEmpleado,text:T.empleado});
 					}
 				});
 
 			},
 			borrar:function(id){
 				var tipo = (id)?'uno':'varios';
-				var seleccion = gridCheck.getSelectionJSON('gridCargo');
+				var seleccion = gridCheck.getSelectionJSON('gridCargos');
 				if(tipo=='varios' && seleccion==false){
 					humane.log('No ha seleccionado ning&uacute;n registro');
 					return;
@@ -192,10 +169,10 @@ include("res/partes/encabezado.php");
 				if(!validarForm()){ return; }
 				manto.toggle(false);
 				var nombre = $('#nombreCargo').val();
-				var idEmpleado = $('#idEmpleado').val();
+				var esDoctor = $('#esDoctor').is(':checked');
 				
 				if(this.estado=='agregar'){ this.id=''; }
-				var datos = 'action=sv_cargo&nombre='+nombre+'&idEmpleado='+idEmpleado+'&id='+this.id;
+				var datos = 'action=sv_cargo&nombre='+nombre+'&esDoctor='+esDoctor+'&id='+this.id;
 
 				$.ajax({
 					url:'stores/cargos.php',
@@ -238,6 +215,9 @@ include("res/partes/encabezado.php");
 				<fieldset>
 					<label id="nombreCargo_label" class="requerido">Nombre</label>
 					<input id="nombreCargo" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
+					<label class="checkbox">
+						<input type="checkbox" id="esDoctor"> Mostrar en listados de doctores
+					</label>
 				</fieldset>
 			</form>
 		</div>
@@ -247,7 +227,6 @@ include("res/partes/encabezado.php");
 		</div>
 
 	</div>
-
 
 
 <?php include('res/partes/pie.pagina.php'); ?>
