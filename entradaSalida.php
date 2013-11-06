@@ -4,7 +4,7 @@ include("sesion.php");
 include_once("libs/php/class.connection.php");
 
 $botones_menu["reportes"]=true;
-$botones_herramientas["municipios"]=true;
+$botones_herramientas["entradaSalida"]=true;
 
 
 //- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
@@ -33,7 +33,7 @@ include("res/partes/encabezado.php");
 <!-- /Scripts extra -->
 
 
-	<h3>Reportes</h3>
+	<h3>Reporte: Entrada y Salidas</h3>
 
 	<div class="container-fluid">
 		<div class="row-fluid">
@@ -44,11 +44,12 @@ include("res/partes/encabezado.php");
 			</div>
 			<!-- /Columna fluida con peso 3/12 -->
 
-
+			<div id="buscador" class="span9">
+				<input type="text" id="desde" placeholder="Desde (dd-mm-aaaa)"> - <input type="text" id="hasta" placeholder="hasta (dd-mm-aaaa)"> <button class="btn" id="search">Consultar</button>
+			</div>
 			<!-- Columna fluida con peso 9/12 -->
 			<div id="contenedorTabla" class="span9">
 				<!-- Aqui se cargaran los datos del catalogo -->
-
 			</div>
 			<!-- /Columna fluida con peso 9/12 -->
 			
@@ -59,31 +60,47 @@ include("res/partes/encabezado.php");
 	<!-- Scripts -->
 
 	<script>
-		var preloadedDeptos = [];
+		var preloadedPaises = [];
 
 		$(document).ready(function(){
-			cargarReporte('rp_citas');
-			$('#rp_citas').click(function(){ cargarReporte('rp_citas'); });
-
-			//$('#lnkBorrar').click(function(){ manto.borrar(); });
-			//$('#guardarMuni').click(function(){ manto.guardar(); });
-
+			cargarTabla();			
 		});
 
-		function cargarReporte(r){
+		function cargarTabla(){
 			$.ajax({
-				url:'reportes/'+r+'.php',
-				//data:'action=gd_muni', 
-				dataType:'json', type:'POST',
+				url:'reportes/entradaSalida.php',
+				data:'action=rep_es', dataType:'json', type:'POST',
 				complete:function(datos){
 					$("#contenedorTabla").html(datos.responseText);
 				}
 			});
-		}
+		};
+
+
+		function cargarTablaSearch(desde,hasta){
+			$.ajax({
+				url:'reportes/entradaSalida.php',
+				data:'action=rep_sea&desde='+desde+"&hasta="+hasta, dataType:'json', type:'POST',
+				complete:function(datos){
+					$("#contenedorTabla").html(datos.responseText);
+				}
+			});
+
+		};
 
 
 
-		
+		$('#search').click(function(){
+			var desde = $('#desde').val();
+			var hasta = $('#hasta').val();
+
+			if (desde != '' || hasta != '') {
+				cargarTablaSearch(desde,hasta);				
+			}
+
+		});
+
+
 
 	</script>
 
@@ -92,3 +109,6 @@ include("res/partes/encabezado.php");
 
 <?php include('res/partes/pie.pagina.php'); ?>
 
+<style type="text/css">
+	#buscador button { margin-bottom: 12px;	}
+</style>

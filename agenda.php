@@ -65,8 +65,8 @@ $fecha_impresion=$fecha_inicial;
 //----Listado de empleados-doctores
 $selDoctores = "SELECT e.emp_id AS 'id',CONCAT(e.emp_nom,' ',e.emp_ape) AS 'nombre',c.car_nom 
 				FROM empleado AS e INNER JOIN cargo AS c ON e.emp_idcar = c.car_id WHERE c.car_es_doctor = 'true'";
-$res = $conexion->execSelect($selDoctores);
 
+$res = $conexion->execSelect($selDoctores);
 $lsDoctores=""; //Almacenará la lista html de los doctores
 $lsDoctoresWin=""; //Almacenará la lista html de los doctores para la ventana
 $seleccion=""; //Decidirá si un registro será autoseleccionado o no
@@ -132,11 +132,23 @@ include("res/partes/encabezado.php");
 	
 
 	<h2>Agenda <img id="progressBar_main" src="res/img/loading.gif" class="loading_indicator_process" /></h2>
-	<select id="cmb_doctor" style="width:300px">
-		<?php echo $lsDoctores; ?>
-	</select>
-	
-	<br/>
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="span7">
+				<select id="cmb_doctor" style="width:300px">
+					<?php echo $lsDoctores; ?>
+				</select>
+			</div>
+			<div class="span5">
+				<ul class="pager" style="margin-top:0;margin-bottom:0;">
+					<li><a href="#">&larr; Anterior</a></li>
+					<span class="label label-info">Semana 10: 04/11 - 10/11</span>
+					<li><a href="#">Siguiente &rarr;</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
 	<br/>
 
 		<!-- Agenda -->
