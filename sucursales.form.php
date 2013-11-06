@@ -44,21 +44,19 @@ include("res/partes/encabezado.php");
 			
 			<!-- Columna fluida con peso 3/12 -->
 			<div class="span3">
-				<?php include('res/partes/herramientas.catalogos.php'); ?>
+				<?php include_once('res/partes/herramientas.formularios.php'); ?>
 			</div>
 			<!-- /Columna fluida con peso 3/12 -->
 
 
 			<!-- Columna fluida con peso 9/12 -->
 			<div id="AgregarSuc" class="span9">
-				<form>
+				<form id="frmSucursal">
 					<fieldset>
 						<legend>General</legend>
 						<div class="span5">
 							<label id="nombreSuc_label" class="requerido">Nombre de la Sucursal</label>
-				
-					  <input id="nombreSuc" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-
+							<input id="nombreSuc" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
 						</div>
 						
 					</fieldset>
@@ -67,43 +65,40 @@ include("res/partes/encabezado.php");
 
 						<legend>Direccion</legend>
 							<div class="span5">
-							<label id="condominioDir_label">Condominio</label>
-					<input id="condominioDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-					</div>
-						<div class="span5">
-					<label id="condominio2Dir_label" >Condominio 2</label>
-					<input id="condominio2Dir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-					</div>
-						<div class="span5">
-					</div>
-						<div class="span5">
-					<label id="calleDir_label" class="requerido">Calle</label>
-					<input id="calleDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-					</div>
-						<div class="span5">
-					<label id="complementocalleDir_label" >Complemento Calle</label>
-					<input id="complementocalleDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-					</div>
-						<div class="span5">
-					<label id="casaDir_label" class="requerido">Casa</label>
-					<input id="casaDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-					</div>
-						<div class="span5">
-					<label id="coloniaDir_label" >Colonia</label>
-					<input id="coloniaDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-					</div>
-						<div class="span5">
-					<label id="distritoDir_label">Distrito</label>
-					<input id="distritoDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-					</div>
-						<div class="span5">
-					<label id="referenciaDir_label">Referencia</label>
-					<input id="referenciaDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-				</div>
-						<div class="modal-footer">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-			<button id="guardarBtn" class="btn btn-primary">Guardar</button>
-		</div>
+								<label id="condominioDir_label">Condominio</label>
+								<input id="condominioDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
+							</div>
+							<div class="span5">
+								<label id="condominio2Dir_label" >Condominio 2</label>
+								<input id="condominio2Dir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
+							</div>
+							
+							<div class="span5"> </div>
+							<div class="span5">
+								<label id="calleDir_label" class="requerido">Calle</label>
+								<input id="calleDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
+							</div>
+							<div class="span5">
+								<label id="complementocalleDir_label" >Complemento Calle</label>
+								<input id="complementocalleDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
+							</div>
+							<div class="span5">
+								<label id="casaDir_label" class="requerido">Casa</label>
+								<input id="casaDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
+							</div>
+							<div class="span5">
+								<label id="coloniaDir_label" >Colonia</label>
+								<input id="coloniaDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
+							</div>
+							<div class="span5">
+								<label id="distritoDir_label">Distrito</label>
+								<input id="distritoDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
+							</div>
+							<div class="span5">
+								<label id="referenciaDir_label">Referencia</label>
+								<input id="referenciaDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
+							</div>
+
 					</fieldset>
 					<br>
 				</form>
@@ -122,9 +117,11 @@ include("res/partes/encabezado.php");
 		$(document).ready(function(){
 			cargarTabla();
 
-			$('#lnkAgregar').click(function(){ manto.agregar(); });
-			$('#lnkBorrar').click(function(){ manto.borrar(); });
-			$('#guardarSuc').click(function(){ manto.guardar(); });
+			$('#lnkGuardar').click(function(){ manto.guardar(); });
+			$('#lnkCancelar').attr('href','sucursales.php');
+			$('#lnkLimpiar').click(function(){
+				document.getElementById('frmSucursal').reset();
+			});
 			
 		});
 

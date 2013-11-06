@@ -77,7 +77,8 @@ include("res/partes/encabezado.php");
 		$(document).ready(function(){
 			cargarTabla();
 
-			$('#lnkAgregar').click(function(){ manto.agregar(); });
+			$('#lnkAgregar').attr('href','sucursales.form.php');
+			//$('#lnkAgregar').click(function(){ manto.agregar(); });
 			$('#lnkBorrar').click(function(){ manto.borrar(); });
 			$('#guardarSuc').click(function(){ manto.guardar(); });
 			
@@ -98,7 +99,7 @@ include("res/partes/encabezado.php");
 		function cargarTabla(){
 			$.ajax({
 				url:'stores/sucursales.php',
-				data:'action=gd_suc', dataType:'json', type:'POST',
+				data:'action=gd_sucursal', dataType:'json', type:'POST',
 				complete:function(datos){
 					$("#contenedorTabla").html(datos.responseText);
 				}
@@ -212,7 +213,7 @@ include("res/partes/encabezado.php");
 	<div id="AgregarSuc" class="modal hide fade modalPequena" tabindex="-1" role="dialog" aria-labelledby="AgregarSuc" aria-hidden="true">
 		
 		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">Ã—</button>
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			<h3 id="modalHead">Agregar sucursal</h3>
 		</div>
 		<div class="modal-body">

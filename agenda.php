@@ -178,7 +178,7 @@ include("res/partes/encabezado.php");
 	<div id="ManntoCita" class="modal hide fade modalMediana" role="dialog" aria-labelledby="ManntoCita" aria-hidden="true">
 		
 		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			<h3 id="modalHead">Nueva cita</h3>
 		</div>
 		<div class="modal-body" style="overflow-y:visible;" >

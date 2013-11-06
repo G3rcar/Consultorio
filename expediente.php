@@ -39,23 +39,14 @@ include("res/partes/encabezado.php");
 			
 			<!-- Columna fluida con peso 3/12 -->
 			<div class="span3">
-				<div class="well sidebar-nav">
-	<img id="progressBar_main" src="res/img/loading.gif" class="loading_indicator_mannto" />
-	<ul class="nav nav-list">
-		<li class="nav-header">Opciones</li>
-		<li><a id="lnkGuardar" href="#"><i class="icon-hdd"></i> Guardar</a></li>
-		<li><a id="lnkBorrar" href="#"><i class="icon-repeat"></i> Limpiar</a></li>
-		<li><a id="lnkLimpiar" href="pacientes.php"><i class="icon-remove"></i> Cancelar</a></li>
-		
-	</ul>
-</div>
+				<?php include_once('res/partes/herramientas.formularios.php'); ?>
 			</div>
 			<!-- /Columna fluida con peso 3/12 -->
 
 			
 			<div class="span9">
 			
-				<form>
+				<form id="frmPaciente">
 					<label>Nombres</label> 
 					<input id="txtNompaciente" type="text" placeholder="Escriba el nombre" style="width:70%;">
 
@@ -135,12 +126,20 @@ include("res/partes/encabezado.php");
 
 
 
-			 <script>
-		     $(document).ready(function(){
-			 $('#lnkGuardar').click(function(){ manto.guardar(); });
-                 
+	<script>
+		$(document).ready(function(){
+			$('#lnkGuardar').click(function(){ manto.guardar(); });
+			$('#lnkCancelar').attr('href','pacientes.php');
+			$('#lnkLimpiar').click(function(){
+				document.getElementById('frmPaciente').reset();
+			});
+		});
+
+		var mantoPaciente = {
+
+			estado:'agregar',
 			
-			 	validarForm:function(){
+			validarForm:function(){
 				var errores=0;
 				var iv1 = $('#txtNompaciente').val();
 				var iv2 = $('txtApellidoPac').val();
@@ -190,10 +189,6 @@ include("res/partes/encabezado.php");
 				var telcel = $('#txtCelc').val();
 				var frecha_cre = $('#pac_fecha_cre').val();
 
-
-			
-				
-				if(this.estado=='agregar'){ thivar sistema = $('#alergiaspac').val();s.id=''; }
 				var datos = 'action=sv_conf&nombre='+nombre+'&apellido='+apellido+'&fecha_nac='+fecha_nac+'&peso='+peso+'&altura='+altura+'&alergias='+altura+
 				'&alergias='+alergias+'&direccion='+direccion+'&telcasa='+telcasa+'&telcel='+telcel+'&frecha_cre'+frecha_cre;
 

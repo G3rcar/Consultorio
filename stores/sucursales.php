@@ -14,20 +14,22 @@ if(!isset($_POST["action"])){ exit(); }
 $accion = $_POST["action"];
 
 switch ($accion) {
-	case 'gd_suc':
+	case 'gd_sucursal':
 
-		$selSuc = " SELECT suc_id,suc_nom,dir_cond,dir_cond2,dir_calle,dir_compcalle, dir_casa, dir_col, dir_dist, dir_ref, dir_fecha_cre, dir_idmun
-		FROM sucursal
-		INNER JOIN direccion ON suc_iddir = dir_id
-		ORDER BY suc_id ";
+		$selSuc = " SELECT su.suc_id,su.suc_nom,mu.mun_nom,de.dep_nom,DATE_FORMAT(di.dir_fecha_cre,'%d/%m/%Y') AS 'dir_fecha_cre'
+					FROM sucursal AS su
+					INNER JOIN direccion AS di ON su.suc_iddir = di.dir_id
+					INNER JOIN municipio AS mu ON di.dir_idmun = mu.mun_id
+					INNER JOIN departamento AS de ON mu.mun_iddep = de.dep_id
+					ORDER BY suc_id ";
 
 
 
 		$res = $conexion->execSelect($selSuc);
 		$headers = array(
 			"Nombre",
-			array("width"=>"200","text"=>"Fecha de creaci&oacute;n"),
 			array("width"=>"200","text"=>"Direccion"),
+			array("width"=>"200","text"=>"Fecha de creaci&oacute;n"),
 			array("width"=>"15","text"=>"&nbsp;"),
 			array("width"=>"15","text"=>"&nbsp;")
 		);
@@ -39,7 +41,7 @@ switch ($accion) {
 				$editar = "<a href='#' onClick='manto.editar({$iSuc["suc_id"]});' title='Editar' ><i class='icon-edit'></i></a>";
 				$borrar = "<a href='#' onClick='manto.borrar({$iSuc["suc_id"]});' title='Borrar' ><i class='icon-remove'></i></a>";
 				
-				$valoresFila = array(utf8_encode($iSuc["suc_nom"]),$iSuc["dir_fecha_cre"],$iSuc["dir_ref"],$editar,$borrar);
+				$valoresFila = array(utf8_encode($iSuc["suc_nom"]),$iSuc["mun_nom"].", ".$iSuc["dep_nom"],$iSuc["dir_fecha_cre"],$editar,$borrar);
 				$fila = array("id"=>$iSuc["suc_id"],"valores"=>$valoresFila);
 				$tabla->nuevaFila($fila);
 			}
