@@ -7,6 +7,17 @@ include_once("libs/php/class.objetos.base.php");
 $botones_menu["limpio"]=true;
 $botones_configuracion["configuracion"]=true;
 
+$conexion = new Conexion();
+
+//$paises="<option value='0'>-</option>";
+$selectPaises = "SELECT pai_id,pai_nom FROM pais ORDER BY pai_nom";
+$res = $conexion->execSelect($selectPaises);
+if($res["num"]>0){
+	while($iPai = $conexion->fetchArray($res["result"])){
+		$paises .= "<option value='".$iPai["pai_id"]."'>".$iPai["pai_nom"]."</option>";
+	}
+}
+
 
 //- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
 include("res/partes/encabezado.php");
@@ -56,7 +67,7 @@ include("res/partes/encabezado.php");
 						<legend>General</legend>
 						<div class="span5">
 							<label id="nombreSuc_label" class="requerido">Nombre de la Sucursal</label>
-							<input id="nombreSuc" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
+							<input id="nombreSuc" type="text" min-length="2" class="input-block-level" >
 						</div>
 						
 					</fieldset>
@@ -65,38 +76,52 @@ include("res/partes/encabezado.php");
 
 						<legend>Direccion</legend>
 							<div class="span5">
-								<label id="condominioDir_label">Condominio</label>
-								<input id="condominioDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
+								<label id="pais_label">Pais</label>
+								<select id="pais" class="input-block-level" >
+									<?php echo $paises; ?>
+								</select>
 							</div>
 							<div class="span5">
-								<label id="condominio2Dir_label" >Condominio 2</label>
-								<input id="condominio2Dir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-							</div>
-							
-							<div class="span5"> </div>
-							<div class="span5">
-								<label id="calleDir_label" class="requerido">Calle</label>
-								<input id="calleDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
+								<label id="departamento_label">Departamento</label>
+								<select id="departamento" class="input-block-level" >
+								</select>
 							</div>
 							<div class="span5">
-								<label id="complementocalleDir_label" >Complemento Calle</label>
-								<input id="complementocalleDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-							</div>
-							<div class="span5">
-								<label id="casaDir_label" class="requerido">Casa</label>
-								<input id="casaDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-							</div>
-							<div class="span5">
-								<label id="coloniaDir_label" >Colonia</label>
-								<input id="coloniaDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
+								<label id="municipio_label" class="requerido">Municipio</label>
+								<select id="municipio" class="input-block-level">
+								</select>
 							</div>
 							<div class="span5">
 								<label id="distritoDir_label">Distrito</label>
-								<input id="distritoDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
+								<input id="distritoDir" type="text" min-length="2" class="input-block-level" >
 							</div>
 							<div class="span5">
+								<label id="coloniaDir_label" >Colonia</label>
+								<input id="coloniaDir" type="text" min-length="2" class="input-block-level" >
+							</div>
+							<div class="span5">
+								<label id="calleDir_label" class="requerido">Calle</label>
+								<input id="calleDir" type="text" min-length="2" class="input-block-level" >
+							</div>
+							<div class="span5">
+								<label id="complementocalleDir_label" >Complemento Calle</label>
+								<input id="complementocalleDir" type="text" min-length="2" class="input-block-level" >
+							</div>
+							<div class="span5">
+								<label id="condominioDir_label">Condominio</label>
+								<input id="condominioDir" type="text" min-length="2" class="input-block-level" >
+							</div>
+							<div class="span5">
+								<label id="condominio2Dir_label" >Condominio 2</label>
+								<input id="condominio2Dir" type="text" min-length="2" class="input-block-level" >
+							</div>
+							<div class="span5">
+								<label id="casaDir_label">Casa</label>
+								<input id="casaDir" type="text" min-length="2" class="input-block-level" >
+							</div>
+							<div class="span10">
 								<label id="referenciaDir_label">Referencia</label>
-								<input id="referenciaDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
+								<textarea id="referenciaDir" type="text" min-length="2" class="input-block-level" ></textarea>
 							</div>
 
 					</fieldset>
@@ -123,12 +148,18 @@ include("res/partes/encabezado.php");
 				document.getElementById('frmSucursal').reset();
 			});
 			
+			$("#pais").select2();
 		});
 
 		function validarForm(){
 			var errores = 0;
 			var v1 = $('#nombreSuc').val();
+			var v2 = $('#municipio').val();
+			var v3 = $('#calleDir').val();
+
 			if(v1==''){ $('#nombreSuc').addClass('error_requerido'); errores++; }
+			if(v2==''){ $('#municipio').addClass('error_requerido'); errores++; }
+			if(v3==''){ $('#calleDir').addClass('error_requerido'); errores++; }
 			if(errores>0){
 				humane.log('Complete los campos requeridos');
 				return false;

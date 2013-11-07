@@ -12,7 +12,7 @@
 		<li <?php echo ($botones_herramientas["sucursales"]?'class="active" ':''); ?> ><a href="sucursales.php">Sucursales</a></li>
 		<hr />
 		<li <?php echo ($botones_herramientas["documentos"]?'class="active" ':''); ?> ><a href="documentos.php">Tipos de documento</a></li>
-		<li <?php echo ($botones_herramientas["movimientos"]?'class="active" ':''); ?> ><a href="movimientos.php">Tipos de movimiento</a></li>
+		<!--<li <?php echo ($botones_herramientas["movimientos"]?'class="active" ':''); ?> ><a href="movimientos.php">Tipos de movimiento</a></li>-->
 		<li <?php echo ($botones_herramientas["tiposangre"]?'class="active" ':''); ?> ><a href="tipos.sangre.php">Tipos de sangre</a></li>
 	</ul>
 </div>
