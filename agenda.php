@@ -144,7 +144,7 @@ include("res/partes/encabezado.php");
 			<div class="span4" style="text-align:right;">
 				<div class="btn-group">
 					<button id="btnAnterior" title="Semana anterior" class="btn"><<</button>
-					<span class="btn disabled" id="txtSemana">Semana 10: 4/11 - 10/11</span>
+					<span class="btn disabled" id="txtSemana">Semana 45: 4/11 - 10/11</span>
 					<button id="btnSeguiente" title="Semana siguiente" class="btn">>></button>
 				</div>
 
