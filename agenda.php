@@ -329,7 +329,7 @@ include("res/partes/encabezado.php");
 				var ids = id;
 				var action = 'br_cita';
 				
-				bootbox.confirm("¿Esta seguro de eliminar la cita?", function(confirm) {
+				bootbox.confirm("&iquest;Esta seguro de eliminar la cita?", function(confirm) {
 					if(confirm){
 						$.ajax({
 							url:'stores/agenda.php',
