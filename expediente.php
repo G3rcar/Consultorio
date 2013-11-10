@@ -109,8 +109,21 @@ include("res/partes/encabezado.php");
 					</fieldset>
 
 					<label>Dirección</label>
-				    <textarea rows="3" id="dirpac" cols= 50 class="span9" placeholder="Escriba la direccion" value="<?php echo $conf["direccionPaciente"]; ?>"></textarea>
+				    <textarea rows="3" id="dirpac" cols= 50 class="span9" placeholder="Escriba la direccion" value="<?php echo $conf["direccionPaciente"]; ?>"></textarea><br>
 				  
+				    <fieldset>
+                    <div class="span5">
+                    <label>DuI</lavel>
+                    <input id="txtDui" type="text" placeholder="Escriba el DUI" ><br>
+                    </div>
+                    <div class="span5">
+                    <label>NIT</label>
+                    <input id="txtNit" type="text" placeholder="Escriba el NIT" ><br>
+                	</div>
+				    </fieldset>
+
+
+
 					<label>Correo Electronico</label> 	
 					<input id="txtcorreo" type="text" placeholder="e-mail@ejemplo.com" value="<?php echo $conf["correoPaciente"]; ?>">
   					<fieldset>
