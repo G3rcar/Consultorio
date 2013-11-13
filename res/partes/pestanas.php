@@ -1,7 +1,7 @@
 <div class="navbar navbar-inverse navbar-fixed-top">
 	<div class="navbar-inner">
 		<div class="container">
-			<a class="brand" href="#"><?php echo $conf["nombreSistema"]; ?></a>
+			<a class="brand" href="./"><?php echo $conf["nombreSistema"]; ?></a>
 			<ul class="nav pull-right">
 				<li> <a href="#"> <i class="icon-question-sign icon-white"> </i> </a> </li>
 				
@@ -32,7 +32,7 @@
 						<li><a tabindex="-1" href="sucursales.php">Sucursales</a></li>
 						<li class="divider"></li>
 						<li><a tabindex="-1" href="documentos.php">Tipos de documentos</a></li>
-						<li><a tabindex="-1" href="movimientos.php">Tipos de movimientos</a></li>
+						<!--<li><a tabindex="-1" href="movimientos.php">Tipos de movimientos</a></li>-->
 						<li><a tabindex="-1" href="tipos.sangre.php">Tipos de sangre</a></li>
 					</ul>
 				</li>

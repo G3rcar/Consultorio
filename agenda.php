@@ -126,6 +126,8 @@ include("res/partes/encabezado.php");
 			mainAgenda.fechaInicial = <?php echo $fecha_inicial; ?>;
 			mainAgenda.docSeleccionado = <?php echo $docSeleccionado; ?>;
 			mainAgenda.cargarAgenda(<?php echo $docSeleccionado; ?>); 
+
+			$("#btnAnterior").tooltip({'placement': 'right'});
 		});
 	</script>
 
@@ -134,17 +136,25 @@ include("res/partes/encabezado.php");
 	<h2>Agenda <img id="progressBar_main" src="res/img/loading.gif" class="loading_indicator_process" /></h2>
 	<div class="container-fluid">
 		<div class="row-fluid">
-			<div class="span7">
+			<div class="span8">
 				<select id="cmb_doctor" style="width:300px">
 					<?php echo $lsDoctores; ?>
 				</select>
 			</div>
-			<div class="span5">
+			<div class="span4" style="text-align:right;">
+				<div class="btn-group">
+					<button id="btnAnterior" title="Semana anterior" class="btn"><<</button>
+					<span class="btn disabled" id="txtSemana">Semana 45: 4/11 - 10/11</span>
+					<button id="btnSeguiente" title="Semana siguiente" class="btn">>></button>
+				</div>
+
+				<!--
 				<ul class="pager" style="margin-top:0;margin-bottom:0;">
 					<li><a href="#">&larr; Anterior</a></li>
 					<span class="label label-info">Semana 10: 04/11 - 10/11</span>
 					<li><a href="#">Siguiente &rarr;</a></li>
 				</ul>
+				-->
 			</div>
 		</div>
 	</div>
@@ -178,7 +188,7 @@ include("res/partes/encabezado.php");
 	<div id="ManntoCita" class="modal hide fade modalMediana" role="dialog" aria-labelledby="ManntoCita" aria-hidden="true">
 		
 		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			<h3 id="modalHead">Nueva cita</h3>
 		</div>
 		<div class="modal-body" style="overflow-y:visible;" >
@@ -319,7 +329,7 @@ include("res/partes/encabezado.php");
 				var ids = id;
 				var action = 'br_cita';
 				
-				bootbox.confirm("¿Esta seguro de eliminar la cita?", function(confirm) {
+				bootbox.confirm("&iquest;Esta seguro de eliminar la cita?", function(confirm) {
 					if(confirm){
 						$.ajax({
 							url:'stores/agenda.php',

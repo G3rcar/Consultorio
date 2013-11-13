@@ -130,7 +130,7 @@ include("res/partes/encabezado.php");
 				var ids = (tipo=='uno')?id:seleccion;
 				var action = (tipo=='uno')?'br_pais':'br_variospais' ;
 				
-				bootbox.confirm("Â¿Esta seguro de eliminar los registros?", function(confirm) {
+				bootbox.confirm("&iquest;Esta seguro de eliminar los registros?", function(confirm) {
 					if(confirm){
 						$.ajax({
 							url:'stores/paises.php',

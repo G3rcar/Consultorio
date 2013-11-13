@@ -2,19 +2,31 @@
 include("sesion.php");
 //- Incluimos la clase de conexion e instanciamos del objeto principal
 include_once("libs/php/class.connection.php");
+include_once("libs/php/class.objetos.base.php");
 
 $botones_menu["limpio"]=true;
-$botones_herramientas["sucursales"]=true;
+$botones_configuracion["configuracion"]=true;
+
+$conexion = new Conexion();
+
+//$paises="<option value='0'>-</option>";
+$selectPaises = "SELECT pai_id,pai_nom FROM pais ORDER BY pai_nom";
+$res = $conexion->execSelect($selectPaises);
+if($res["num"]>0){
+	while($iPai = $conexion->fetchArray($res["result"])){
+		$paises .= "<option value='".$iPai["pai_id"]."'>".$iPai["pai_nom"]."</option>";
+	}
+}
 
 
 //- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
 include("res/partes/encabezado.php");
 
+
 ?>
 <!-- Estilo extra -->
 <style>
 .sidebar-nav { padding: 9px 0; }
-
 .headGrid{
 	background-color: #33b5e5;
 }
@@ -23,30 +35,98 @@ include("res/partes/encabezado.php");
 }
 
 </style>
+<link href="res/css/select2/select2.css" rel="stylesheet"/>
+<link href="res/css/bootstrap/css/bootstrap-timepicker.css" rel="stylesheet"/>
 <!-- /Estilo extra -->
 
 <!-- Scripts extra -->
+<script type="text/javascript" src="libs/js/select2/select2.js"></script>
+<script type="text/javascript" src="libs/js/select2/select2_locale_es.js"></script>
+    <script type="text/javascript" src="libs/js/bootstrap-timepicker.js"></script>
 <script type="text/javascript" src="libs/js/custom/objetos-comunes.js"></script>
 
 <!-- /Scripts extra -->
 
 
-	<h3>Cat&aacute;logos: sucursales</h3>
+	<h3>Sucursales</h3>
 
 	<div class="container-fluid">
 		<div class="row-fluid">
 			
 			<!-- Columna fluida con peso 3/12 -->
 			<div class="span3">
-				<?php include('res/partes/herramientas.catalogos.php'); ?>
+				<?php include_once('res/partes/herramientas.formularios.php'); ?>
 			</div>
 			<!-- /Columna fluida con peso 3/12 -->
 
 
 			<!-- Columna fluida con peso 9/12 -->
+			<div id="AgregarSuc" class="span9">
+				<form id="frmSucursal">
+					<fieldset>
+						<legend>General</legend>
+						<div class="span5">
+							<label id="nombreSuc_label" class="requerido">Nombre de la Sucursal</label>
+							<input id="nombreSuc" type="text" min-length="2" class="input-block-level" >
+						</div>
+						
+					</fieldset>
+					<br>
+					<fieldset>
 
-			<div id="contenedorTabla" class="span9">
-				
+						<legend>Direccion</legend>
+							<div class="span5">
+								<label id="pais_label">Pais</label>
+								<select id="pais" class="input-block-level" >
+									<?php echo $paises; ?>
+								</select>
+							</div>
+							<div class="span5">
+								<label id="departamento_label">Departamento</label>
+								<select id="departamento" class="input-block-level" >
+								</select>
+							</div>
+							<div class="span5">
+								<label id="municipio_label" class="requerido">Municipio</label>
+								<select id="municipio" class="input-block-level">
+								</select>
+							</div>
+							<div class="span5">
+								<label id="distritoDir_label">Distrito</label>
+								<input id="distritoDir" type="text" min-length="2" class="input-block-level" >
+							</div>
+							<div class="span5">
+								<label id="coloniaDir_label" >Colonia</label>
+								<input id="coloniaDir" type="text" min-length="2" class="input-block-level" >
+							</div>
+							<div class="span5">
+								<label id="calleDir_label" class="requerido">Calle</label>
+								<input id="calleDir" type="text" min-length="2" class="input-block-level" >
+							</div>
+							<div class="span5">
+								<label id="complementocalleDir_label" >Complemento Calle</label>
+								<input id="complementocalleDir" type="text" min-length="2" class="input-block-level" >
+							</div>
+							<div class="span5">
+								<label id="condominioDir_label">Condominio</label>
+								<input id="condominioDir" type="text" min-length="2" class="input-block-level" >
+							</div>
+							<div class="span5">
+								<label id="condominio2Dir_label" >Condominio 2</label>
+								<input id="condominio2Dir" type="text" min-length="2" class="input-block-level" >
+							</div>
+							<div class="span5">
+								<label id="casaDir_label">Casa</label>
+								<input id="casaDir" type="text" min-length="2" class="input-block-level" >
+							</div>
+							<div class="span10">
+								<label id="referenciaDir_label">Referencia</label>
+								<textarea id="referenciaDir" type="text" min-length="2" class="input-block-level" ></textarea>
+							</div>
+
+					</fieldset>
+					<br>
+				</form>
 			</div>
 			<!-- /Columna fluida con peso 9/12 -->
 			
@@ -56,21 +136,30 @@ include("res/partes/encabezado.php");
 
 	<!-- Scripts -->
 
+	
+
 	<script>
 		$(document).ready(function(){
 			cargarTabla();
 
-			$('#lnkAgregar').attr('href','sucursales.form.php');
-			//$('#lnkAgregar').click(function(){ manto.agregar(); });
-			$('#lnkBorrar').click(function(){ manto.borrar(); });
-			$('#guardarSuc').click(function(){ manto.guardar(); });
+			$('#lnkGuardar').click(function(){ manto.guardar(); });
+			$('#lnkCancelar').attr('href','sucursales.php');
+			$('#lnkLimpiar').click(function(){
+				document.getElementById('frmSucursal').reset();
+			});
 			
+			$("#pais").select2();
 		});
 
 		function validarForm(){
 			var errores = 0;
 			var v1 = $('#nombreSuc').val();
+			var v2 = $('#municipio').val();
+			var v3 = $('#calleDir').val();
+
 			if(v1==''){ $('#nombreSuc').addClass('error_requerido'); errores++; }
+			if(v2==''){ $('#municipio').addClass('error_requerido'); errores++; }
+			if(v3==''){ $('#calleDir').addClass('error_requerido'); errores++; }
 			if(errores>0){
 				humane.log('Complete los campos requeridos');
 				return false;
@@ -82,7 +171,7 @@ include("res/partes/encabezado.php");
 		function cargarTabla(){
 			$.ajax({
 				url:'stores/sucursales.php',
-				data:'action=gd_sucursal', dataType:'json', type:'POST',
+				data:'action=gd_suc', dataType:'json', type:'POST',
 				complete:function(datos){
 					$("#contenedorTabla").html(datos.responseText);
 				}
@@ -131,7 +220,7 @@ include("res/partes/encabezado.php");
 				var ids = (tipo=='uno')?id:seleccion;
 				var action = (tipo=='uno')?'br_suc':'br_variossuc' ;
 				
-				bootbox.confirm("&iquest;Esta seguro de eliminar los registros?", function(confirm) {
+				bootbox.confirm("¿Esta seguro de eliminar los registros?", function(confirm) {
 					if(confirm){
 						$.ajax({
 							url:'stores/sucursales.php',
@@ -193,45 +282,7 @@ include("res/partes/encabezado.php");
 	<!-- Modales -->
 
 	<!-- Agregar -->
-	<div id="AgregarSuc" class="modal hide fade modalPequena" tabindex="-1" role="dialog" aria-labelledby="AgregarSuc" aria-hidden="true">
-		
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3 id="modalHead">Agregar sucursal</h3>
-		</div>
-		<div class="modal-body">
-			<form>
-				<fieldset>
-					<label id="nombreSuc_label" class="requerido">Nombre</label>
-					<input id="nombreSuc" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-					<label id="condominioDir_label">Condominio</label>
-					<input id="condominioDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-					<label id="condominio2Dir_label" >Condominio 2</label>
-					<input id="condominio2Dir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-					<label id="calleDir_label" class="requerido">Calle</label>
-					<input id="calleDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-					<label id="complementocalleDir_label" >Complemento Calle</label>
-					<input id="complementocalleDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-					<label id="casaDir_label" class="requerido">Casa</label>
-					<input id="casaDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-					<label id="coloniaDir_label" >Colonia</label>
-					<input id="coloniaDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-					<label id="distritoDir_label">Distrito</label>
-					<input id="distritoDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-					<label id="referenciaDir_label">Referencia</label>
-					<input id="referenciaDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-					
-					
-				</fieldset>
-			</form>
-		</div>
-		<div class="modal-footer">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-			<button id="guardarSuc" class="btn btn-primary">Guardar</button>
-		</div>
-
-	</div>
-
+	
 
 
 <?php include('res/partes/pie.pagina.php'); ?>

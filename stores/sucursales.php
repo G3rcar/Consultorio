@@ -14,20 +14,23 @@ if(!isset($_POST["action"])){ exit(); }
 $accion = $_POST["action"];
 
 switch ($accion) {
-	case 'gd_suc':
+	case 'gd_sucursal':
 
-		$selSuc = " SELECT suc_id,suc_nom,dir_cond,dir_cond2,dir_calle,dir_compcalle, dir_casa, dir_col, dir_dist, dir_ref, dir_fecha_cre, dir_idmun
-		FROM sucursal
-		INNER JOIN direccion ON suc_iddir = dir_id
-		ORDER BY suc_id ";
+		$selSuc = " SELECT su.suc_id,su.suc_nom,mu.mun_nom,de.dep_nom,DATE_FORMAT(di.dir_fecha_cre,'%d/%m/%Y') AS 'dir_fecha_cre'
+					FROM sucursal AS su
+					INNER JOIN direccion AS di ON su.suc_iddir = di.dir_id
+					INNER JOIN municipio AS mu ON di.dir_idmun = mu.mun_id
+					INNER JOIN departamento AS de ON mu.mun_iddep = de.dep_id
+					ORDER BY suc_id ";
 
 
 
 		$res = $conexion->execSelect($selSuc);
 		$headers = array(
 			"Nombre",
+			array("width"=>"200","text"=>"Direccion"),
 			array("width"=>"200","text"=>"Fecha de creaci&oacute;n"),
-			array("width"=>"200","text"=>"Direccion;"),
+			array("width"=>"15","text"=>"&nbsp;"),
 			array("width"=>"15","text"=>"&nbsp;")
 		);
 		$tabla = new GridCheck($headers,"gridSucursales");
@@ -35,11 +38,11 @@ switch ($accion) {
 			$i=0;
 			while($iSuc = $conexion->fetchArray($res["result"])){
 				//Iconos
-				$editar = "<a href='#' onClick='manto.editar({$iSuc["id"]});' title='Editar' ><i class='icon-edit'></i></a>";
-				$borrar = "<a href='#' onClick='manto.borrar({$iSuc["id"]});' title='Borrar' ><i class='icon-remove'></i></a>";
+				$editar = "<a href='#' onClick='manto.editar({$iSuc["suc_id"]});' title='Editar' ><i class='icon-edit'></i></a>";
+				$borrar = "<a href='#' onClick='manto.borrar({$iSuc["suc_id"]});' title='Borrar' ><i class='icon-remove'></i></a>";
 				
-				$valoresFila = array(utf8_encode($iSuc["nombre"]),$iSuc["creacion"],$editar,$borrar);
-				$fila = array("id"=>$iSuc["id"],"valores"=>$valoresFila);
+				$valoresFila = array(utf8_encode($iSuc["suc_nom"]),$iSuc["mun_nom"].", ".$iSuc["dep_nom"],$iSuc["dir_fecha_cre"],$editar,$borrar);
+				$fila = array("id"=>$iSuc["suc_id"],"valores"=>$valoresFila);
 				$tabla->nuevaFila($fila);
 			}
 		}
@@ -55,14 +58,22 @@ switch ($accion) {
 		$tipo = ($_POST["id"]=="")?'nuevo':'editar';
 
 		$id = (int)$conexion->escape($_POST["id"]);
-		$nombre = $conexion->escape(utf8_decode($_POST["nombre"]));
-		
+		$nombre  = $conexion->escape(utf8_decode($_POST["nombre"]));
+		$condominio = $conexion->escape(utf8_decode($_POST["condominio"]));
+		$condominio2 = $conexion->escape(utf8_decode($_POST["condominio2"]));
+		$calle = $conexion->escape(utf8_decode($_POST["calle"]));
+		$calleComplemento = $conexion->escape(utf8_decode($_POST["calleComplemento"]));
+		$casa = $conexion->escape(utf8_decode($_POST["casa"]));
+		$colonia = $conexion->escape(utf8_decode($_POST["colonia"]));
+		$distrito = $conexion->escape(utf8_decode($_POST["distrito"]));
+		$referencia = $conexion->escape(utf8_decode($_POST["referencia"]));
 		$nuevoSuc = "";
 		if($tipo=='nuevo'){
-			$mantoSuc = "INSERT INTO direccion(nombre,creacion) VALUES('{$nombre}',NOW()) ";
-			"INSERT INTO sucursal(nombre,creacion) VALUES('{$nombre}',NOW()) ";
+			$mantoSuc = "INSERT INTO direccion(dir_cond,dir_cond2,dir_calle,dir_compcalle, dir_casa, dir_col, dir_dist, dir_ref, dir_fecha_cre) VALUES('{$condominio}','{$condominio2}','{$calle}','{$calleComplemento}','{$casa}','{$colonia}','{$distrito}','{$referencia}',NOW()) ";
+			"INSERT INTO sucursal(suc_nom) VALUES('{$nombre}') ";
 		}else{
-			$mantoSuc = "UPDATE sucursal SET nombre='{$nombre}' WHERE id = {$id} ";
+			$mantoSuc = "UPDATE sucursal SET suc_nombre='{$nombre}' WHERE suc_id = {$id} ";
+			"UPDATE sucursal SET suc_nombre='{$nombre}' WHERE suc_id = {$id} ";
 		}
 		
 		$res = 0;
@@ -83,12 +94,12 @@ switch ($accion) {
 		if(!isset($_POST["id"])){ exit(); }
 		$id = $conexion->escape($_POST["id"]);
 
-		$selSuc = "SELECT id,nombre FROM sucursal WHERE id = {$id} ";
+		$selSuc = "SELECT suc_id,suc_nom   FROM sucursal WHERE suc_id = {$id} ";
 		$res = $conexion->execSelect($selSuc);
 
 		if($res["num"]>0){
 			$iSuc = $conexion->fetchArray($res["result"]);
-			$result = array("id"=>$iSuc["id"],"nombre"=>utf8_encode($iSuc["nombre"]));
+			$result = array("id"=>$iSuc["suc_id"],"suc_nom"=>utf8_encode($iSuc["suc_nom"]));
 		}
 
 		echo json_encode($result);
@@ -101,7 +112,7 @@ switch ($accion) {
 		if(!isset($_POST["id"])){ exit(); }
 		$id = json_decode($_POST["id"],true);
 
-		$borrarSuc = "DELETE FROM sucursal WHERE id = {$id} ";
+		$borrarSuc = "DELETE FROM sucursal WHERE suc_id = {$id} ";
 		$res = $conexion->execManto($borrarSuc);
 		if($res>0){
 			$result = array("success"=>"true","msg"=>"La sucursal se ha borrado");
@@ -125,7 +136,7 @@ switch ($accion) {
 		for($i=0;$i<$tot;$i++){
 			$id = $ids[$i];
 
-			$borrarSuc = "DELETE FROM sucursal WHERE id = {$id} ";
+			$borrarSuc = "DELETE FROM sucursal WHERE suc_id = {$id} ";
 			$res = $conexion->execManto($borrarSuc);
 			if(!($res>0)) $errores++;
 		}

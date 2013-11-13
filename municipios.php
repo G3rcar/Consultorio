@@ -244,7 +244,7 @@ include("res/partes/encabezado.php");
 				var ids = (tipo=='uno')?id:seleccion;
 				var action = (tipo=='uno')?'br_muni':'br_variosmuni' ;
 				
-				bootbox.confirm("¿Esta seguro de eliminar los registros?", function(confirm) {
+				bootbox.confirm("&iquest;Esta seguro de eliminar los registros?", function(confirm) {
 					if(confirm){
 						$.ajax({
 							url:'stores/municipios.php',
