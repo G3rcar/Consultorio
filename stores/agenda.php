@@ -10,6 +10,7 @@ $conexion = new Conexion();
 $minutos_citas = $conf["duracion"]; //40;
 $hora_inicio = $conf["horaInicio"]; //1379854800;
 $hora_fin = $conf["horaFin"]; //1379887200;
+$arrayDias = array("1"=>"Lunes","2"=>"Martes","3"=>"Mi&eacute;rcoles","4"=>"Jueves","5"=>"Viernes","6"=>"S&aacute;bado","7"=>"Domingo");
 
 
 //- Si la variable action no viene se detenemos la ejecucion
@@ -45,10 +46,12 @@ switch ($accion) {
 		$fecha_inicial = date('Y/m/d',$_POST["fechainicial"]);
 		$fecha_final = date('Y/m/d',strtotime("+7 days",$_POST["fechainicial"]));
 
+		$idDoctor = $conexion->escape($_POST["iddoctor"]);
+
 		$selCitas = "SELECT c.cit_id AS 'id',CONCAT(p.pac_nom,' ',p.pac_ape) AS 'nombre', DATE_FORMAT(c.cit_fecha_cita,'%Y/%m/%d') AS 'fecha',
 						DATE_FORMAT(c.cit_fecha_cita,'%H:%i') AS 'hora'
 						FROM cita AS c INNER JOIN paciente AS p ON c.cit_idpac = p.pac_id
-						WHERE c.cit_fecha_cita BETWEEN '{$fecha_inicial}' AND '{$fecha_final}' ";
+						WHERE c.cit_fecha_cita BETWEEN '{$fecha_inicial}' AND '{$fecha_final}' AND c.cit_idemp = {$idDoctor} ";
 		
 		$res = $conexion->execSelect($selCitas);
 		$citas = array();
@@ -125,6 +128,42 @@ switch ($accion) {
 			$result = array("success"=>"false","msg"=>"La cita tiene una consulta relacionada");
 		}
 		echo json_encode($result);
+	break;
+
+	case 'data_semanas':
+		if(!isset($_POST["tipo_cambio"]) || !isset($_POST["fecha"])) exit();
+
+		$fecha_actual = (int)$_POST["fecha"];
+		$tipo = $_POST["tipo_cambio"];
+
+		if($tipo=="data_anterior"){
+			$inicial = strtotime("-7 days",$fecha_actual);
+		}elseif($tipo=="data_siguiente"){
+			$inicial = strtotime("+7 days",$fecha_actual);
+		}else{
+			$inicial = $fecha_actual;
+		}
+		$numSemana = date("W",$inicial);
+		$actual = $inicial;
+		$dias = array();
+		$abreviatura_inicial=$abreviatura_final="";
+		for($i=1;$i<=7;$i++){
+
+			$diaI = date("d",$actual);
+			$mesI = date("m",$actual);
+			if($i==1) $abreviatura_inicial = "{$diaI}/{$mesI}";
+			if($i==7) $abreviatura_final = "{$diaI}/{$mesI}";
+
+			$nomDiaI = $arrayDias[date("N",$actual)];
+			$dias[]=$nomDiaI." ".date("d/m",$actual);
+			$actual = strtotime("+1 day",$actual);
+		}
+
+		$textoInfo = "Semana {$numSemana}: {$abreviatura_inicial} - {$abreviatura_final}";
+
+		$response = array("primerDia"=>$inicial,"numSemana"=>$numSemana,"textoInfo"=>$textoInfo,"dias"=>$dias);
+		echo json_encode($response);
+
 	break;
 
 

@@ -10,7 +10,7 @@
 						<i class="icon-user icon-white"></i> <b class="caret"></b>
 					</a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
-						<li class="disabled"><a tabindex="-1" class="username"> <?php echo $_SESSION["nombre"]; ?> </a></li>
+						<li class="disabled"><a tabindex="-1" class="username"> <?php echo utf8_encode($_SESSION["nombre"]); ?> </a></li>
 						<li class="divider"></li>
 						<li><a tabindex="-1" href="cuenta.php"><i class="icon-wrench"></i> Cuenta</a></li>
 						<li><a tabindex="-1" href="logout.php"><i class="icon-off"></i> Salir</a></li>

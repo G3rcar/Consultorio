@@ -7,6 +7,7 @@ $conexion = new Conexion();
 $botones_menu["citas"]=true;
 
 $idUsuario = $_SESSION["iduser"];
+$idEmpleado = $_SESSION["idempleado"];
 $esDoctor = $_SESSION["esDoctor"];
 
 $minutos_citas = $conf["duracion"]; //40;
@@ -36,7 +37,7 @@ while($finalizado==false){
 	for($i=1;$i<=7;$i++){
 
 		$tabla_agenda .= "<td class='events'> <div id='h_{$ho}_d_{$i}' p:fecha='{$fecha_impresion}' p:hora='{$hora}'>
-			<span class='out-button'> <a href='#' onClick='citas.nueva($fecha_impresion,\"{$hora}\")' title='Agregar'><i class='icon-plus'></i> </a> </span> </div> </td>";
+			<span class='out-button'> <a onClick='citas.nueva($fecha_impresion,\"{$hora}\")' title='Agregar' class='btnPlus'><i class='icon-plus'></i> </a> </span> </div> </td>";
 		$fecha_impresion = strtotime("+1 day",$fecha_impresion);
 	}
 	$tabla_agenda .= "</tr>";
@@ -51,11 +52,17 @@ while($finalizado==false){
 
 //----Impresion de días de la agenda
 $dias_agenda="";
+$abreviatura_inicial="";
+$abreviatura_final="";
+$num_semana=date("W",$fecha_inicial);
 for($i=1;$i<=7;$i++){
 	$diaI = date("d",$fecha_impresion);
 	$mesI = date("m",$fecha_impresion);
+	if($i==1) $abreviatura_inicial = "{$diaI}/{$mesI}";
+	if($i==7) $abreviatura_final = "{$diaI}/{$mesI}";
+
 	$nomDiaI = $arrayDias[date("N",$fecha_impresion)];
-	$dias_agenda .= "<th width='13%'>{$nomDiaI} {$diaI}/{$mesI}</th>";
+	$dias_agenda .= "<th width='13%' id='txt_dia_{$i}'>{$nomDiaI} {$diaI}/{$mesI}</th>";
 	$fecha_impresion = strtotime("+1 day",$fecha_impresion);
 }
 $fecha_impresion=$fecha_inicial;
@@ -74,7 +81,7 @@ $docSeleccionado = "0"; //Id del doctor que se seleccione del listado
 if($res["num"]>0){
 	$i=0;
 	while($iDoc = $conexion->fetchArray($res["result"])){
-		if($idUsuario==$iDoc["id"] && $esDoctor){
+		if($idEmpleado==$iDoc["id"] && $esDoctor){
 			$seleccion=" selected ";
 			$docSeleccionado = $iDoc["id"];
 		}elseif($i==0 && !$esDoctor){
@@ -106,6 +113,9 @@ include("res/partes/encabezado.php");
 		.item-agenda{
 			transition: all 3s;
 		}
+		.btnPlus{
+			cursor: pointer;
+		}
 		
 	</style>
 	<link href="res/css/select2/select2.css" rel="stylesheet"/>
@@ -122,12 +132,20 @@ include("res/partes/encabezado.php");
 		$(document).ready(function(){
 			
 			$("#cmb_doctor").select2();
+			$("#cmb_doctor").change(function(){
+				mainAgenda.cargarAgenda($(this).val());
+			});
 			$('.table-fixed-header').fixedHeader();
 			mainAgenda.fechaInicial = <?php echo $fecha_inicial; ?>;
+			mainAgenda.fechaActual = <?php echo $fecha_inicial; ?>;
 			mainAgenda.docSeleccionado = <?php echo $docSeleccionado; ?>;
-			mainAgenda.cargarAgenda(<?php echo $docSeleccionado; ?>); 
+			mainAgenda.numSemana = <?php echo $num_semana; ?>;
+			mainAgenda.cargarAgenda(<?php echo $docSeleccionado; ?>);
 
-			$("#btnAnterior").tooltip({'placement': 'right'});
+			$("#btnAnterior").click(function(){ mainAgenda.cargarDatosSemanas('anterior'); });
+			$("#btnSeguiente").click(function(){ mainAgenda.cargarDatosSemanas('siguiente'); });
+			$("#btnSemanaActual").click(function(){ mainAgenda.cargarDatosSemanas('actual'); });
+
 		});
 	</script>
 
@@ -136,16 +154,19 @@ include("res/partes/encabezado.php");
 	<h2>Agenda <img id="progressBar_main" src="res/img/loading.gif" class="loading_indicator_process" /></h2>
 	<div class="container-fluid">
 		<div class="row-fluid">
-			<div class="span8">
+			<div class="span7">
 				<select id="cmb_doctor" style="width:300px">
 					<?php echo $lsDoctores; ?>
 				</select>
 			</div>
-			<div class="span4" style="text-align:right;">
+			<div class="span5" style="text-align:right;">
 				<div class="btn-group">
-					<button id="btnAnterior" title="Semana anterior" class="btn"><<</button>
-					<span class="btn disabled" id="txtSemana">Semana 45: 4/11 - 10/11</span>
-					<button id="btnSeguiente" title="Semana siguiente" class="btn">>></button>
+					<!-- badge-important sera cuando haya uno -->
+					<button id="btnSolicitudes" title="Semana anterior" class="btn">Solicitudes <span class="badge ">0</span></button>
+					<button id="btnAnterior" title="Semana anterior" class="btn"><i class="icon-step-backward"></i></button>
+					<span class="btn disabled" id="txtSemana">Semana <?php echo $num_semana.": ".$abreviatura_inicial." - ".$abreviatura_final; ?></span>
+					<button id="btnSeguiente" title="Semana siguiente" class="btn"><i class="icon-step-forward"></i></button>
+					<button id="btnSemanaActual" title="Hoy" class="btn"><i class="icon-calendar" ></i></button>
 				</div>
 
 				<!--
@@ -286,6 +307,10 @@ include("res/partes/encabezado.php");
 					minuteStep: dr_ci, showInputs: true, showSeconds: false, showMeridian: true 
 				}).on("changeTime.timepicker",function(e){ _t.procesarMinutos(e.time,"fin"); });*/
 				$('#comentario').val('').removeClass('error_requerido').attr('title','');
+			},
+
+			editar:function(id){
+				console.log('editando '+id);
 			},
 			
 			guardar:function(){

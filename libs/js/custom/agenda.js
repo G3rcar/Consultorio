@@ -2,6 +2,9 @@ var mainAgenda = {
 
 	docSeleccionado:0,
 	fechaInicial:0,
+	fechaActual:0,
+	numSemana:0,
+
 
 	cargarAgenda:function(idDoctor){
 		var _t = this;
@@ -9,14 +12,16 @@ var mainAgenda = {
 
 		$.ajax({
 			url:'stores/agenda.php',
-			data:'action=rt_agenda&iddoctor='+idDoctor+'&fechainicial='+_t.fechaInicial, dataType:'json', type:'POST',
+			data:'action=rt_agenda&iddoctor='+idDoctor+'&fechainicial='+_t.fechaActual, dataType:'json', type:'POST',
 			complete:function(datos){
 				var T = jQuery.parseJSON(datos.responseText);
 				var total = T.total;
+				_t.removerTodo();
 				for(var i=0;i<total;i++){
 					rec = T.citas[i];
 					_t.crearEvento(rec.id_cita,rec.posicion,rec.offset,rec.texto_uno,rec.texto_dos);
 				}
+				_t.agregarListeners()
 				//humane.log(T.msg)
 				//if(T.success=='true') cargarTabla();
 			}
@@ -29,7 +34,7 @@ var mainAgenda = {
 		'<span class="title">'+texto_uno+'</span>'+
 		'<span class="lecturer">'+texto_dos+'</span> '+
 		'<span class="buttons">'+
-		//	'<button class="btn btn-primary btn-hover" title="Editar" onClick="citas.editar('+i+')"><i class="icon-edit icon-white"></i></button>'+
+			'<button class="btn btn-primary btn-hover" title="Editar" onClick="citas.editar('+id+')"><i class="icon-edit icon-white"></i></button>'+
 			'<button class="btn btn-primary btn-hover" title="Cancelar" onClick="citas.borrar('+id+')"><i class="icon-remove icon-white"></i></button>'+
 		'</span> '+
 		'</div></td></tr></table>';
@@ -58,6 +63,44 @@ var mainAgenda = {
 			var id = $(this).attr('p:id');
 			console.log(id);
 			_t.removerEvento(id);
+		});
+	},
+
+	cargarDatosSemanas:function(t){
+		var _t = this;
+		var fechaEnv;
+		switch(t){
+			case 'anterior': tipo = 'data_anterior'; fechaEnv=_t.fechaActual; break;
+			case 'siguiente': tipo = 'data_siguiente'; fechaEnv=_t.fechaActual; break;
+			default: tipo = 'data_actual'; fechaEnv=_t.fechaInicial; break;
+		}
+		$.ajax({
+			url:'stores/agenda.php',
+			data:{ action:'data_semanas', tipo_cambio:tipo, fecha:fechaEnv },
+			dataType:'json', type:'POST',
+			complete:function(datos){
+				var T = jQuery.parseJSON(datos.responseText);
+				_t.fechaActual = T.primerDia;
+				_t.numSemana = T.numSemana;
+				$("#txtSemana").html(T.textoInfo);
+				_t.refrescarAgenda(T.dias);
+			}
+		});
+	},
+
+	refrescarAgenda:function(dias){
+		var _t = this;
+		for(var i=0;i<7;i++){
+			$("#txt_dia_"+(i+1)).html(dias[i]);
+		}
+		_t.removerTodo();
+		_t.cargarAgenda(_t.docSeleccionado);
+	},
+
+	agregarListeners:function(){
+		$('.has-events .practice').click(function(){
+			var id = $(this).attr('p:id');
+			console.log(id);
 		});
 	}
 
