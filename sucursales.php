@@ -227,7 +227,7 @@ include("res/partes/encabezado.php");
 		</div>
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-			<button id="guardarSuc" class="btn btn-primary">Guardar</button>
+			<button id="guardarMun" class="btn btn-primary">Guardar</button>
 		</div>
 
 	</div>

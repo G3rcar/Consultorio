@@ -5,7 +5,7 @@
 		<?php 
 		if(!$botones_configuracion["configuracion"]){ 
 		//Si no esta en la pagina de configuracion se muestran los botones de agregar y borrar 
-		?>
+		?> <!--****Aqui estan los botones de agregar, borrar y guardar en el menu de configuraciones**** -->
 		<li><a id="lnkAgregar" href="#"><i class="icon-plus"></i> Agregar</a></li>
 		<li><a id="lnkBorrar" href="#"><i class="icon-remove"></i> Borrar</a></li>
 		<?php 
@@ -15,7 +15,7 @@
 		<li><a id="lnkGuardar" href="#"><i class="icon-hdd"></i> Guardar</a></li>
 		<?php } ?>
 		
-		<li class="nav-header">Cat&aacute;logos</li>
+		<li class="nav-header">Cat&aacute;logos</li>  <!--***Link del catalogo de las configuraciones****-->
 		<li <?php echo ($botones_configuracion["configuracion"]?'class="active" ':''); ?> ><a href="configuracion.php">Configuracion General</a></li>
 		<li <?php echo ($botones_configuracion["cargos"]?'class="active" ':''); ?> ><a href="cargos.php">Cargos</a></li>
 		<li <?php echo ($botones_configuracion["roles"]?'class="active" ':''); ?> ><a href="roles.php">Roles</a></li>
