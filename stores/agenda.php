@@ -49,7 +49,7 @@ switch ($accion) {
 		$idDoctor = $conexion->escape($_POST["iddoctor"]);
 
 		$selCitas = "SELECT c.cit_id AS 'id',CONCAT(p.pac_nom,' ',p.pac_ape) AS 'nombre', DATE_FORMAT(c.cit_fecha_cita,'%Y/%m/%d') AS 'fecha',
-						DATE_FORMAT(c.cit_fecha_cita,'%H:%i') AS 'hora'
+						DATE_FORMAT(c.cit_fecha_cita,'%H:%i %p') AS 'hora'
 						FROM cita AS c INNER JOIN paciente AS p ON c.cit_idpac = p.pac_id
 						WHERE c.cit_fecha_cita BETWEEN '{$fecha_inicial}' AND '{$fecha_final}' AND c.cit_idemp = {$idDoctor} ";
 		
@@ -68,7 +68,7 @@ switch ($accion) {
 					"posicion"=>$posicion["id"],
 					"offset"=>$posicion["offset"],
 					"texto_uno"=>utf8_encode($iCita["nombre"]),
-					"texto_dos"=>$iCita["fecha"]." ".$iCita["hora"]
+					"texto_dos"=>strtolower($iCita["hora"])
 				);
 				$i++;
 			}
@@ -76,6 +76,34 @@ switch ($accion) {
 
 		$results = array("citas"=>$registros,"total"=>$i);
 		echo json_encode($results);
+
+	break;
+
+	case 'rt_cita':
+		if(!isset($_POST["id"])) exit();
+
+		$id = (int)$conexion->escape($_POST["id"]);
+
+		$selInfo = "SELECT c.cit_id AS 'id', c.cit_idemp AS 'idEm', CONCAT(e.emp_nombre,' ',e.emp_apellido) AS 'empleado', 
+					c.cit_idpac AS 'idPa', p.pac_nom
+					DATE_FORMAT(c.cit_fecha_cita,'%Y/%m/%d') AS 'fecha',DATE_FORMAT(c.cit_fecha_cita,'%h:%i %p') AS 'hora' 
+					FROM cita AS c INNER JOIN empleado AS e ON c.cit_idemp = e.emp_id
+					INNER JOIN paciente AS p ON c.cit_idpac = p.pac_id
+					WHERE c.cit_id = {$id} ";
+
+		$res = $conexion->execSelect($selInfo);
+		if($res["num"]>0){
+			$iC = $conexion->fetchArray($res["num"]);
+			$result = array(
+				"success"=>true
+				"fecha"=>strtotime($iC["fecha"]),
+				"hora"=>$iC["hora"],
+				"idPa"=>$iC["hora"],
+				"nomPa"=>$iC["hora"],
+				"idEm"=>$iC["hora"],
+				"nomEm"=>$iC["hora"]
+				)
+		}
 
 	break;
 

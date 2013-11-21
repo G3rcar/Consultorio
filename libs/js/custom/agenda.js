@@ -93,6 +93,7 @@ var mainAgenda = {
 		for(var i=0;i<7;i++){
 			$("#txt_dia_"+(i+1)).html(dias[i]);
 		}
+		$('.table-fixed-header').fixedHeader();
 		_t.removerTodo();
 		_t.cargarAgenda(_t.docSeleccionado);
 	},

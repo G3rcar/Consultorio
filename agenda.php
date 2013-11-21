@@ -154,15 +154,16 @@ include("res/partes/encabezado.php");
 	<h2>Agenda <img id="progressBar_main" src="res/img/loading.gif" class="loading_indicator_process" /></h2>
 	<div class="container-fluid">
 		<div class="row-fluid">
-			<div class="span7">
+			<div class="span5">
 				<select id="cmb_doctor" style="width:300px">
 					<?php echo $lsDoctores; ?>
 				</select>
 			</div>
-			<div class="span5" style="text-align:right;">
+			<div class="span7" style="text-align:right;">
 				<div class="btn-group">
 					<!-- badge-important sera cuando haya uno -->
-					<button id="btnSolicitudes" title="Semana anterior" class="btn">Solicitudes <span class="badge ">0</span></button>
+					<button id="btnSolicitudes" class="btn">Solicitudes <span class="badge ">0</span></button>
+					<button id="btnSolicitudes" class="btn">Citas Canceladas</button>
 					<button id="btnAnterior" title="Semana anterior" class="btn"><i class="icon-step-backward"></i></button>
 					<span class="btn disabled" id="txtSemana">Semana <?php echo $num_semana.": ".$abreviatura_inicial." - ".$abreviatura_final; ?></span>
 					<button id="btnSeguiente" title="Semana siguiente" class="btn"><i class="icon-step-forward"></i></button>
@@ -188,7 +189,7 @@ include("res/partes/encabezado.php");
 		<div class="table-content"> 
 		<table class="calendar table table-bordered table-fixed-header">
 			<thead class="header">
-				<tr>
+				<tr style="background:#F8F8F8;">
 					<th width="6%">&nbsp;</th>
 					<?php echo $dias_agenda; ?>
 				</tr>
@@ -279,6 +280,7 @@ include("res/partes/encabezado.php");
 			fecha_seleccionada:0,
 			nueva:function(fecha,hora){
 				var _t = this;
+				_t.id = 0;
 				_t.fecha_seleccionada = fecha;
 				$('#ManntoCita').modal('show');
 				
@@ -310,7 +312,52 @@ include("res/partes/encabezado.php");
 			},
 
 			editar:function(id){
+				var _t = this;
 				console.log('editando '+id);
+
+				_t.estado = 'editar';
+				_t.id = id;
+
+				$.ajax({
+					url:'stores/agenda.php', data:{ action:'rt_cita', id:id }, 
+					dataType:'json', type:'POST',
+					complete:function(datos){
+						var T = jQuery.parseJSON(datos.responseText);
+						_t.mannto(_t.id,T.hora,T.idPa,T.nomPa,T.idEm,T.nomEm);
+					}
+				})
+			},
+
+			mannto:function(id,hora,iPa,nPa,iEm,nEm){
+				var _t = this;
+				_t.fecha_seleccionada = fecha;
+				$('#ManntoCita').modal('show');
+				
+				$("#empleado").select2({ allowClear:true });
+				$("#paciente").select2("val","");
+
+				$("#paciente").select2({
+					placeholder: "Seleccionar",
+					escapeMarkup: function(m) { return m; },
+					ajax: {
+						url: "stores/agenda.php", dataType: 'json', type:'POST',
+						data: function (term, page) {
+							return { q: term, action:'ls_pacientes' };
+						},
+						results: function (data, page) {
+							return {results: data.results};
+					    }
+					}
+				});
+
+				$('#hora_inicio').timepicker({ 
+					minuteStep: dr_ci, showInputs: true, showSeconds: false, showMeridian: true 
+				}).on("changeTime.timepicker",function(e){ _t.procesarMinutos(e.time,"inicio"); });
+				$('#hora_inicio').timepicker('setTime',hora);
+				/*$('#hora_fin').timepicker({ 
+					minuteStep: dr_ci, showInputs: true, showSeconds: false, showMeridian: true 
+				}).on("changeTime.timepicker",function(e){ _t.procesarMinutos(e.time,"fin"); });*/
+				$('#comentario').val('').removeClass('error_requerido').attr('title','');
 			},
 			
 			guardar:function(){
