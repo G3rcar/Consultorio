@@ -120,7 +120,9 @@ include("res/partes/encabezado.php");
 	</style>
 	<link href="res/css/select2/select2.css" rel="stylesheet"/>
 	<link href="res/css/bootstrap/css/bootstrap-timepicker.css" rel="stylesheet"/>
+	<link href="res/css/bootstrap/css/bootstrap-datepicker.css" rel="stylesheet"/>
 	<link href="res/css/table-fixed-header.css" rel="stylesheet"/>
+	<link href="res/css/datepicker.css" rel="stylesheet"/>
 
     <script type="text/javascript" src="libs/js/select2/select2.js"></script>
     <script type="text/javascript" src="libs/js/select2/select2_locale_es.js"></script>
@@ -266,6 +268,67 @@ include("res/partes/encabezado.php");
 	</div>
 
 
+
+	<!-- Agregar -->
+	<div id="EditarCita" class="modal hide fade modalMediana" role="dialog" aria-labelledby="EditarCita" aria-hidden="true">
+		
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3 id="modalHead">Editar cita</h3>
+		</div>
+		<div class="modal-body" style="overflow-y:visible;" >
+			<form>
+				<fieldset>
+					<table width="100%" cellspacing="0" cellpadding="0" style="margin-top:5px;">
+					<tr><td width="80%">
+						<label id="paciente_label" class="requerido">Paciente</label>
+						<input type="hidden" id="paciente" style="width:95%" />
+					</td>
+					<td width="20%">
+						<label id="hora_inicio_label" class="requerido">Hora</label>
+						<div class="input-append bootstrap-timepicker" style="padding-top:4px;">
+							<input id="hora_inicio" type="text" class="input-small" style="width:80px">
+							<span class="add-on"><i class="icon-time"></i></span>
+						</div>
+					</td></tr>
+					</table>
+					<!--
+					<label id="paciente_label" class="requerido">Paciente</label>
+					<input type="hidden" id="paciente" style="width:100%" />
+					<table width="100%" cellspacing="0" cellpadding="0" style="margin-top:5px;">
+					<tr><td width="50%">
+						<label id="hora_inicio_label" class="requerido">Hora de inicio</label>
+						<div class="input-append bootstrap-timepicker">
+							<input id="hora_inicio" type="text" class="input-small" style="width:155px">
+							<span class="add-on"><i class="icon-time"></i></span>
+						</div>
+					</td>
+					<td width="50%">
+						<label id="hora_inicio_label" class="requerido">Hora de fin</label>
+						<div class="input-append bootstrap-timepicker">
+							<input id="hora_fin" type="text" class="input-small" style="width:165px">
+							<span class="add-on"><i class="icon-time"></i></span>
+						</div>
+					</td></tr>
+					</table>-->
+
+					<label id="empleado_label" class="requerido">Doctor</label>
+					<select id="empleado" style="width:100%">
+						<?php echo $lsDoctoresWin; ?>
+					</select>
+					<label id="comentario_label" style="margin-top:10px;">Motivo&nbsp;<small>(M&aacute;x. 50)</small></label>
+					<textarea id="comentario" style="width:96%;height:50px;" placeholder="Escriba una breve descripci&oacute;n del motivo de la cita"></textarea>
+				</fieldset>
+			</form>
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+			<button id="guardarCita" onClick="citas.guardar()" class="btn btn-primary">Guardar</button>
+		</div>
+
+	</div>
+
+
 	<script type="text/javascript">
 
 
@@ -323,12 +386,12 @@ include("res/partes/encabezado.php");
 					dataType:'json', type:'POST',
 					complete:function(datos){
 						var T = jQuery.parseJSON(datos.responseText);
-						_t.mannto(_t.id,T.hora,T.idPa,T.nomPa,T.idEm,T.nomEm);
+						_t.mannto(_t.id,T.fecha,T.hora,T.idPa,T.nomPa,T.idEm,T.nomEm);
 					}
 				})
 			},
 
-			mannto:function(id,hora,iPa,nPa,iEm,nEm){
+			mannto:function(id,fecha,hora,iPa,nPa,iEm,nEm){
 				var _t = this;
 				_t.fecha_seleccionada = fecha;
 				$('#ManntoCita').modal('show');
@@ -354,10 +417,10 @@ include("res/partes/encabezado.php");
 					minuteStep: dr_ci, showInputs: true, showSeconds: false, showMeridian: true 
 				}).on("changeTime.timepicker",function(e){ _t.procesarMinutos(e.time,"inicio"); });
 				$('#hora_inicio').timepicker('setTime',hora);
-				/*$('#hora_fin').timepicker({ 
-					minuteStep: dr_ci, showInputs: true, showSeconds: false, showMeridian: true 
-				}).on("changeTime.timepicker",function(e){ _t.procesarMinutos(e.time,"fin"); });*/
 				$('#comentario').val('').removeClass('error_requerido').attr('title','');
+
+				$("#empleado").select2("data",{id:iEm,text:nEm});
+				$("#paciente").select2("data",{id:iPa,text:nPa});
 			},
 			
 			guardar:function(){

@@ -84,8 +84,8 @@ switch ($accion) {
 
 		$id = (int)$conexion->escape($_POST["id"]);
 
-		$selInfo = "SELECT c.cit_id AS 'id', c.cit_idemp AS 'idEm', CONCAT(e.emp_nombre,' ',e.emp_apellido) AS 'empleado', 
-					c.cit_idpac AS 'idPa', p.pac_nom
+		$selInfo = "SELECT c.cit_id AS 'id', c.cit_idemp AS 'idEm', CONCAT(e.emp_nom,' ',e.emp_ape) AS 'empleado', 
+					c.cit_idpac AS 'idPa', CONCAT(p.pac_nom,' ',p.pac_ape) AS 'paciente',
 					DATE_FORMAT(c.cit_fecha_cita,'%Y/%m/%d') AS 'fecha',DATE_FORMAT(c.cit_fecha_cita,'%h:%i %p') AS 'hora' 
 					FROM cita AS c INNER JOIN empleado AS e ON c.cit_idemp = e.emp_id
 					INNER JOIN paciente AS p ON c.cit_idpac = p.pac_id
@@ -93,17 +93,21 @@ switch ($accion) {
 
 		$res = $conexion->execSelect($selInfo);
 		if($res["num"]>0){
-			$iC = $conexion->fetchArray($res["num"]);
+			$iC = $conexion->fetchArray($res["result"]);
 			$result = array(
-				"success"=>true
+				"success"=>true,
 				"fecha"=>strtotime($iC["fecha"]),
 				"hora"=>$iC["hora"],
-				"idPa"=>$iC["hora"],
-				"nomPa"=>$iC["hora"],
-				"idEm"=>$iC["hora"],
-				"nomEm"=>$iC["hora"]
-				)
+				"idPa"=>$iC["idPa"],
+				"nomPa"=>$iC["paciente"],
+				"idEm"=>$iC["idEm"],
+				"nomEm"=>$iC["empleado"]
+				);
+		}else{
+			$result = array("success"=>false);
 		}
+
+		echo json_encode($result);
 
 	break;
 
