@@ -318,8 +318,8 @@ include("res/partes/encabezado.php");
 
 
 		var dr_ci = <?php echo $minutos_citas; ?>;
-
 		var nowText = '<?php echo $fecha_actual; ?>';
+
 
 		var citas = {
 			estado: 'agregar',
@@ -335,7 +335,10 @@ include("res/partes/encabezado.php");
 				$('#ManntoCita').modal('show');
 				
 				$("#empleado").select2({ allowClear:true });
+				var cmbDoc = $("#cmb_doctor").select2("data");
 				$("#paciente").select2("val","");
+				$("#empleado").select2("data",{id:cmbDoc.id,text:cmbDoc.text});
+
 
 
 				$("#paciente").select2({
@@ -416,7 +419,6 @@ include("res/partes/encabezado.php");
 				$("#fecha_edicion").datepicker({
 					format:'dd/mm/yyyy', startDate:nowText, autoclose:true, language:'es',
 				}).on('changeDate',function(ev){
-					console.log(ev);
 					var timestamp = ev.timeStamp/1000; //Sacando el timestamp en segundos UNIX
 					_t.fecha_seleccionada = timestamp;
 				});
@@ -437,11 +439,12 @@ include("res/partes/encabezado.php");
 				var hi = _t.hora_inicio;
 				var hf = _t.hora_fin;
 				var fecha = _t.fecha_seleccionada;
+				var fechaT = $('#fecha_edicion').val();
 				var idEmpleado = (agre)?$('#empleado').val():$('#empleadoE').val();
 				var comentario = (agre)?$('#comentario').val():$('#comentarioE').val();
 				
 				if(this.estado=='agregar'){ this.id=''; }
-				var datos = 'action=sv_cita&idpaciente='+idPaciente+'&hinicio='+hi+'&idempleado='+idEmpleado+'&fecha='+fecha+'&comentario='+comentario+'&id='+this.id;
+				var datos = 'action=sv_cita&idpaciente='+idPaciente+'&hinicio='+hi+'&idempleado='+idEmpleado+'&fecha='+fecha+'&comentario='+comentario+'&fechaT='+fechaT+'&id='+this.id;
 				//+'&hfin='+hf
 
 				$.ajax({

@@ -51,7 +51,7 @@ switch ($accion) {
 		$selCitas = "SELECT c.cit_id AS 'id',CONCAT(p.pac_nom,' ',p.pac_ape) AS 'nombre', DATE_FORMAT(c.cit_fecha_cita,'%Y/%m/%d') AS 'fecha',
 						DATE_FORMAT(c.cit_fecha_cita,'%H:%i %p') AS 'hora'
 						FROM cita AS c INNER JOIN paciente AS p ON c.cit_idpac = p.pac_id
-						WHERE c.cit_fecha_cita BETWEEN '{$fecha_inicial}' AND '{$fecha_final}' AND c.cit_idemp = {$idDoctor} ";
+						WHERE c.cit_fecha_cita BETWEEN '{$fecha_inicial}' AND '{$fecha_final}' AND c.cit_idemp = {$idDoctor} AND c.cit_estado = 'activa' ";
 		
 		$res = $conexion->execSelect($selCitas);
 		$citas = array();
@@ -118,17 +118,21 @@ switch ($accion) {
 		if(!isset($_POST["idpaciente"])||!isset($_POST["hinicio"])||!isset($_POST["idempleado"])) exit();
 
 		$tipo = ($_POST["id"]=="")?'nuevo':'editar';
-
 		$id = (int)$conexion->escape($_POST["id"]);
+		$tipo = ($id==0)?'nuevo':$tipo;
+
 		$idPaciente = (int)$conexion->escape($_POST["idpaciente"]);
 		$idEmpleado = (int)$conexion->escape($_POST["idempleado"]);
 		$comentario = utf8_decode((string)$conexion->escape($_POST["comentario"]));
 		$hi = ((int)$_POST["hinicio"])*60;
 		//$hf = (int)$_POST["hfin"]);
 		$fe = (int)$_POST["fecha"];
+		if($id!=0){ 
+			$tmpF = explode("/",$_POST["fechaT"]);
+			$fe = strtotime($tmpF[2]."-".$tmpF[1]."-".$tmpF[0]);
+		}
+		//$fe = strtotime(date('Y-m-d',(int)$_POST["fecha"]));
 		$fecha = date("Y-m-d H:i:s",$fe+$hi);
-		echo $fe+$hi;
-		exit();
 		$idSucursal = $_SESSION["idsucursal"];
 
 		$mantoCita = "";
@@ -137,7 +141,7 @@ switch ($accion) {
 		}else{
 			$mantoCita = "UPDATE cita SET cit_idpac='{$idPaciente}',cit_idemp='{$idEmpleado}',cit_fecha_cita='{$fecha}',cit_com='{$comentario}' WHERE cit_id = {$id} ";
 		}
-		
+
 		$res = 0;
 		$res = $conexion->execManto($mantoCita);
 
@@ -157,7 +161,7 @@ switch ($accion) {
 		if(!isset($_POST["id"])){ exit(); }
 		$id = json_decode($_POST["id"],true);
 
-		$borrarCita = "DELETE FROM cita WHERE cit_id = {$id} ";
+		$borrarCita = "UPDATE cita SET cit_estado = 'cancelada' WHERE cit_id = {$id} ";
 		$res = $conexion->execManto($borrarCita);
 		if($res>0){
 			$result = array("success"=>"true","msg"=>"La cita se ha borrado");
