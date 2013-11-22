@@ -120,16 +120,16 @@ include("res/partes/encabezado.php");
 	</style>
 	<link href="res/css/select2/select2.css" rel="stylesheet"/>
 	<link href="res/css/bootstrap/css/bootstrap-timepicker.css" rel="stylesheet"/>
-	<link href="res/css/bootstrap/css/bootstrap-datepicker.css" rel="stylesheet"/>
-	<link href="res/css/table-fixed-header.css" rel="stylesheet"/>
 	<link href="res/css/datepicker.css" rel="stylesheet"/>
+	<link href="res/css/table-fixed-header.css" rel="stylesheet"/>
 
     <script type="text/javascript" src="libs/js/select2/select2.js"></script>
     <script type="text/javascript" src="libs/js/select2/select2_locale_es.js"></script>
     <script type="text/javascript" src="libs/js/bootstrap-timepicker.js"></script>
+    <script type="text/javascript" src="libs/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="libs/js/bootstrap-datepicker.es.js"></script>
     <script type="text/javascript" src="libs/js/table-fixed-header.js"></script>
 	<script type="text/javascript" src="libs/js/custom/agenda.js"></script>
-	<script type="text/javascript" src="libs/js/jquery-ui-1.10.3.custom.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
 			
@@ -280,50 +280,35 @@ include("res/partes/encabezado.php");
 			<form>
 				<fieldset>
 					<table width="100%" cellspacing="0" cellpadding="0" style="margin-top:5px;">
-					<tr><td width="80%">
-						<label id="paciente_label" class="requerido">Paciente</label>
-						<input type="hidden" id="paciente" style="width:95%" />
+					<tr><td width="50%" valign="top">
+						<label id="pacienteE_label" class="requerido">Paciente</label>
+						<input type="hidden" id="pacienteE" style="width:95%" />
 					</td>
-					<td width="20%">
+					<td width="25%" valign="top">
+						<label id="fecha_label" class="requerido">Fecha</label>
+						<input type="text" style="width:80px" placeholder="dd/mm/yyyy" id="fecha_edicion" >
+					</td>
+					<td width="25%" valign="top">
 						<label id="hora_inicio_label" class="requerido">Hora</label>
-						<div class="input-append bootstrap-timepicker" style="padding-top:4px;">
-							<input id="hora_inicio" type="text" class="input-small" style="width:80px">
+						<div class="input-append bootstrap-timepicker">
+							<input id="hora_inicioE" type="text" class="input-small" style="width:80px">
 							<span class="add-on"><i class="icon-time"></i></span>
 						</div>
 					</td></tr>
 					</table>
-					<!--
-					<label id="paciente_label" class="requerido">Paciente</label>
-					<input type="hidden" id="paciente" style="width:100%" />
-					<table width="100%" cellspacing="0" cellpadding="0" style="margin-top:5px;">
-					<tr><td width="50%">
-						<label id="hora_inicio_label" class="requerido">Hora de inicio</label>
-						<div class="input-append bootstrap-timepicker">
-							<input id="hora_inicio" type="text" class="input-small" style="width:155px">
-							<span class="add-on"><i class="icon-time"></i></span>
-						</div>
-					</td>
-					<td width="50%">
-						<label id="hora_inicio_label" class="requerido">Hora de fin</label>
-						<div class="input-append bootstrap-timepicker">
-							<input id="hora_fin" type="text" class="input-small" style="width:165px">
-							<span class="add-on"><i class="icon-time"></i></span>
-						</div>
-					</td></tr>
-					</table>-->
 
-					<label id="empleado_label" class="requerido">Doctor</label>
-					<select id="empleado" style="width:100%">
+					<label id="empleadoE_label" class="requerido">Doctor</label>
+					<select id="empleadoE" style="width:100%">
 						<?php echo $lsDoctoresWin; ?>
 					</select>
-					<label id="comentario_label" style="margin-top:10px;">Motivo&nbsp;<small>(M&aacute;x. 50)</small></label>
-					<textarea id="comentario" style="width:96%;height:50px;" placeholder="Escriba una breve descripci&oacute;n del motivo de la cita"></textarea>
+					<label id="comentarioE_label" style="margin-top:10px;">Motivo&nbsp;<small>(M&aacute;x. 50)</small></label>
+					<textarea id="comentarioE" style="width:96%;height:50px;" placeholder="Escriba una breve descripci&oacute;n del motivo de la cita"></textarea>
 				</fieldset>
 			</form>
 		</div>
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-			<button id="guardarCita" onClick="citas.guardar()" class="btn btn-primary">Guardar</button>
+			<button id="guardarCitaE" onClick="citas.guardar()" class="btn btn-primary">Guardar</button>
 		</div>
 
 	</div>
@@ -333,6 +318,8 @@ include("res/partes/encabezado.php");
 
 
 		var dr_ci = <?php echo $minutos_citas; ?>;
+
+		var nowText = '<?php echo $fecha_actual; ?>';
 
 		var citas = {
 			estado: 'agregar',
@@ -349,6 +336,7 @@ include("res/partes/encabezado.php");
 				
 				$("#empleado").select2({ allowClear:true });
 				$("#paciente").select2("val","");
+
 
 				$("#paciente").select2({
 					placeholder: "Seleccionar",
@@ -372,6 +360,8 @@ include("res/partes/encabezado.php");
 					minuteStep: dr_ci, showInputs: true, showSeconds: false, showMeridian: true 
 				}).on("changeTime.timepicker",function(e){ _t.procesarMinutos(e.time,"fin"); });*/
 				$('#comentario').val('').removeClass('error_requerido').attr('title','');
+				
+
 			},
 
 			editar:function(id){
@@ -386,20 +376,20 @@ include("res/partes/encabezado.php");
 					dataType:'json', type:'POST',
 					complete:function(datos){
 						var T = jQuery.parseJSON(datos.responseText);
-						_t.mannto(_t.id,T.fecha,T.hora,T.idPa,T.nomPa,T.idEm,T.nomEm);
+						_t.mannto(_t.id,T.fechaTS,T.fecha,T.hora,T.idPa,T.nomPa,T.idEm,T.nomEm,T.com);
 					}
 				})
 			},
 
-			mannto:function(id,fecha,hora,iPa,nPa,iEm,nEm){
+			mannto:function(id,fechaTS,fecha,hora,iPa,nPa,iEm,nEm,com,fechaT){
 				var _t = this;
-				_t.fecha_seleccionada = fecha;
-				$('#ManntoCita').modal('show');
+				_t.fecha_seleccionada = fechaTS;
+				$('#EditarCita').modal('show');
 				
-				$("#empleado").select2({ allowClear:true });
-				$("#paciente").select2("val","");
+				$("#empleadoE").select2({ allowClear:true });
+				$("#pacienteE").select2("val","");
 
-				$("#paciente").select2({
+				$("#pacienteE").select2({
 					placeholder: "Seleccionar",
 					escapeMarkup: function(m) { return m; },
 					ajax: {
@@ -413,18 +403,29 @@ include("res/partes/encabezado.php");
 					}
 				});
 
-				$('#hora_inicio').timepicker({ 
+				$('#hora_inicioE').timepicker({ 
 					minuteStep: dr_ci, showInputs: true, showSeconds: false, showMeridian: true 
 				}).on("changeTime.timepicker",function(e){ _t.procesarMinutos(e.time,"inicio"); });
-				$('#hora_inicio').timepicker('setTime',hora);
-				$('#comentario').val('').removeClass('error_requerido').attr('title','');
+				$('#hora_inicioE').timepicker('setTime',hora);
+				
+				$('#comentarioE').val(com).removeClass('error_requerido').attr('title','');
 
-				$("#empleado").select2("data",{id:iEm,text:nEm});
-				$("#paciente").select2("data",{id:iPa,text:nPa});
+				$("#empleadoE").select2("data",{id:iEm,text:nEm});
+				$("#pacienteE").select2("data",{id:iPa,text:nPa});
+
+				$("#fecha_edicion").datepicker({
+					format:'dd/mm/yyyy', startDate:nowText, autoclose:true, language:'es',
+				}).on('changeDate',function(ev){
+					console.log(ev);
+					var timestamp = ev.timeStamp/1000; //Sacando el timestamp en segundos UNIX
+					_t.fecha_seleccionada = timestamp;
+				});
+				$("#fecha_edicion").datepicker('update',fecha);
 			},
 			
 			guardar:function(){
 				var _t = this;
+				var agre = (_t.estado=="agregar")?true:false;
 
 				if(!_t.validarForm()){ return; }
 				$('#s2id_paciente').removeClass('error_requerido_sel2');
@@ -432,12 +433,12 @@ include("res/partes/encabezado.php");
 				
 				_t.toggle(false);
 				
-				var idPaciente = $('#paciente').val();
+				var idPaciente = (agre)?$('#paciente').val():$('#pacienteE').val();
 				var hi = _t.hora_inicio;
 				var hf = _t.hora_fin;
 				var fecha = _t.fecha_seleccionada;
-				var idEmpleado = $('#empleado').val();
-				var comentario = $('#comentario').val();
+				var idEmpleado = (agre)?$('#empleado').val():$('#empleadoE').val();
+				var comentario = (agre)?$('#comentario').val():$('#comentarioE').val();
 				
 				if(this.estado=='agregar'){ this.id=''; }
 				var datos = 'action=sv_cita&idpaciente='+idPaciente+'&hinicio='+hi+'&idempleado='+idEmpleado+'&fecha='+fecha+'&comentario='+comentario+'&id='+this.id;
@@ -451,7 +452,7 @@ include("res/partes/encabezado.php");
 
 						humane.log(T.msg);
 						if(T.success=="true"){
-							$('#ManntoCita').modal('hide');
+							$('#ManntoCita, #EditarCita').modal('hide');
 							_t.toggle(true);
 							mainAgenda.cargarAgenda(mainAgenda.docSeleccionado);
 						}
@@ -490,7 +491,7 @@ include("res/partes/encabezado.php");
 				var h = tiempo.hours;
 				var m = tiempo.minutes;
 				var p = tiempo.meridian;
-				h += (p=="PM")?12:0;
+				h += (p=="PM"&&h!=12)?12:0;
 				h = (p=="AM"&&h==12)?0:h;
 				h = h*60;
 				h += m;
@@ -499,20 +500,21 @@ include("res/partes/encabezado.php");
 			},
 			validarForm:function(){
 				var _t = this;
+				var agre = (_t.estado=="agregar")?true:false;
 				var errores=0;
 				var maximo = 50;
-				var iv1 = $('#paciente').val();
-				var iv2 = $('#comentario').val();
+				var iv1 = (agre)?$('#paciente').val():$('#pacienteE').val();
+				var iv2 = (agre)?$('#comentario').val():$('#comentarioE').val();
 				var hi = _t.hora_inicio;
 				//var hf = _t.hora_fin;
 
 				//--remover
-				$('#s2id_paciente').removeClass('error_requerido_sel2');
-				$('#comentario').removeClass('error_requerido').attr('title','');
+				$('#s2id_paciente, #s2id_pacienteE').removeClass('error_requerido_sel2');
+				$('#comentario,#comentarioE').removeClass('error_requerido').attr('title','');
 				//--/remover
 
-				if(iv1==''){ $('#s2id_paciente').addClass('error_requerido_sel2'); errores++; }
-				if(iv2.length>maximo){ $('#comentario').addClass('error_requerido').attr('title','No debe sobrepasar de 50 caracteres'); errores++; }
+				if(iv1==''){ $('#s2id_paciente,#s2id_pacienteE').addClass('error_requerido_sel2'); errores++; }
+				if(iv2.length>maximo){ $('#comentario,#comentarioE').addClass('error_requerido').attr('title','No debe sobrepasar de 50 caracteres'); errores++; }
 				//if(hi>=hf){ $('#hora_fin').addClass('error_requerido'); errores++; }
 				if(errores>0){
 					humane.log('Complete los campos requeridos');
@@ -523,8 +525,8 @@ include("res/partes/encabezado.php");
 			},
 
 			toggle:function(v){
-				if(v){ $('#guardarCita').removeAttr('disabled').html('Guardar'); }
-				else{ $('#guardarCita').attr('disabled','disabled').html('Guardando...'); }
+				if(v){ $('#guardarCita,#guardarCitaE').removeAttr('disabled').html('Guardar'); }
+				else{ $('#guardarCita,#guardarCitaE').attr('disabled','disabled').html('Guardando...'); }
 			}
 		}
 

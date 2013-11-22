@@ -80,13 +80,14 @@ switch ($accion) {
 	break;
 
 	case 'rt_cita':
-		if(!isset($_POST["id"])) exit();
+		if(!isset($_POST["id"])) exit("ss");
 
 		$id = (int)$conexion->escape($_POST["id"]);
 
 		$selInfo = "SELECT c.cit_id AS 'id', c.cit_idemp AS 'idEm', CONCAT(e.emp_nom,' ',e.emp_ape) AS 'empleado', 
-					c.cit_idpac AS 'idPa', CONCAT(p.pac_nom,' ',p.pac_ape) AS 'paciente',
-					DATE_FORMAT(c.cit_fecha_cita,'%Y/%m/%d') AS 'fecha',DATE_FORMAT(c.cit_fecha_cita,'%h:%i %p') AS 'hora' 
+					c.cit_idpac AS 'idPa', CONCAT(p.pac_nom,' ',p.pac_ape) AS 'paciente',c.cit_com AS 'comentario',
+					DATE_FORMAT(c.cit_fecha_cita,'%Y/%m/%d') AS 'fecha', DATE_FORMAT(c.cit_fecha_cita,'%d/%m/%Y') AS 'fechaF',
+					DATE_FORMAT(c.cit_fecha_cita,'%h:%i %p') AS 'hora' 
 					FROM cita AS c INNER JOIN empleado AS e ON c.cit_idemp = e.emp_id
 					INNER JOIN paciente AS p ON c.cit_idpac = p.pac_id
 					WHERE c.cit_id = {$id} ";
@@ -96,12 +97,14 @@ switch ($accion) {
 			$iC = $conexion->fetchArray($res["result"]);
 			$result = array(
 				"success"=>true,
-				"fecha"=>strtotime($iC["fecha"]),
+				"fechaTS"=>strtotime($iC["fecha"]),
+				"fecha"=>$iC["fechaF"],
 				"hora"=>$iC["hora"],
 				"idPa"=>$iC["idPa"],
-				"nomPa"=>$iC["paciente"],
+				"nomPa"=>utf8_encode($iC["paciente"]),
 				"idEm"=>$iC["idEm"],
-				"nomEm"=>$iC["empleado"]
+				"nomEm"=>utf8_encode($iC["empleado"]),
+				"com"=>utf8_encode($iC["comentario"])
 				);
 		}else{
 			$result = array("success"=>false);
@@ -124,6 +127,8 @@ switch ($accion) {
 		//$hf = (int)$_POST["hfin"]);
 		$fe = (int)$_POST["fecha"];
 		$fecha = date("Y-m-d H:i:s",$fe+$hi);
+		echo $fe+$hi;
+		exit();
 		$idSucursal = $_SESSION["idsucursal"];
 
 		$mantoCita = "";
