@@ -7,6 +7,7 @@ $conexion = new Conexion();
 $botones_menu["citas"]=true;
 
 $idUsuario = $_SESSION["iduser"];
+$idEmpleado = $_SESSION["idempleado"];
 $esDoctor = $_SESSION["esDoctor"];
 
 $minutos_citas = $conf["duracion"]; //40;
@@ -36,7 +37,7 @@ while($finalizado==false){
 	for($i=1;$i<=7;$i++){
 
 		$tabla_agenda .= "<td class='events'> <div id='h_{$ho}_d_{$i}' p:fecha='{$fecha_impresion}' p:hora='{$hora}'>
-			<span class='out-button'> <a href='#' onClick='citas.nueva($fecha_impresion,\"{$hora}\")' title='Agregar'><i class='icon-plus'></i> </a> </span> </div> </td>";
+			<span class='out-button'> <a onClick='citas.nueva($fecha_impresion,\"{$hora}\")' title='Agregar' class='btnPlus'><i class='icon-plus'></i> </a> </span> </div> </td>";
 		$fecha_impresion = strtotime("+1 day",$fecha_impresion);
 	}
 	$tabla_agenda .= "</tr>";
@@ -51,11 +52,17 @@ while($finalizado==false){
 
 //----Impresion de días de la agenda
 $dias_agenda="";
+$abreviatura_inicial="";
+$abreviatura_final="";
+$num_semana=date("W",$fecha_inicial);
 for($i=1;$i<=7;$i++){
 	$diaI = date("d",$fecha_impresion);
 	$mesI = date("m",$fecha_impresion);
+	if($i==1) $abreviatura_inicial = "{$diaI}/{$mesI}";
+	if($i==7) $abreviatura_final = "{$diaI}/{$mesI}";
+
 	$nomDiaI = $arrayDias[date("N",$fecha_impresion)];
-	$dias_agenda .= "<th width='13%'>{$nomDiaI} {$diaI}/{$mesI}</th>";
+	$dias_agenda .= "<th width='13%' id='txt_dia_{$i}'>{$nomDiaI} {$diaI}/{$mesI}</th>";
 	$fecha_impresion = strtotime("+1 day",$fecha_impresion);
 }
 $fecha_impresion=$fecha_inicial;
@@ -74,7 +81,7 @@ $docSeleccionado = "0"; //Id del doctor que se seleccione del listado
 if($res["num"]>0){
 	$i=0;
 	while($iDoc = $conexion->fetchArray($res["result"])){
-		if($idUsuario==$iDoc["id"] && $esDoctor){
+		if($idEmpleado==$iDoc["id"] && $esDoctor){
 			$seleccion=" selected ";
 			$docSeleccionado = $iDoc["id"];
 		}elseif($i==0 && !$esDoctor){
@@ -106,28 +113,41 @@ include("res/partes/encabezado.php");
 		.item-agenda{
 			transition: all 3s;
 		}
+		.btnPlus{
+			cursor: pointer;
+		}
 		
 	</style>
 	<link href="res/css/select2/select2.css" rel="stylesheet"/>
 	<link href="res/css/bootstrap/css/bootstrap-timepicker.css" rel="stylesheet"/>
+	<link href="res/css/datepicker.css" rel="stylesheet"/>
 	<link href="res/css/table-fixed-header.css" rel="stylesheet"/>
 
     <script type="text/javascript" src="libs/js/select2/select2.js"></script>
     <script type="text/javascript" src="libs/js/select2/select2_locale_es.js"></script>
     <script type="text/javascript" src="libs/js/bootstrap-timepicker.js"></script>
+    <script type="text/javascript" src="libs/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="libs/js/bootstrap-datepicker.es.js"></script>
     <script type="text/javascript" src="libs/js/table-fixed-header.js"></script>
 	<script type="text/javascript" src="libs/js/custom/agenda.js"></script>
-	<script type="text/javascript" src="libs/js/jquery-ui-1.10.3.custom.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
 			
 			$("#cmb_doctor").select2();
+			$("#cmb_doctor").change(function(){
+				mainAgenda.cargarAgenda($(this).val());
+			});
 			$('.table-fixed-header').fixedHeader();
 			mainAgenda.fechaInicial = <?php echo $fecha_inicial; ?>;
+			mainAgenda.fechaActual = <?php echo $fecha_inicial; ?>;
 			mainAgenda.docSeleccionado = <?php echo $docSeleccionado; ?>;
-			mainAgenda.cargarAgenda(<?php echo $docSeleccionado; ?>); 
+			mainAgenda.numSemana = <?php echo $num_semana; ?>;
+			mainAgenda.cargarAgenda(<?php echo $docSeleccionado; ?>);
 
-			$("#btnAnterior").tooltip({'placement': 'right'});
+			$("#btnAnterior").click(function(){ mainAgenda.cargarDatosSemanas('anterior'); });
+			$("#btnSeguiente").click(function(){ mainAgenda.cargarDatosSemanas('siguiente'); });
+			$("#btnSemanaActual").click(function(){ mainAgenda.cargarDatosSemanas('actual'); });
+
 		});
 	</script>
 
@@ -136,16 +156,20 @@ include("res/partes/encabezado.php");
 	<h2>Agenda <img id="progressBar_main" src="res/img/loading.gif" class="loading_indicator_process" /></h2>
 	<div class="container-fluid">
 		<div class="row-fluid">
-			<div class="span8">
+			<div class="span5">
 				<select id="cmb_doctor" style="width:300px">
 					<?php echo $lsDoctores; ?>
 				</select>
 			</div>
-			<div class="span4" style="text-align:right;">
+			<div class="span7" style="text-align:right;">
 				<div class="btn-group">
-					<button id="btnAnterior" title="Semana anterior" class="btn"><<</button>
-					<span class="btn disabled" id="txtSemana">Semana 45: 4/11 - 10/11</span>
-					<button id="btnSeguiente" title="Semana siguiente" class="btn">>></button>
+					<!-- badge-important sera cuando haya uno -->
+					<button id="btnSolicitudes" class="btn">Solicitudes <span class="badge ">0</span></button>
+					<button id="btnSolicitudes" class="btn">Citas Canceladas</button>
+					<button id="btnAnterior" title="Semana anterior" class="btn"><i class="icon-step-backward"></i></button>
+					<span class="btn disabled" id="txtSemana">Semana <?php echo $num_semana.": ".$abreviatura_inicial." - ".$abreviatura_final; ?></span>
+					<button id="btnSeguiente" title="Semana siguiente" class="btn"><i class="icon-step-forward"></i></button>
+					<button id="btnSemanaActual" title="Hoy" class="btn"><i class="icon-calendar" ></i></button>
 				</div>
 
 				<!--
@@ -167,7 +191,7 @@ include("res/partes/encabezado.php");
 		<div class="table-content"> 
 		<table class="calendar table table-bordered table-fixed-header">
 			<thead class="header">
-				<tr>
+				<tr style="background:#F8F8F8;">
 					<th width="6%">&nbsp;</th>
 					<?php echo $dias_agenda; ?>
 				</tr>
@@ -244,10 +268,58 @@ include("res/partes/encabezado.php");
 	</div>
 
 
+
+	<!-- Agregar -->
+	<div id="EditarCita" class="modal hide fade modalMediana" role="dialog" aria-labelledby="EditarCita" aria-hidden="true">
+		
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3 id="modalHead">Editar cita</h3>
+		</div>
+		<div class="modal-body" style="overflow-y:visible;" >
+			<form>
+				<fieldset>
+					<table width="100%" cellspacing="0" cellpadding="0" style="margin-top:5px;">
+					<tr><td width="50%" valign="top">
+						<label id="pacienteE_label" class="requerido">Paciente</label>
+						<input type="hidden" id="pacienteE" style="width:95%" />
+					</td>
+					<td width="25%" valign="top">
+						<label id="fecha_label" class="requerido">Fecha</label>
+						<input type="text" style="width:80px" placeholder="dd/mm/yyyy" id="fecha_edicion" >
+					</td>
+					<td width="25%" valign="top">
+						<label id="hora_inicio_label" class="requerido">Hora</label>
+						<div class="input-append bootstrap-timepicker">
+							<input id="hora_inicioE" type="text" class="input-small" style="width:80px">
+							<span class="add-on"><i class="icon-time"></i></span>
+						</div>
+					</td></tr>
+					</table>
+
+					<label id="empleadoE_label" class="requerido">Doctor</label>
+					<select id="empleadoE" style="width:100%">
+						<?php echo $lsDoctoresWin; ?>
+					</select>
+					<label id="comentarioE_label" style="margin-top:10px;">Motivo&nbsp;<small>(M&aacute;x. 50)</small></label>
+					<textarea id="comentarioE" style="width:96%;height:50px;" placeholder="Escriba una breve descripci&oacute;n del motivo de la cita"></textarea>
+				</fieldset>
+			</form>
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+			<button id="guardarCitaE" onClick="citas.guardar()" class="btn btn-primary">Guardar</button>
+		</div>
+
+	</div>
+
+
 	<script type="text/javascript">
 
 
 		var dr_ci = <?php echo $minutos_citas; ?>;
+		var nowText = '<?php echo $fecha_actual; ?>';
+
 
 		var citas = {
 			estado: 'agregar',
@@ -258,11 +330,16 @@ include("res/partes/encabezado.php");
 			fecha_seleccionada:0,
 			nueva:function(fecha,hora){
 				var _t = this;
+				_t.id = 0;
 				_t.fecha_seleccionada = fecha;
 				$('#ManntoCita').modal('show');
 				
 				$("#empleado").select2({ allowClear:true });
+				var cmbDoc = $("#cmb_doctor").select2("data");
 				$("#paciente").select2("val","");
+				$("#empleado").select2("data",{id:cmbDoc.id,text:cmbDoc.text});
+
+
 
 				$("#paciente").select2({
 					placeholder: "Seleccionar",
@@ -286,10 +363,71 @@ include("res/partes/encabezado.php");
 					minuteStep: dr_ci, showInputs: true, showSeconds: false, showMeridian: true 
 				}).on("changeTime.timepicker",function(e){ _t.procesarMinutos(e.time,"fin"); });*/
 				$('#comentario').val('').removeClass('error_requerido').attr('title','');
+				
+
+			},
+
+			editar:function(id){
+				var _t = this;
+				console.log('editando '+id);
+
+				_t.estado = 'editar';
+				_t.id = id;
+
+				$.ajax({
+					url:'stores/agenda.php', data:{ action:'rt_cita', id:id }, 
+					dataType:'json', type:'POST',
+					complete:function(datos){
+						var T = jQuery.parseJSON(datos.responseText);
+						_t.mannto(_t.id,T.fechaTS,T.fecha,T.hora,T.idPa,T.nomPa,T.idEm,T.nomEm,T.com);
+					}
+				})
+			},
+
+			mannto:function(id,fechaTS,fecha,hora,iPa,nPa,iEm,nEm,com,fechaT){
+				var _t = this;
+				_t.fecha_seleccionada = fechaTS;
+				$('#EditarCita').modal('show');
+				
+				$("#empleadoE").select2({ allowClear:true });
+				$("#pacienteE").select2("val","");
+
+				$("#pacienteE").select2({
+					placeholder: "Seleccionar",
+					escapeMarkup: function(m) { return m; },
+					ajax: {
+						url: "stores/agenda.php", dataType: 'json', type:'POST',
+						data: function (term, page) {
+							return { q: term, action:'ls_pacientes' };
+						},
+						results: function (data, page) {
+							return {results: data.results};
+					    }
+					}
+				});
+
+				$('#hora_inicioE').timepicker({ 
+					minuteStep: dr_ci, showInputs: true, showSeconds: false, showMeridian: true 
+				}).on("changeTime.timepicker",function(e){ _t.procesarMinutos(e.time,"inicio"); });
+				$('#hora_inicioE').timepicker('setTime',hora);
+				
+				$('#comentarioE').val(com).removeClass('error_requerido').attr('title','');
+
+				$("#empleadoE").select2("data",{id:iEm,text:nEm});
+				$("#pacienteE").select2("data",{id:iPa,text:nPa});
+
+				$("#fecha_edicion").datepicker({
+					format:'dd/mm/yyyy', startDate:nowText, autoclose:true, language:'es',
+				}).on('changeDate',function(ev){
+					var timestamp = ev.timeStamp/1000; //Sacando el timestamp en segundos UNIX
+					_t.fecha_seleccionada = timestamp;
+				});
+				$("#fecha_edicion").datepicker('update',fecha);
 			},
 			
 			guardar:function(){
 				var _t = this;
+				var agre = (_t.estado=="agregar")?true:false;
 
 				if(!_t.validarForm()){ return; }
 				$('#s2id_paciente').removeClass('error_requerido_sel2');
@@ -297,15 +435,16 @@ include("res/partes/encabezado.php");
 				
 				_t.toggle(false);
 				
-				var idPaciente = $('#paciente').val();
+				var idPaciente = (agre)?$('#paciente').val():$('#pacienteE').val();
 				var hi = _t.hora_inicio;
 				var hf = _t.hora_fin;
 				var fecha = _t.fecha_seleccionada;
-				var idEmpleado = $('#empleado').val();
-				var comentario = $('#comentario').val();
+				var fechaT = $('#fecha_edicion').val();
+				var idEmpleado = (agre)?$('#empleado').val():$('#empleadoE').val();
+				var comentario = (agre)?$('#comentario').val():$('#comentarioE').val();
 				
 				if(this.estado=='agregar'){ this.id=''; }
-				var datos = 'action=sv_cita&idpaciente='+idPaciente+'&hinicio='+hi+'&idempleado='+idEmpleado+'&fecha='+fecha+'&comentario='+comentario+'&id='+this.id;
+				var datos = 'action=sv_cita&idpaciente='+idPaciente+'&hinicio='+hi+'&idempleado='+idEmpleado+'&fecha='+fecha+'&comentario='+comentario+'&fechaT='+fechaT+'&id='+this.id;
 				//+'&hfin='+hf
 
 				$.ajax({
@@ -316,7 +455,7 @@ include("res/partes/encabezado.php");
 
 						humane.log(T.msg);
 						if(T.success=="true"){
-							$('#ManntoCita').modal('hide');
+							$('#ManntoCita, #EditarCita').modal('hide');
 							_t.toggle(true);
 							mainAgenda.cargarAgenda(mainAgenda.docSeleccionado);
 						}
@@ -355,7 +494,7 @@ include("res/partes/encabezado.php");
 				var h = tiempo.hours;
 				var m = tiempo.minutes;
 				var p = tiempo.meridian;
-				h += (p=="PM")?12:0;
+				h += (p=="PM"&&h!=12)?12:0;
 				h = (p=="AM"&&h==12)?0:h;
 				h = h*60;
 				h += m;
@@ -364,20 +503,21 @@ include("res/partes/encabezado.php");
 			},
 			validarForm:function(){
 				var _t = this;
+				var agre = (_t.estado=="agregar")?true:false;
 				var errores=0;
 				var maximo = 50;
-				var iv1 = $('#paciente').val();
-				var iv2 = $('#comentario').val();
+				var iv1 = (agre)?$('#paciente').val():$('#pacienteE').val();
+				var iv2 = (agre)?$('#comentario').val():$('#comentarioE').val();
 				var hi = _t.hora_inicio;
 				//var hf = _t.hora_fin;
 
 				//--remover
-				$('#s2id_paciente').removeClass('error_requerido_sel2');
-				$('#comentario').removeClass('error_requerido').attr('title','');
+				$('#s2id_paciente, #s2id_pacienteE').removeClass('error_requerido_sel2');
+				$('#comentario,#comentarioE').removeClass('error_requerido').attr('title','');
 				//--/remover
 
-				if(iv1==''){ $('#s2id_paciente').addClass('error_requerido_sel2'); errores++; }
-				if(iv2.length>maximo){ $('#comentario').addClass('error_requerido').attr('title','No debe sobrepasar de 50 caracteres'); errores++; }
+				if(iv1==''){ $('#s2id_paciente,#s2id_pacienteE').addClass('error_requerido_sel2'); errores++; }
+				if(iv2.length>maximo){ $('#comentario,#comentarioE').addClass('error_requerido').attr('title','No debe sobrepasar de 50 caracteres'); errores++; }
 				//if(hi>=hf){ $('#hora_fin').addClass('error_requerido'); errores++; }
 				if(errores>0){
 					humane.log('Complete los campos requeridos');
@@ -388,8 +528,8 @@ include("res/partes/encabezado.php");
 			},
 
 			toggle:function(v){
-				if(v){ $('#guardarCita').removeAttr('disabled').html('Guardar'); }
-				else{ $('#guardarCita').attr('disabled','disabled').html('Guardando...'); }
+				if(v){ $('#guardarCita,#guardarCitaE').removeAttr('disabled').html('Guardar'); }
+				else{ $('#guardarCita,#guardarCitaE').attr('disabled','disabled').html('Guardando...'); }
 			}
 		}
 

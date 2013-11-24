@@ -151,6 +151,32 @@ switch ($accion) {
 		echo json_encode($result);
 		
 	break;
+
+
+	case 'ls_muni':
+		$query = "";
+		if(!isset($_POST["depto"])) exit();
+
+		$idDepto = $conexion->escape($_POST["depto"]);
+		if(isset($_POST["q"]) && $_POST["q"]!=""){
+			$q = $conexion->escape($_POST["q"]);
+			$query = " AND mun_nom LIKE '%{$q}%' ";
+		}
+
+		$selRes = "SELECT mun_id AS 'id',mun_nom AS 'nombre' FROM municipio WHERE mun_iddep = {$idDepto} {$query} ORDER BY mun_id";
+		$res = $conexion->execSelect($selRes);
+		
+		$registros=array();
+		if($res["num"]>0){
+			$i=0;
+			while($iMun = $conexion->fetchArray($res["result"])){
+				$registros[]=array("id"=>$iMun["id"],"text"=>utf8_encode($iMun["nombre"]));
+			}
+		}
+
+		$results = array("results"=>$registros,"more"=>false);
+		echo json_encode($results);
+	break;
 }
 
 
