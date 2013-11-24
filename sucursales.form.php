@@ -9,11 +9,13 @@ $botones_configuracion["configuracion"]=true;
 
 $conexion = new Conexion();
 
-//$paises="<option value='0'>-</option>";
+$paises="";
+$idPrimerPais="0";
 $selectPaises = "SELECT pai_id,pai_nom FROM pais ORDER BY pai_nom";
 $res = $conexion->execSelect($selectPaises);
 if($res["num"]>0){
 	while($iPai = $conexion->fetchArray($res["result"])){
+		$idPrimerPais = ($idPrimerPais=="0")?$iPai["pai_id"]:$idPrimerPais;
 		$paises .= "<option value='".$iPai["pai_id"]."'>".$iPai["pai_nom"]."</option>";
 	}
 }
@@ -42,13 +44,11 @@ include("res/partes/encabezado.php");
 <!-- Scripts extra -->
 <script type="text/javascript" src="libs/js/select2/select2.js"></script>
 <script type="text/javascript" src="libs/js/select2/select2_locale_es.js"></script>
-    <script type="text/javascript" src="libs/js/bootstrap-timepicker.js"></script>
+<script type="text/javascript" src="libs/js/bootstrap-timepicker.js"></script>
 <script type="text/javascript" src="libs/js/custom/objetos-comunes.js"></script>
-
 <!-- /Scripts extra -->
 
-
-	<h3>Sucursales</h3>
+<h3>Sucursales</h3>
 
 	<div class="container-fluid">
 		<div class="row-fluid">
@@ -77,19 +77,17 @@ include("res/partes/encabezado.php");
 						<legend>Direccion</legend>
 							<div class="span5">
 								<label id="pais_label">Pais</label>
-								<select id="pais" class="input-block-level" >
+								<select id="idPais" class="input-block-level" >
 									<?php echo $paises; ?>
 								</select>
 							</div>
 							<div class="span5">
 								<label id="departamento_label">Departamento</label>
-								<select id="departamento" class="input-block-level" >
-								</select>
+								<input type="hidden" id="idDepto" class="input-block-level" />
 							</div>
 							<div class="span5">
 								<label id="municipio_label" class="requerido">Municipio</label>
-								<select id="municipio" class="input-block-level">
-								</select>
+								<input type="hidden" id="idMuni" class="input-block-level" />
 							</div>
 							<div class="span5">
 								<label id="distritoDir_label">Distrito</label>
@@ -148,7 +146,65 @@ include("res/partes/encabezado.php");
 				document.getElementById('frmSucursal').reset();
 			});
 			
-			$("#pais").select2();
+			$("#idPais").select2();
+			$("#idPais").change(function(){
+				var idPais = $(this).val();
+				$("#idDepto").select2({
+					placeholder: "Seleccionar",
+					ajax: {
+						url: "stores/municipios.php", dataType: 'json', type:'POST',
+						data: function (term, page) {
+							return { q: term, action:'ls_depto', pais:idPais };
+						},
+						results: function (data, page) {
+							return {results: data.results};
+						}
+					}
+				});
+				$("#idDepto").select2("enable",true);
+			});
+			$("#idDepto").select2({
+				placeholder: "Seleccionar", enable:false,
+				ajax: {
+					url: "stores/municipios.php", dataType: 'json', type:'POST',
+					data: function (term, page) {
+						return { q: term, action:'ls_depto', pais:'<?php echo $idPrimerPais; ?>' };
+					},
+					results: function (data, page) {
+						return {results: data.results};
+					}
+				}
+			});
+			$("#idDepto").change(function(){
+				var idDepto = $(this).val();
+				$("#idMuni").select2({
+					placeholder: "Seleccionar",
+					ajax: {
+						url: "stores/sucursales.php", dataType: 'json', type:'POST',
+						data: function (term, page) {
+							return { q: term, action:'ls_muni', depto:idDepto };
+						},
+						results: function (data, page) {
+							return {results: data.results};
+						}
+					}
+				});
+				$("#idMuni").select2("enable",true);
+			});
+
+			$("#idMuni").select2({
+				placeholder: "Seleccionar", enable:false,
+				ajax: {
+					url: "stores/sucursales.php", dataType: 'json', type:'POST',
+					data: function (term, page) {
+						return { q: term, action:'ls_muni' };
+					},
+					results: function (data, page) {
+						return {results: data.results};
+					}
+				}
+			});
+			$("#idMuni").select2("enable",false);
 		});
 
 		function validarForm(){

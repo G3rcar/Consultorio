@@ -32,6 +32,7 @@ include("res/partes/encabezado.php");
 <script type="text/javascript" src="libs/js/select2/select2.js"></script>
 <script type="text/javascript" src="libs/js/select2/select2_locale_es.js"></script>
 <script type="text/javascript" src="libs/js/custom/objetos-comunes.js"></script>
+<!-- /Scripts extra -->
 
 <h3> Expediente </h3>
 <div class="container-fluid">
