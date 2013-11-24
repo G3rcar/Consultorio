@@ -1,0 +1,44 @@
+@media (min-width: 980px) {
+	.cm-main-containter {
+		padding-top: 40px;
+	}
+}
+.loading_indicator_mannto, .loading_indicator_process{
+	display: none;
+	width: 30px;
+	height: 30px;
+}
+.loading_indicator_mannto{
+	position: absolute;
+	top: 5px;
+	right: 5px;
+}
+.well{
+	position: relative;
+}
+
+.modalPequena{
+	width:350px;
+	margin-left:-175px;
+}
+
+.modalMediana{
+	width:450px;
+	margin-left:-225px;
+}
+
+.requerido::after {
+	content: "*";
+	color: #C00;
+	font-size: 16px;
+}
+
+.error_requerido, .error_requerido_sel2 a { border-color:#FF0000 !important; }
+
+
+.username{
+	display:block;
+	text-align:center;
+	color:#000 !important;
+	font-weight: bold !important;
+}

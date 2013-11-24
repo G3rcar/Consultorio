@@ -1,7 +1,7 @@
-<?
+<?php
 
 //-------- Titulos
-define("TITULO_SISTEMA",htmlentities("Consultorio Médico Cerna y Alvarado"));
+define("TITULO_SISTEMA","Control de Citas e Inventario");
 
 //-------- /
 
