@@ -16,11 +16,11 @@ $accion = $_POST["action"];
 switch ($accion) {
 	case 'gd_tipo':
 
-		$selRes = "SELECT tip_id AS 'id',tip_nom AS 'nombre' FROM tipo_documento ORDER BY tip_id ";
+		$selRes = "SELECT tip_id AS 'id',tip_nom AS 'nombre',DATE_FORMAT(tip_fecha_crea,'%d/%m/%Y %h:%i %p') AS 'fecha' FROM tipo_documento ORDER BY tip_id ";
 		$res = $conexion->execSelect($selRes);
 		$headers = array(
 			"Nombre",
-			//array("width"=>"200","text"=>"Fecha de creaci&oacute;n"),
+			array("width"=>"200","text"=>"Fecha de creaci&oacute;n"),
 			array("width"=>"15","text"=>"&nbsp;"),
 			array("width"=>"15","text"=>"&nbsp;")
 		);
@@ -32,7 +32,7 @@ switch ($accion) {
 				$editar = "<a href='#' onClick='manto.editar({$iTipo["id"]});' title='Editar' ><i class='icon-edit'></i></a>";
 				$borrar = "<a href='#' onClick='manto.borrar({$iTipo["id"]});' title='Borrar' ><i class='icon-remove'></i></a>";
 				
-				$valoresFila = array(utf8_encode($iTipo["nombre"]),$editar,$borrar);
+				$valoresFila = array(utf8_encode($iTipo["nombre"]),$iTipo["fecha"],$editar,$borrar);
 				$fila = array("id"=>$iTipo["id"],"valores"=>$valoresFila);
 				$tabla->nuevaFila($fila);
 			}
@@ -53,7 +53,7 @@ switch ($accion) {
 		
 		$nuevoDepto = "";
 		if($tipo=='nuevo'){
-			$mantoTipo = "INSERT INTO tipo_documento(tip_nom) VALUES('{$nombre}') ";
+			$mantoTipo = "INSERT INTO tipo_documento(tip_nom,tip_fecha_crea) VALUES('{$nombre}',NOW()) ";
 		}else{
 			$mantoTipo = "UPDATE tipo_documento SET tip_nom='{$nombre}' WHERE tip_id = {$id} ";
 		}

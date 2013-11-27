@@ -16,7 +16,8 @@ $accion = $_POST["action"];
 switch ($accion) {
 	case 'gd_tipo':
 
-		$selRes = "SELECT tps_id AS 'id',tps_tipo_san AS 'nombre' FROM tipo_sangre ORDER BY tps_id ";
+		$selRes = "SELECT tps_id AS 'id',tps_tipo_san AS 'nombre',DATE_FORMAT(tps_fecha_crea,'%d/%m/%Y %h:%i %p') AS 'fecha' 
+					FROM tipo_sangre ORDER BY tps_id ";
 		$res = $conexion->execSelect($selRes);
 		$headers = array(
 			"Nombre",
@@ -51,9 +52,9 @@ switch ($accion) {
 		$id = (int)$conexion->escape($_POST["id"]);
 		$nombre = $conexion->escape(utf8_decode($_POST["nombre"]));
 		
-		$nuevoDepto = "";
+		$mantoTipo = "";
 		if($tipo=='nuevo'){
-			$mantoTipo = "INSERT INTO tipo_sangre(tps_tipo_san) VALUES('{$nombre}') ";
+			$mantoTipo = "INSERT INTO tipo_sangre(tps_tipo_san,tps_fecha_crea) VALUES('{$nombre}',NOW()) ";
 		}else{
 			$mantoTipo = "UPDATE tipo_sangre SET tps_tipo_san='{$nombre}' WHERE tps_id = {$id} ";
 		}

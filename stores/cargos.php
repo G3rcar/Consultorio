@@ -16,11 +16,12 @@ $accion = $_POST["action"];
 switch ($accion) {
 	case 'gd_cargo':
 
-		$selRes = "SELECT car_id,car_nom,car_es_doctor FROM cargo";
+		$selRes = "SELECT car_id,car_nom,car_es_doctor,DATE_FORMAT(car_fecha_cre,'%d/%m/%Y %h:%i %p') AS 'fecha' FROM cargo";
 		$res = $conexion->execSelect($selRes);
 		$headers = array( 
 			"Nombre", 
 			array("width"=>"250","text"=>"&nbsp;"),
+			array("width"=>"200","text"=>"Fecha creaci&oacute;n"),
 			array("width"=>"15","text"=>"&nbsp;"),
 			array("width"=>"15","text"=>"&nbsp;")
 		);
@@ -34,7 +35,7 @@ switch ($accion) {
 				$borrar = "<a href='#' onClick='manto.borrar({$iCargo["car_id"]});' title='Borrar' ><i class='icon-remove'></i></a>";
 				$visibilidad = ($iCargo["car_es_doctor"]=="true")?"<i class='icon-ok-circle'></i> &nbsp;Aparece en listado de doctores":"-";
 
-				$valoresFila = array(utf8_encode($iCargo["car_nom"]),$visibilidad,$editar,$borrar);
+				$valoresFila = array(utf8_encode($iCargo["car_nom"]),$visibilidad,$iCargo["fecha"],$editar,$borrar);
 				$fila = array("id"=>$iCargo["car_id"],"valores"=>$valoresFila);
 				$tabla->nuevaFila($fila);
 			}	
@@ -77,7 +78,7 @@ switch ($accion) {
 		
 		$mantoCargo = "";
 		if($tipo=='nuevo'){
-			$mantoCargo = "INSERT INTO cargo(car_nom,car_es_doctor) VALUES('{$nombre}','{$esDoctor}') ";
+			$mantoCargo = "INSERT INTO cargo(car_nom,car_es_doctor,car_fecha_cre) VALUES('{$nombre}','{$esDoctor}') ";
 		}else{
 			$mantoCargo = "UPDATE cargo SET car_nom='{$nombre}', car_es_doctor='{$esDoctor}' WHERE car_id = {$id} ";
 		}

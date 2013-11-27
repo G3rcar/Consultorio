@@ -8,7 +8,7 @@ include_once("libs/php/class.connection.php");
 $botones_menu["limpio"]=true;
 $botones_herramientas["pacientes"]=true;
 $consulta="SELECT pac_id,pac_nom FROM paciente ORDER BY pac_id ASC ";
-$result=mysql_query($consulta);
+//$result=mysql_query($consulta);
 
 //- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
 include("res/partes/encabezado.php");
@@ -32,6 +32,7 @@ include("res/partes/encabezado.php");
 <script type="text/javascript" src="libs/js/select2/select2.js"></script>
 <script type="text/javascript" src="libs/js/select2/select2_locale_es.js"></script>
 <script type="text/javascript" src="libs/js/custom/objetos-comunes.js"></script>
+<!-- /Scripts extra -->
 
 <h3> Expediente </h3>
 <div class="container-fluid">

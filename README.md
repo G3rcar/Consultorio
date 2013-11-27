@@ -44,5 +44,6 @@ https://github.com/G3rcar/Consultorio/wiki/Base-de-Datos
 * Bootbox http://bootboxjs.com/
 * Select2 http://ivaynberg.github.io/select2/
 * Bootstrap Timepicker  http://jdewit.github.io/bootstrap-timepicker/
+* Bootstrap Datepicker  http://vitalets.github.io/bootstrap-datepicker/
 * Fixed Header  https://gist.github.com/G3rcar/6722471
 

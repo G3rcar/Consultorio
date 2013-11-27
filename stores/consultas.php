@@ -14,30 +14,36 @@ if(!isset($_POST["action"])){ exit(); }
 $accion = $_POST["action"];
 
 switch ($accion) {
-	case 'gd_muni':
+	case 'gd_consultas':
 
-		$selDeptos = "SELECT m.mun_id AS 'id',m.mun_nom AS 'muni',d.dep_nom AS 'depto',p.pai_nom AS 'pais',
-						DATE_FORMAT(mun_fecha_crea,'%d/%m/%Y %h:%i %p') AS 'fecha'
-						FROM departamento AS d INNER JOIN municipio AS m ON m.mun_iddep = d.dep_id
-						INNER JOIN pais AS p ON d.dep_idpai = p.pai_id
-						ORDER BY p.pai_nom,d.dep_nom,m.mun_nom";
-		$res = $conexion->execSelect($selDeptos);
+		$conexion->execManto("SET lc_time_names = 'es_ES'");
+
+		$selResult = "SELECT c.con_id,p.pac_nom,p.pac_ape,c.con_desc,c.con_diag,
+					DATE_FORMAT(ci.cit_fecha_cita,'%d/%b/%Y %h:%i %p') AS 'fecha' 
+					FROM consulta AS c INNER JOIN cita AS ci ON c.con_idcit = ci.cit_id 
+					INNER JOIN paciente AS p ON ci.cit_idpac = p.pac_id
+					ORDER BY ci.cit_fecha_cita";
+		$res = $conexion->execSelect($selResult);
 		$headers = array(
-			"Nombre","Departamento","Pa&iacute;s",
-			array("width"=>"200","text"=>"Fecha creaci&oacute;n"),
+			"Paciente","Descripci&oacute;n","Diagn&oacute;stico","Fecha",
 			array("width"=>"15","text"=>"&nbsp;"),
 			array("width"=>"15","text"=>"&nbsp;")
 		);
-		$tabla = new GridCheck($headers,"gridMuni");
+		$tabla = new GridCheck($headers,"gridConsulta");
 		if($res["num"]>0){
 			$i=0;
-			while($iMuni = $conexion->fetchArray($res["result"])){
+			while($iRes = $conexion->fetchArray($res["result"])){
 				//Iconos
-				$editar = "<a href='#' onClick='manto.editar({$iMuni["id"]});' title='Editar' ><i class='icon-edit'></i></a>";
-				$borrar = "<a href='#' onClick='manto.borrar({$iMuni["id"]});' title='Borrar' ><i class='icon-remove'></i></a>";
+				$editar = "<a href='#' onClick='manto.editar({$iRes["con_id"]});' title='Editar' ><i class='icon-edit'></i></a>";
+				$borrar = "<a href='#' onClick='manto.borrar({$iRes["con_id"]});' title='Borrar' ><i class='icon-remove'></i></a>";
 				
-				$valoresFila = array(utf8_encode($iMuni["muni"]),utf8_encode($iMuni["depto"]),utf8_encode($iMuni["pais"]),$iMuni["fecha"],$editar,$borrar);
-				$fila = array("id"=>$iMuni["id"],"valores"=>$valoresFila);
+				$valoresFila = array(
+					utf8_encode($iRes["pac_nom"]." ".$iRes["pac_ape"]),
+					utf8_encode($iRes["con_desc"]),
+					utf8_encode($iRes["con_diag"]),
+					utf8_encode($iRes["fecha"]),
+					$editar,$borrar);
+				$fila = array("id"=>$iRes["con_id"],"valores"=>$valoresFila);
 				$tabla->nuevaFila($fila);
 			}
 		}
@@ -107,7 +113,7 @@ switch ($accion) {
 		
 		$mantoMuni = "";
 		if($tipo=='nuevo'){
-			$mantoMuni = "INSERT INTO municipio(mun_nom,mun_iddep,mun_fecha_crea) VALUES('{$nombre}','{$idDepto}',NOW()) ";
+			$mantoMuni = "INSERT INTO municipio(mun_nom,mun_iddep) VALUES('{$nombre}','{$idDepto}') ";
 		}else{
 			$mantoMuni = "UPDATE municipio SET mun_nom='{$nombre}',mun_iddep='{$idDepto}' WHERE mun_id = {$id} ";
 		}
