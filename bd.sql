@@ -969,9 +969,9 @@ INSERT INTO `municipio`(`mun_id`,`mun_nom`,`mun_iddep`,`mun_fecha_crea`) VALUES(
 
 
 
-INSERT INTO `cargo` VALUES (1,'Doctor','true','2013-10-13 22:47:27'),
-  (2,'Dentista','true','0000-00-00 00:00:00'),
-  (3,'Secretaria','false','0000-00-00 00:00:00');
+INSERT INTO `cargo` VALUES (1,'true','Doctor','2013-10-13 22:47:27'),
+  (2,'true','Dentista','0000-00-00 00:00:00'),
+  (3,'false','Secretaria','0000-00-00 00:00:00');
 
 INSERT INTO `direccion` VALUES (1,NULL,NULL,'Central',NULL,NULL,NULL,NULL,NULL,'2013-10-13 22:47:26',1),
 (2,NULL,NULL,'Colonia',NULL,NULL,NULL,NULL,NULL,'2013-10-13 22:47:27',1),
