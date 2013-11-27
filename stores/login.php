@@ -31,7 +31,7 @@ if($iUsers["total"]!="1"){
 }
 
 //- Repetimos el proceso anterior pero con el usuario y password a la vez
-$selPass = "SELECT count(log_id) AS 'total',log_id AS 'id',log_idemp AS 'idempleado' FROM login WHERE log_usr='{$user}' AND log_pss='{$pass}' ";
+$selPass = "SELECT count(log_id) AS 'total',log_id AS 'id' FROM login WHERE log_usr='{$user}' AND log_pss='{$pass}' ";
 $res = $conexion->execSelect($selPass);
 $iUserP = $conexion->fetchArray($res["result"]);
 
@@ -41,9 +41,9 @@ if($iUserP["total"]!="1"){
 	echo json_encode($success); exit(); 
 }
 
-$selInfo = "SELECT c.car_es_doctor AS 'isdoctor',e.emp_idsuc,e.emp_nom,e.emp_ape 
+$selInfo = "SELECT c.car_es_doctor AS 'isdoctor',e.emp_idsuc,e.emp_nom,e.emp_ape, e.emp_id AS 'idempleado'
 			FROM empleado AS e INNER JOIN cargo AS c on e.emp_idcar = c.car_id 
-			WHERE emp_id='".$iUserP["idempleado"]."'";
+			WHERE login_log_id='".$iUserP["id"]."'";
 $res = $conexion->execSelect($selInfo);
 $iEmp = $conexion->fetchArray($res["result"]);
 $esDoctor = ($iEmp["isdoctor"]=="true")?true:false;
@@ -53,7 +53,7 @@ $apellidos = explode(" ",$iEmp["emp_ape"]);
 //- Si llego hasta aqui es porque se encontro el usuario, 
 //- por lo tanto se asignan las variables a la sesion
 $_SESSION["iduser"] = $iUserP["id"];
-$_SESSION["idempleado"] = $iUserP["idempleado"];
+$_SESSION["idempleado"] = $iEmp["idempleado"];
 $_SESSION["user"] = $user;
 $_SESSION["password"] = $pass;
 $_SESSION["esDoctor"] = $esDoctor;
