@@ -56,6 +56,7 @@
 				<li <?php echo ($botones_menu["pacientes"]?'class="active" ':''); ?> > <a href="pacientes.php">Pacientes</a> </li>
 				<li <?php echo ($botones_menu["facturas"]?'class="active" ':''); ?> > <a href="facturas.php">Facturas</a> </li>
 				<li <?php echo ($botones_menu["reportes"]?'class="active" ':''); ?> > <a href="reportes.php">Reportes</a> </li>
+				
 			</ul>
 		</div>
 	</div>
