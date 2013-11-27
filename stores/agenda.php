@@ -49,9 +49,9 @@ switch ($accion) {
 		$idDoctor = $conexion->escape($_POST["iddoctor"]);
 
 		$selCitas = "SELECT c.cit_id AS 'id',CONCAT(p.pac_nom,' ',p.pac_ape) AS 'nombre', DATE_FORMAT(c.cit_fecha_cita,'%Y/%m/%d') AS 'fecha',
-						DATE_FORMAT(c.cit_fecha_cita,'%H:%i %p') AS 'hora'
+						DATE_FORMAT(c.cit_fecha_cita,'%H:%i:%s') AS 'horaC', DATE_FORMAT(c.cit_fecha_cita,'%h:%i %p') AS 'hora'
 						FROM cita AS c INNER JOIN paciente AS p ON c.cit_idpac = p.pac_id
-						WHERE c.cit_fecha_cita BETWEEN '{$fecha_inicial}' AND '{$fecha_final}' AND c.cit_idemp = {$idDoctor} AND c.cit_estado = 'activa' ";
+						WHERE c.cit_fecha_cita BETWEEN '{$fecha_inicial}' AND '{$fecha_final}' AND c.cit_idemp = {$idDoctor} AND c.cit_estado = 'a' ";
 		
 		$res = $conexion->execSelect($selCitas);
 		$citas = array();
@@ -61,7 +61,7 @@ switch ($accion) {
 		if($res["num"]>0){
 			while($iCita = $conexion->fetchArray($res["result"])){
 
-				$posicion = calcularCuadroAgenda($iCita["fecha"],$iCita["hora"]);
+				$posicion = calcularCuadroAgenda($iCita["fecha"],$iCita["horaC"]);
 
 				$registros[]=array(
 					"id_cita"=>$iCita["id"],
@@ -87,7 +87,7 @@ switch ($accion) {
 		$selInfo = "SELECT c.cit_id AS 'id', c.cit_idemp AS 'idEm', CONCAT(e.emp_nom,' ',e.emp_ape) AS 'empleado', 
 					c.cit_idpac AS 'idPa', CONCAT(p.pac_nom,' ',p.pac_ape) AS 'paciente',c.cit_com AS 'comentario',
 					DATE_FORMAT(c.cit_fecha_cita,'%Y/%m/%d') AS 'fecha', DATE_FORMAT(c.cit_fecha_cita,'%d/%m/%Y') AS 'fechaF',
-					DATE_FORMAT(c.cit_fecha_cita,'%h:%i %p') AS 'hora' 
+					DATE_FORMAT(c.cit_fecha_cita,'%h:%i %p') AS 'hora'
 					FROM cita AS c INNER JOIN empleado AS e ON c.cit_idemp = e.emp_id
 					INNER JOIN paciente AS p ON c.cit_idpac = p.pac_id
 					WHERE c.cit_id = {$id} ";
@@ -137,10 +137,11 @@ switch ($accion) {
 
 		$mantoCita = "";
 		if($tipo=='nuevo'){
-			$mantoCita = "INSERT INTO cita(cit_idpac,cit_fecha_cita,cit_idemp,cit_com,cit_estado,cit_idsuc,cit_fecha_cre) VALUES('{$idPaciente}','{$fecha}','{$idEmpleado}','{$comentario}','1','{$idSucursal}',NOW()) ";
+			$mantoCita = "INSERT INTO cita(cit_idpac,cit_fecha_cita,cit_idemp,cit_com,cit_estado,cit_idsuc,cit_idslc,cit_fecha_cre) VALUES('{$idPaciente}','{$fecha}','{$idEmpleado}','{$comentario}','a','{$idSucursal}',NULL,NOW()) ";
 		}else{
 			$mantoCita = "UPDATE cita SET cit_idpac='{$idPaciente}',cit_idemp='{$idEmpleado}',cit_fecha_cita='{$fecha}',cit_com='{$comentario}' WHERE cit_id = {$id} ";
 		}
+
 
 		$res = 0;
 		$res = $conexion->execManto($mantoCita);
@@ -161,7 +162,7 @@ switch ($accion) {
 		if(!isset($_POST["id"])){ exit(); }
 		$id = json_decode($_POST["id"],true);
 
-		$borrarCita = "UPDATE cita SET cit_estado = 'cancelada' WHERE cit_id = {$id} ";
+		$borrarCita = "UPDATE cita SET cit_estado = 'c' WHERE cit_id = {$id} ";
 		$res = $conexion->execManto($borrarCita);
 		if($res>0){
 			$result = array("success"=>"true","msg"=>"La cita se ha borrado");

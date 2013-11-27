@@ -105,19 +105,20 @@ include("res/partes/encabezado.php");
 
 			},
 			editar:function(id){
-				this.estado = 'editar';
-				this.id = id;
-				$.ajax({
-					url:'stores/sucursales.php',
-					data:'action=rt_suc&id='+id, dataType:'json', type:'POST',
-					complete:function(datos){
-						var T = jQuery.parseJSON(datos.responseText);
-						
-						$('#nombreSuc').removeClass('error_requerido');
-						$('#nombreSuc').val(T.nombre);
-						$('#AgregarSuc').modal('show');
-					}
-				});
+				window.location.href = "sucursales.form.php?i="+id
+				//this.estado = 'editar';
+				//this.id = id;
+				//$.ajax({
+				//	url:'stores/sucursales.php',
+				//	data:'action=rt_suc&id='+id, dataType:'json', type:'POST',
+				//	complete:function(datos){
+				//		var T = jQuery.parseJSON(datos.responseText);
+				//		
+				//		$('#nombreSuc').removeClass('error_requerido');
+				//		$('#nombreSuc').val(T.nombre);
+				//		$('#AgregarSuc').modal('show');
+				//	}
+				//});
 
 			},
 			borrar:function(id){

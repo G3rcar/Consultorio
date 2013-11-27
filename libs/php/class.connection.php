@@ -44,6 +44,9 @@ class Conexion{
 	public function fetchArray($r){
 		return mysql_fetch_array($r);
 	}
+	public function lastId(){
+		return mysql_insert_id($this->link);
+	}
 	
 	//-- TRANSACTIONS
 	public function startTransaction(){

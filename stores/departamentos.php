@@ -16,13 +16,13 @@ $accion = $_POST["action"];
 switch ($accion) {
 	case 'gd_depto':
 
-		$selRes = "SELECT dep_id,dep_nom,pai_nom FROM departamento 
+		$selRes = "SELECT dep_id,dep_nom,pai_nom,DATE_FORMAT(dep_fecha_cre,'%d/%m%Y %h:%i %p') AS 'fecha' FROM departamento 
 					INNER JOIN pais ON dep_idpai = pai_id ORDER BY dep_id ";
 		$res = $conexion->execSelect($selRes);
 		$headers = array(
 			"Nombre",
 			"Pa&iacute;s",
-			//array("width"=>"200","text"=>"Fecha de creaci&oacute;n"),
+			array("width"=>"200","text"=>"Fecha de creaci&oacute;n"),
 			array("width"=>"15","text"=>"&nbsp;"),
 			array("width"=>"15","text"=>"&nbsp;")
 		);
@@ -34,7 +34,7 @@ switch ($accion) {
 				$editar = "<a href='#' onClick='manto.editar({$iDepto["dep_id"]});' title='Editar' ><i class='icon-edit'></i></a>";
 				$borrar = "<a href='#' onClick='manto.borrar({$iDepto["dep_id"]});' title='Borrar' ><i class='icon-remove'></i></a>";
 				
-				$valoresFila = array(utf8_encode($iDepto["dep_nom"]),$iDepto["pai_nom"],$editar,$borrar);
+				$valoresFila = array(utf8_encode($iDepto["dep_nom"]),$iDepto["pai_nom"],$iDepto["fecha"],$editar,$borrar);
 				$fila = array("id"=>$iDepto["dep_id"],"valores"=>$valoresFila);
 				$tabla->nuevaFila($fila);
 			}
@@ -77,7 +77,7 @@ switch ($accion) {
 		
 		$nuevoDepto = "";
 		if($tipo=='nuevo'){
-			$mantoDepto = "INSERT INTO departamento(dep_nom,dep_idpai) VALUES('{$nombre}','{$pais}') ";
+			$mantoDepto = "INSERT INTO departamento(dep_nom,dep_idpai,dep_fecha_cre) VALUES('{$nombre}','{$pais}',NOW()) ";
 		}else{
 			$mantoDepto = "UPDATE departamento SET dep_nom='{$nombre}', dep_idpai='{$pais}' WHERE dep_id = {$id} ";
 		}

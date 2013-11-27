@@ -52,38 +52,51 @@ switch ($accion) {
 		
 	break;
 
-	case 'suc':
+	case 'sv_sucursal':
 		if(!isset($_POST["nombre"])) exit();
 
 		$tipo = ($_POST["id"]=="")?'nuevo':'editar';
 
 		$id = (int)$conexion->escape($_POST["id"]);
 		$nombre  = $conexion->escape(utf8_decode($_POST["nombre"]));
-		$condominio = $conexion->escape(utf8_decode($_POST["condominio"]));
-		$condominio2 = $conexion->escape(utf8_decode($_POST["condominio2"]));
+		$municipio  = (int)$conexion->escape(utf8_decode($_POST["municipio"]));
+		$distrito = $conexion->escape(utf8_decode($_POST["distrito"]));
+		$colonia = $conexion->escape(utf8_decode($_POST["colonia"]));
 		$calle = $conexion->escape(utf8_decode($_POST["calle"]));
 		$calleComplemento = $conexion->escape(utf8_decode($_POST["calleComplemento"]));
+		$condominio = $conexion->escape(utf8_decode($_POST["condominio"]));
+		$condominio2 = $conexion->escape(utf8_decode($_POST["condominio2"]));
 		$casa = $conexion->escape(utf8_decode($_POST["casa"]));
-		$colonia = $conexion->escape(utf8_decode($_POST["colonia"]));
-		$distrito = $conexion->escape(utf8_decode($_POST["distrito"]));
 		$referencia = $conexion->escape(utf8_decode($_POST["referencia"]));
 		$nuevoSuc = "";
+
+		$res = 0;
 		if($tipo=='nuevo'){
-			$mantoSuc = "INSERT INTO direccion(dir_cond,dir_cond2,dir_calle,dir_compcalle, dir_casa, dir_col, dir_dist, dir_ref, dir_fecha_cre) VALUES('{$condominio}','{$condominio2}','{$calle}','{$calleComplemento}','{$casa}','{$colonia}','{$distrito}','{$referencia}',NOW()) ";
-			"INSERT INTO sucursal(suc_nom) VALUES('{$nombre}') ";
+			$mantoSuc = "INSERT INTO direccion(dir_cond,dir_cond2,dir_calle,dir_compcalle, dir_casa, dir_col, dir_dist, dir_ref, dir_idmun,dir_fecha_cre) 
+						VALUES('{$condominio}','{$condominio2}','{$calle}','{$calleComplemento}','{$casa}','{$colonia}','{$distrito}','{$referencia}','{$municipio}',NOW()) ";
+			$res = $conexion->execManto($mantoSuc);
+			$idDir = $conexion->lastId();
+			$mantoSuc = "INSERT INTO sucursal(suc_nom,suc_iddir) VALUES('{$nombre}','{$idDir}') ";
+			$res = $conexion->execManto($mantoSuc);
 		}else{
-			$mantoSuc = "UPDATE sucursal SET suc_nombre='{$nombre}' WHERE suc_id = {$id} ";
-			"UPDATE sucursal SET suc_nombre='{$nombre}' WHERE suc_id = {$id} ";
+			$selIdDir = "SELECT suc_iddir FROM sucursal WHERE suc_id = {$id} ";
+			$res = $conexion->execSelect($selIdDir);
+			if($res["num"]>0){
+				$iD = $conexion->fetchArray($res["result"]);
+				$mantoSuc = "UPDATE direccion SET dir_cond='{$condominio}', dir_cond2='{$condominio2}', dir_calle='{$calle}',dir_compcalle='{$calleComplemento}',
+							dir_casa='{$casa}', dir_col='{$colonia}',dir_dist='{$distrito}',dir_ref='{$referencia}',dir_idmun='{$municipio}' WHERE dir_id = '".$iD["suc_iddir"]."' ";
+				$res = $conexion->execManto($mantoSuc);
+			}
+			$mantoSuc = "UPDATE sucursal SET suc_nom='{$nombre}' WHERE suc_id = {$id} ";
+			$res = $conexion->execManto($mantoSuc);
 		}
 		
-		$res = 0;
-		$res = $conexion->execManto($mantoSuc);
 
-		if($res>0){
+		//if($res>0){
 			$success = array("success"=>"true","msg"=>"La sucursal se ha guardado");
-		}else{
-			$success = array("success"=>"false","msg"=>"Ha ocurrido un error");
-		}
+		//}else{
+		//	$success = array("success"=>"false","msg"=>"Ha ocurrido un error");
+		//}
 		echo json_encode($success);
 
 	break;
@@ -106,7 +119,7 @@ switch ($accion) {
 
 	break;
 
-	case 'br_Suc':
+	case 'br_suc':
 		$result = array("success"=>"false","msg"=>"");
 
 		if(!isset($_POST["id"])){ exit(); }

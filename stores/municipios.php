@@ -16,13 +16,15 @@ $accion = $_POST["action"];
 switch ($accion) {
 	case 'gd_muni':
 
-		$selDeptos = "SELECT m.mun_id AS 'id',m.mun_nom AS 'muni',d.dep_nom AS 'depto',p.pai_nom AS 'pais' 
+		$selDeptos = "SELECT m.mun_id AS 'id',m.mun_nom AS 'muni',d.dep_nom AS 'depto',p.pai_nom AS 'pais',
+						DATE_FORMAT(mun_fecha_crea,'%d/%m/%Y %h:%i %p') AS 'fecha'
 						FROM departamento AS d INNER JOIN municipio AS m ON m.mun_iddep = d.dep_id
 						INNER JOIN pais AS p ON d.dep_idpai = p.pai_id
 						ORDER BY p.pai_nom,d.dep_nom,m.mun_nom";
 		$res = $conexion->execSelect($selDeptos);
 		$headers = array(
 			"Nombre","Departamento","Pa&iacute;s",
+			array("width"=>"200","text"=>"Fecha creaci&oacute;n"),
 			array("width"=>"15","text"=>"&nbsp;"),
 			array("width"=>"15","text"=>"&nbsp;")
 		);
@@ -34,7 +36,7 @@ switch ($accion) {
 				$editar = "<a href='#' onClick='manto.editar({$iMuni["id"]});' title='Editar' ><i class='icon-edit'></i></a>";
 				$borrar = "<a href='#' onClick='manto.borrar({$iMuni["id"]});' title='Borrar' ><i class='icon-remove'></i></a>";
 				
-				$valoresFila = array(utf8_encode($iMuni["muni"]),utf8_encode($iMuni["depto"]),utf8_encode($iMuni["pais"]),$editar,$borrar);
+				$valoresFila = array(utf8_encode($iMuni["muni"]),utf8_encode($iMuni["depto"]),utf8_encode($iMuni["pais"]),$iMuni["fecha"],$editar,$borrar);
 				$fila = array("id"=>$iMuni["id"],"valores"=>$valoresFila);
 				$tabla->nuevaFila($fila);
 			}
@@ -105,7 +107,7 @@ switch ($accion) {
 		
 		$mantoMuni = "";
 		if($tipo=='nuevo'){
-			$mantoMuni = "INSERT INTO municipio(mun_nom,mun_iddep) VALUES('{$nombre}','{$idDepto}') ";
+			$mantoMuni = "INSERT INTO municipio(mun_nom,mun_iddep,mun_fecha_crea) VALUES('{$nombre}','{$idDepto}',NOW()) ";
 		}else{
 			$mantoMuni = "UPDATE municipio SET mun_nom='{$nombre}',mun_iddep='{$idDepto}' WHERE mun_id = {$id} ";
 		}

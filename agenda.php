@@ -269,7 +269,7 @@ include("res/partes/encabezado.php");
 
 
 
-	<!-- Agregar -->
+	<!-- Editar -->
 	<div id="EditarCita" class="modal hide fade modalMediana" role="dialog" aria-labelledby="EditarCita" aria-hidden="true">
 		
 		<div class="modal-header">
@@ -431,7 +431,7 @@ include("res/partes/encabezado.php");
 
 				if(!_t.validarForm()){ return; }
 				$('#s2id_paciente').removeClass('error_requerido_sel2');
-				$('#comentario').removeClass('error_requerido').attr('title','');
+				$('#comentario,#comentarioE').removeClass('error_requerido').attr('title','');
 				
 				_t.toggle(false);
 				
