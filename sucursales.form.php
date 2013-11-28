@@ -47,6 +47,7 @@ if($res["num"]>0){
 }
 
 
+$titulo = (!$ed)?"Agregar sucursal":"Editar sucursal";
 
 //- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
 include("res/partes/encabezado.php");
@@ -75,7 +76,7 @@ include("res/partes/encabezado.php");
 <script type="text/javascript" src="libs/js/custom/objetos-comunes.js"></script>
 <!-- /Scripts extra -->
 
-<h3>Sucursales</h3>
+<h3><?php echo $titulo; ?></h3>
 
 	<div class="container-fluid">
 		<div class="row-fluid">
