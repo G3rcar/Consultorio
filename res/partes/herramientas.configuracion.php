@@ -18,7 +18,7 @@
 		<li class="nav-header">Cat&aacute;logos</li>
 		<li <?php echo ($botones_configuracion["configuracion"]?'class="active" ':''); ?> ><a href="configuracion.php">Configuracion General</a></li>
 		<li <?php echo ($botones_configuracion["cargos"]?'class="active" ':''); ?> ><a href="cargos.php">Cargos</a></li>
-		<li <?php echo ($botones_configuracion["roles"]?'class="active" ':''); ?> ><a href="roles.php">Roles</a></li>
+		<!-- <li <?php echo ($botones_configuracion["roles"]?'class="active" ':''); ?> ><a href="roles.php">Roles</a></li> -->
 		<li <?php echo ($botones_configuracion["empleados"]?'class="active" ':''); ?> ><a href="empleados.php">Empleados/Usuarios</a></li>
 		<hr />
 		<li <?php echo ($botones_configuracion["productos"]?'class="active" ':''); ?> ><a href="productos.php">Producto/Servicios</a></li>
