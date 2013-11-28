@@ -14,7 +14,7 @@ if(!isset($_POST["action"])){ exit(); }
 $accion = $_POST["action"];
 
 switch ($accion) {
-	case 'gd_sucursal':
+	case 'gd_empleado':
 
 		$selSuc = "SELECT emp.emp_id,emp.emp_nom,mu.mun_nom,de.dep_nom,DATE_FORMAT(di.dir_fecha_cre,'%d/%m/%Y') AS 'dir_fecha_cre'
 					FROM empleado AS emp
@@ -33,7 +33,7 @@ switch ($accion) {
 			array("width"=>"15","text"=>"&nbsp;"),
 			array("width"=>"15","text"=>"&nbsp;")
 		);
-		$tabla = new GridCheck($headers,"gridSucursales");
+		$tabla = new GridCheck($headers,"gridEmpleados");
 		if($res["num"]>0){
 			$i=0;
 			while($iSuc = $conexion->fetchArray($res["result"])){
@@ -52,7 +52,7 @@ switch ($accion) {
 		
 	break;
 
-	case 'suc':
+	case 'empl':
 		if(!isset($_POST["nombre"])) exit();
 
 		$tipo = ($_POST["id"]=="")?'nuevo':'editar';
