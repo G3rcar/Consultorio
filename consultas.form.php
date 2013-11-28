@@ -9,6 +9,12 @@ $botones_configuracion["configuracion"]=true;
 
 $conexion = new Conexion();
 
+$edicion=false;
+$edicion=(isset($_GET["i"]))?true:false;
+
+$idC = (isset($_GET["c"]))?(int)$conexion->escape($_GET["c"]):0;
+
+
 $citas="<option value='-'>-</option>";
 $idPrimerCita="0";
 $selectCitas = "SELECT c.cit_id,c.cit_com,p.pac_nom,p.pac_ape,
@@ -68,7 +74,6 @@ include("res/partes/encabezado.php");
 						<li><a id="lnkCancelar" href="#"><i class="icon-remove"></i> Cancelar</a></li>
 
 						<li class="nav-header">Herramientas</li>
-						<li><a id="lnkReceta" href="#"><i class="icon-list-alt" title="Guardar y agregar receta"></i> Agregar receta</a></li>
 						<li><a id="lnkFactura" href="#"><i class="icon-shopping-cart" title="Guardar y generar factura"></i> Facturar</a></li>
 
 					</ul>

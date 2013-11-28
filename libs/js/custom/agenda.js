@@ -34,6 +34,7 @@ var mainAgenda = {
 		'<span class="title">'+texto_uno+'</span>'+
 		'<span class="lecturer">'+texto_dos+'</span> '+
 		'<span class="buttons">'+
+			'<button class="btn btn-primary btn-hover" title="Agregar cita" onClick="citas.nuevaConsulta('+id+')"><i class="icon-plus icon-white"></i></button>'+
 			'<button class="btn btn-primary btn-hover" title="Editar" onClick="citas.editar('+id+')"><i class="icon-edit icon-white"></i></button>'+
 			'<button class="btn btn-primary btn-hover" title="Cancelar" onClick="citas.borrar('+id+')"><i class="icon-remove icon-white"></i></button>'+
 		'</span> '+

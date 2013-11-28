@@ -328,8 +328,20 @@ include("res/partes/encabezado.php");
 			min_inicio:0,
 			min_fin:0,
 			fecha_seleccionada:0,
+			timerConsulta:'',
+
+			nuevaConsulta:function(id){
+				var _t = this;
+				_t.timerConsulta = setTimeout(function(){
+					window.location.href='consultas.form.php?c='+id;
+				},100);
+				
+			},
+
 			nueva:function(fecha,hora){
 				var _t = this;
+				clearTimeout(_t.timerConsulta);
+
 				_t.id = 0;
 				_t.fecha_seleccionada = fecha;
 				$('#ManntoCita').modal('show');
@@ -369,6 +381,7 @@ include("res/partes/encabezado.php");
 
 			editar:function(id){
 				var _t = this;
+				clearTimeout(_t.timerConsulta);
 				console.log('editando '+id);
 
 				_t.estado = 'editar';
@@ -463,7 +476,9 @@ include("res/partes/encabezado.php");
 					}
 				});
 			},
+			
 			borrar:function(id){
+				event.preventDefault();
 				var tipo = 'uno';
 				var ids = id;
 				var action = 'br_cita';
