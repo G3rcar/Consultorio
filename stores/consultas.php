@@ -102,30 +102,57 @@ switch ($accion) {
 
 
 
-	case 'sv_muni':
-		if(!isset($_POST["nombre"])) exit();
+	case 'sv_consulta':
+		if(!isset($_POST["idc"])) exit();
 
 		$tipo = ($_POST["id"]=="")?'nuevo':'editar';
 
+
 		$id = (int)$conexion->escape($_POST["id"]);
-		$idDepto = (int)$conexion->escape($_POST["idDepto"]);
-		$nombre = $conexion->escape(utf8_decode($_POST["nombre"]));
+		$idC = (int)$conexion->escape($_POST["idc"]);
+		$descripcion = $conexion->escape($_POST["descripcion"]);
+		$diagnostico = $conexion->escape($_POST["diagnostico"]);
+		$detalle = $conexion->escape($_POST["detalle"]);
+		$medicinas = $conexion->escape($_POST["medicinas"]);
 		
-		$mantoMuni = "";
+
+		$mantoConsulta = "";
 		if($tipo=='nuevo'){
-			$mantoMuni = "INSERT INTO municipio(mun_nom,mun_iddep) VALUES('{$nombre}','{$idDepto}') ";
+			$mantoConsulta = "INSERT INTO consulta(con_diag,con_desc,con_idcit) VALUES('{$diagnostico}','{$descripcion}','{$idC}') ";
 		}else{
-			$mantoMuni = "UPDATE municipio SET mun_nom='{$nombre}',mun_iddep='{$idDepto}' WHERE mun_id = {$id} ";
+			$mantoConsulta = "UPDATE consulta SET con_diag='{$diagnostico}',con_desc='{$descripcion}' WHERE con_id = {$id} ";
 		}
 		
 		$res = 0;
-		$res = $conexion->execManto($mantoMuni);
+		$res = $conexion->execManto($mantoConsulta);
 
-		if($res>0){
-			$success = array("success"=>"true","msg"=>"El municipio se ha guardado");
+		if($tipo=='nuevo'){
+			$idCon = $conexion->lastId();
+			$mantoReceta = "INSERT INTO receta(rec_desc,rec_idcon,rec_fecha_cre) VALUES('{$detalle}','{$idCon}',NOW()) ";
 		}else{
-			$success = array("success"=>"false","msg"=>"Ha ocurrido un error");
+			$mantoReceta = "UPDATE receta SET rec_desc='{$detalle}' WHERE rec_idcon = '{$id}' ";
 		}
+		$res = $conexion->execManto($mantoReceta);
+
+		$rec = $conexion->execSelect("SELECT rec_id FROM receta WHERE rec_idcon='{$id}'");
+		if($rec["num"]>0){
+			$iR = $conexion->fetchArray($rec["result"]);
+			$idRec = $iR["rec_id"];
+			$res = $conexion->execManto("DELETE FROM detalle_receta WHERE dtr_idrec={$idRec}");
+
+			$tmpMed = explode("####--####", $medicinas);
+			for($i=0;$i<count($tmpMed);$i++){
+				$newMed = "INSERT INTO detalle_receta(dtr_idrec,dtr_desc,dtr_fecha_cre) VALUES('{$idRec}','".$tmpMed[$i]."',NOW()) "; 
+				$res = $conexion->execManto($newMed);
+			}
+		}
+		
+		
+
+
+
+		$success = array("success"=>"true","msg"=>"La consulta se ha guardado");
+		
 		echo json_encode($success);
 
 	break;

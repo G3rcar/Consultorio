@@ -8,8 +8,16 @@ $botones_menu["limpio"]=true;
 $botones_configuracion["configuracion"]=true;
 
 $conexion = new Conexion();
+$ed = false;
+$campos = "";
 
-$citas="<option value='-'>-</option>";
+$ed=false;
+$ed=(isset($_GET["i"]))?true:false;
+
+$idC = (isset($_GET["c"]))?(int)$conexion->escape($_GET["c"]):0;
+
+
+$citas="<option value='-'>Seleccione una cita</option>";
 $idPrimerCita="0";
 $selectCitas = "SELECT c.cit_id,c.cit_com,p.pac_nom,p.pac_ape,
 				DATE_FORMAT(c.cit_fecha_cita,'%d/%b/%Y %h:%i %p') AS 'fecha'
@@ -22,6 +30,8 @@ if($res["num"]>0){
 	}
 }
 
+
+$titulo = (!$ed)?"Agregar datos de consulta":"Editar datos de consulta";
 
 //- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
 include("res/partes/encabezado.php");
@@ -36,6 +46,10 @@ include("res/partes/encabezado.php");
 }
 .headGrid th{
 	color: #FFFFFF;
+}
+.well-small{
+	padding-top: 3px;
+	padding-bottom: 3px; 
 }
 
 
@@ -52,7 +66,7 @@ include("res/partes/encabezado.php");
 <script type="text/javascript" src="libs/js/custom/objetos-comunes.js"></script>
 <!-- /Scripts extra -->
 
-<h3>Consulta</h3>
+<h3><?php echo $titulo; ?></h3>
 
 	<div class="container-fluid">
 		<div class="row-fluid">
@@ -68,8 +82,8 @@ include("res/partes/encabezado.php");
 						<li><a id="lnkCancelar" href="#"><i class="icon-remove"></i> Cancelar</a></li>
 
 						<li class="nav-header">Herramientas</li>
-						<li><a id="lnkReceta" href="#"><i class="icon-list-alt" title="Guardar y agregar receta"></i> Agregar receta</a></li>
 						<li><a id="lnkFactura" href="#"><i class="icon-shopping-cart" title="Guardar y generar factura"></i> Facturar</a></li>
+						<li><a id="lnkImprimir" href="#"><i class="icon-print" title="Guardar y generar factura"></i> Imprimir receta</a></li>
 
 					</ul>
 				</div>
@@ -81,37 +95,50 @@ include("res/partes/encabezado.php");
 			<div id="AgregarSuc" class="span9">
 				<form id="frmConsulta">
 					<fieldset>
-						<legend>Cita</legend>
-						<div class="span10">
+						<legend>General</legend>
+						<div class="span4">
 							<select id="idCita" class="input-block-level" >
 								<?php echo $citas; ?>
 							</select>
 						</div>
 
-						<div class="well span10 row-fluid" style="margin-top:20px;">
+						<div class="well well-small span6 row-fluid">
 							<table class="table" style="margin-bottom:0"> 
-								<tr><td style="border-top:none;"><b>Fecha:</b> dd/mm/yyyy </td><td style="border-top:none;"><b>Hora:</b> --:-- </td></tr>
-								<tr><td colspan="2" style="border-top:none;"><b>Paciente:</b> </td></tr>
-								<tr><td colspan="2" style="border-top:none;"><b>Doctor:</b> </td></tr>
+								<tr>
+									<td style="border-top:none;padding:0;"><b>Fecha:</b>  <span id="lblFecha">dd/mm/YYYY</span>  </td>
+									<td style="border-top:none;padding:0;"><b>Hora:</b>  <span id="lblHora">--:--</span> </td>
+								</tr>
+							</table>
+						</div>
+						<div class="well well-small span10 row-fluid">
+							<table class="table" style="margin-bottom:0"> 
+								<tr><td style="border-top:none;width:80px;"><b>Paciente:</b> </td><td style="border-top:none;"> <span id="lblPaciente"></span> </td></tr>
+								<tr><td style="border-top:none;"><b>Doctor:</b> </td><td style="border-top:none;"> <span id="lblDoctor"></span> </td></tr>
 							</table>
 						</div>
 						
-					</fieldset>
-					<br>
-					<fieldset>
 
-						<legend>Informaci&oacute;n</legend>
-							<div class="span10">
-								<label id="descripcion_label">Descripci&oacute;n</label>
-								<textarea id="descripcion" type="text" min-length="2" class="input-block-level" ></textarea>
-							</div>
-							<div class="span10">
-								<label id="diagnostico_label">Diagn&oacute;stico</label>
-								<textarea id="diagnostico" type="text" min-length="2" style="height:100px;" class="input-block-level" ></textarea>
-							</div>
+						<div class="span10">
+							<label id="descripcion_label">Descripci&oacute;n</label>
+							<textarea id="descripcion" type="text" min-length="2" class="input-block-level" ></textarea>
+						</div>
+						<div class="span10">
+							<label id="diagnostico_label">Diagn&oacute;stico</label>
+							<textarea id="diagnostico" type="text" min-length="2" style="height:100px;" class="input-block-level" ></textarea>
+						</div>
+
+						<legend>Receta</legend>
+						<div class="span10">
+							<label id="detalle_receta_label">Detalle</label>
+							<textarea id="detalle_receta" type="text" min-length="2" class="input-block-level" ></textarea>
+						</div>
+						<div class="span10">
+							<label id="descripcion_label">Medicinas</label>
+							<a class="btn btn-success" id="btnAgregarMedicina"><i class="icon icon-plus icon-white"></i> Agregar medicina</a>
+							<div id="contentMedicinas" class="well" style="margin-top:10px; min-height:100px;"></div>
+						</div>
 
 					</fieldset>
-					<br>
 				</form>
 			</div>
 			<!-- /Columna fluida con peso 9/12 -->
@@ -119,6 +146,31 @@ include("res/partes/encabezado.php");
 
 		</div>
 	</div>
+
+
+	<!-- Agregar Medicina -->
+	<div id="AgregarMedicina" class="modal hide fade modalPequena" role="dialog" aria-labelledby="AgregarMedicina" aria-hidden="true">
+		
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3 id="modalHead">Agregar</h3>
+		</div>
+		<div class="modal-body" style="overflow-y:visible;" >
+			<form>
+				<fieldset>
+					<label id="txtMedicina_label" style="margin-top:10px;">Medicina<small>(M&aacute;x. 50)</small></label>
+					<input id="txtMedicina" style="width:95%;" type="text" />
+				</fieldset>
+			</form>
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+			<button id="guardarMedicinaE" onClick="manto.insertarMedicina()" class="btn btn-primary">Agregar</button>
+		</div>
+
+	</div>
+
+
 
 	<!-- Scripts -->
 
@@ -132,7 +184,10 @@ include("res/partes/encabezado.php");
 			$('#lnkCancelar').attr('href','consultas.php');
 			$('#lnkLimpiar').click(function(){ document.getElementById('frmConsulta').reset(); });
 
-			$('#sidebarNav').affix();
+			$('#btnAgregarMedicina').click(function(){
+				manto.agregarMedicina();
+			});
+
 			
 			function format(obj) {
 				if(obj.text=="-") return obj.text;
@@ -148,10 +203,23 @@ include("res/partes/encabezado.php");
 				placeholder: "Seleccionar",
 				formatResult:format,
 				formatSelection:formatSelect,
-				escapeMarkup: function(m) { return m; }, 
+				escapeMarkup: function(m) { return m; }
 			});
+			$("#idCita").change(function(){
+				var idCita = $(this).val();
+				if(idCita!="-") manto.precargarDatos(idCita);
+			});
+
+			<?php if($ed){ ?>
+			$("#idCita").select2("val",<?php echo ""; ?>);
 			
+			<?php } ?>
+
 		});
+
+
+
+
 
 		function validarForm(){
 			var errores = 0;
@@ -186,76 +254,64 @@ include("res/partes/encabezado.php");
 			estado: 'agregar',
 			id:'',
 
-			agregar:function(){
-				this.estado = 'agregar';
-				this.id = '';
-				$('#nombreSuc_label').removeClass('error_requerido');
-				$('#nombreSuc').val('');
-				$('#AgregarSuc').modal('show');
-
-
-			},
-			editar:function(id){
-				this.estado = 'editar';
-				this.id = id;
+			precargarDatos:function(id){
 				$.ajax({
-					url:'stores/sucursales.php',
-					data:'action=rt_suc&id='+id, dataType:'json', type:'POST',
+					url:'stores/agenda.php', data:{ action:'rt_cita', id:id }, 
+					dataType:'json', type:'POST',
 					complete:function(datos){
 						var T = jQuery.parseJSON(datos.responseText);
-						
-						$('#nombreSuc').removeClass('error_requerido');
-						$('#nombreSuc').val(T.nombre);
-						$('#AgregarSuc').modal('show');
+						$("#lblDoctor").html(T.nomEm);
+						$("#lblPaciente").html(T.nomPa);
+						$("#lblFecha").html(T.fecha);
+						$("#lblHora").html(T.hora);
+						$("#descripcion").val(T.com);
 					}
-				});
-
+				})
 			},
-			borrar:function(id){
-				var tipo = (id)?'uno':'varios';
-				var seleccion = gridCheck.getSelectionJSON('gridSucursales');
-				if(tipo=='varios' && seleccion==false){
-					humane.log('No ha seleccionado ning&uacute;n registro');
-					return;
-				}
 
-				var ids = (tipo=='uno')?id:seleccion;
-				var action = (tipo=='uno')?'br_suc':'br_variossuc' ;
-				
-				bootbox.confirm("&iquest;Esta seguro de eliminar los registros?", function(confirm) {
-					if(confirm){
-						$.ajax({
-							url:'stores/sucursales.php',
-							data:'action='+action+'&id='+ids, dataType:'json', type:'POST',
-							complete:function(datos){
-								var T = jQuery.parseJSON(datos.responseText);
-								
-								humane.log(T.msg)
-								if(T.success=='true') cargarTabla();
-							}
-						});
-					}
-				}); 
+			agregarMedicina:function(){ 
+				$("#txtMedicina").val("");
+				$('#AgregarMedicina').modal('show'); 
+			},
+
+			nMed:0,
+			insertarMedicina:function(){
+				var _t = this;
+				var content = "<b class='itemMedicina' id='item_"+_t.nMed+"'>"+$("#txtMedicina").val()+"</b>"+
+							"<a id='btni_"+_t.nMed+"' href='javascript:void(0);' onClick='manto.borrarMedicina("+_t.nMed+")' style='margin-right:10px;'><i class='icon icon-remove'></i></a> ";
+				var cM = $("#contentMedicinas");
+				cM.html(cM.html()+content);
+				_t.nMed++;
+				$('#AgregarMedicina').modal('hide');
+			},
+
+			borrarMedicina:function(i){
+				$("#item_"+i).remove();
+				$("#btni_"+i).remove();
+			},
+
+			obtenerMedicinas:function(){
+				var value="";
+				$(".itemMedicina").each(function(index){
+					value += (value!=""?"####--####":"")+$(this).html();
+				});
+				return value;
 			},
 
 			guardar:function(){
 				if(!validarForm()){ return; }
 				manto.toggle(false);
-				var nombre = $('#nombreSuc').val();
-				var condominio = $('#condominioDir').val();
-				var condominio2 = $('#condominio2Dir').val();
-				var calle = $('#calleDir').val();
-				var calleComplemento = $('#complementocalleDir').val();
-				var casa = $('#casaDir').val();
-				var colonia = $('#coloniaDir').val();
-				var distrito = $('#distritoDir').val();
-				var referencia = $('#referenciaDir').val();
-
-				if(this.estado=='agregar'){ this.id=''; }
-				var datos = 'action=suc&nombre='+nombre+'&id='+this.id;
+				
+				var idCita = $('#idCita').val();
+				var descripcion = $('#descripcion').val();
+				var diagnostico = $('#diagnostico').val();
+				var detalle = $('#detalle_receta').val();
+				var medicinas = $('#detalle_receta').val();
+				
+				var datos = {action:'sv_consulta',idc:idCita,descripcion:descripcion,diagnostico:diagnostico,detalle:detalle,medicinas:medicinas,id:''};
 
 				$.ajax({
-					url:'stores/sucursales.php',
+					url:'stores/consultas.php',
 					data:datos, dataType:'json', type:'POST',
 					complete:function(datos){
 						var T = jQuery.parseJSON(datos.responseText);

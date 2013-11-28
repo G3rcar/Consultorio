@@ -80,7 +80,7 @@ switch ($accion) {
 	break;
 
 	case 'rt_cita':
-		if(!isset($_POST["id"])) exit("ss");
+		if(!isset($_POST["id"])) exit();
 
 		$id = (int)$conexion->escape($_POST["id"]);
 

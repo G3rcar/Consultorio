@@ -349,8 +349,8 @@ DROP TABLE IF EXISTS `consultorio`.`consulta` ;
 
 CREATE  TABLE IF NOT EXISTS `consultorio`.`consulta` (
   `con_id` INT(8) NOT NULL AUTO_INCREMENT ,
-  `con_desc` VARCHAR(50) CHARACTER SET 'utf8' COLLATE 'utf8_spanish2_ci' NOT NULL ,
-  `con_diag` VARCHAR(50) CHARACTER SET 'utf8' COLLATE 'utf8_spanish2_ci' NOT NULL ,
+  `con_desc` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_spanish2_ci' NOT NULL ,
+  `con_diag` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_spanish2_ci' NOT NULL ,
   `con_fecha_cre` DATETIME NOT NULL ,
   `con_idcit` INT(8) NOT NULL ,
   PRIMARY KEY (`con_id`) ,
