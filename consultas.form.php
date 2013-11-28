@@ -209,7 +209,12 @@ include("res/partes/encabezado.php");
 				var idCita = $(this).val();
 				if(idCita!="-") manto.precargarDatos(idCita);
 			});
+
+			<?php if($ed){ ?>
+			$("#idCita").select2("val",<?php echo ""; ?>);
 			
+			<?php } ?>
+
 		});
 
 
@@ -303,10 +308,10 @@ include("res/partes/encabezado.php");
 				var detalle = $('#detalle_receta').val();
 				var medicinas = $('#detalle_receta').val();
 				
-				var datos = {idc:idCita,resc:descripcion,diagnostico:diagnostico,detalle:detalle,medicinas:medicinas};
+				var datos = {action:'sv_consulta',idc:idCita,descripcion:descripcion,diagnostico:diagnostico,detalle:detalle,medicinas:medicinas,id:''};
 
 				$.ajax({
-					url:'stores/sucursales.php',
+					url:'stores/consultas.php',
 					data:datos, dataType:'json', type:'POST',
 					complete:function(datos){
 						var T = jQuery.parseJSON(datos.responseText);
