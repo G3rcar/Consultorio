@@ -79,14 +79,18 @@ include("res/partes/encabezado.php");
 							<input id="nombreFecha_nac" type="text" min-length="2" class="input-block-level" >
 						</div>
                                                 
-                                                <div class="span5">
-							<label id="nombreSuc_label" class="requerido">Sucursal</label>
-							<input id="nombreSuc" type="text" min-length="2" class="input-block-level" >
+						<div class="span5">
+								<label id="sucursal_label">Sucursal</label>
+								<select id="idSucursal" class="input-block-level" >
+									<?php echo $sucursal; ?>
+								</select>
 						</div>
 						
-                                                <div class="span5">
-							<label id="nombreCar_label" class="requerido">Cargo</label>
-							<input id="nombreCar" type="text" min-length="2" class="input-block-level" >
+						<div class="span5">
+								<label id="cargo_label">Cargo</label>
+								<select id="idCargo" class="input-block-level" >
+									<?php echo $cargo; ?>
+								</select>
 						</div>
                                                 
 					</fieldset>
