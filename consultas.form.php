@@ -17,6 +17,7 @@ if($tieneCon!=false){ $_GET["i"]=$tieneCon; }
 
 $ed=(isset($_GET["i"]))?true:false;
 $idCo = ($ed)?(int)$conexion->escape($_GET["i"]):0;
+$mediItems = "";
 
 //Seleccionar datos para cargarlos
 if($ed){
@@ -24,11 +25,20 @@ if($ed){
 	$res = $conexion->execSelect($selConsulta);
 	if($res["num"]>0){
 		$campos = $conexion->fetchArray($res["result"]);
-		$selReceta = "SELECT rec_desc FROM receta WHERE rec_idcon = '{$idCo}' ";
+		$idC = $campos["con_idcit"];
+		$selReceta = "SELECT rec_id,rec_desc FROM receta WHERE rec_idcon = '{$idCo}' ";
 		$resR = $conexion->execSelect($selReceta);
 		if($resR["num"]>0){
 			$iRe = $conexion->fetchArray($resR["result"]);
 			$campos["rec_desc"] = $iRe["rec_desc"];
+			$selMedi = "SELECT dtr_id,dtr_desc FROM detalle_receta WHERE dtr_idrec = ".$iRe["rec_id"];
+			$resM = $conexion->execSelect($selMedi);
+			if($resM["num"]>0){
+				while ($iRe = $conexion->fetchArray($resM["result"])) {
+					$mediItems .= "<b class='itemMedicina' id='item_".$iRe["dtr_id"]."'>".$iRe["dtr_desc"]."</b>".
+									"<a id='btni_".$iRe["dtr_id"]."' href='javascript:void(0);' onClick='manto.borrarMedicina(".$iRe["dtr_id"].")' style='margin-right:10px;'><i class='icon icon-remove'></i></a> ";
+				}
+			}
 		}
 
 	}else{
@@ -36,11 +46,6 @@ if($ed){
 		$idCo=0;
 	}
 }
-
-
-
-
-
 //--------------------------------
 
 
@@ -165,22 +170,22 @@ function tieneConsulta($id){
 
 						<div class="span10">
 							<label id="descripcion_label">Descripci&oacute;n</label>
-							<textarea id="descripcion" type="text" min-length="2" class="input-block-level" ><?php echo ($ed)?utf8_encode($campos["dir_dist"]):""; ?></textarea>
+							<textarea id="descripcion" type="text" min-length="2" class="input-block-level" ><?php echo ($ed)?utf8_encode($campos["con_desc"]):""; ?></textarea>
 						</div>
 						<div class="span10">
 							<label id="diagnostico_label">Diagn&oacute;stico</label>
-							<textarea id="diagnostico" type="text" min-length="2" style="height:100px;" class="input-block-level" ><?php echo ($ed)?utf8_encode($campos["dir_dist"]):""; ?></textarea>
+							<textarea id="diagnostico" type="text" min-length="2" style="height:100px;" class="input-block-level" ><?php echo ($ed)?utf8_encode($campos["con_diag"]):""; ?></textarea>
 						</div>
 
 						<legend>Receta</legend>
 						<div class="span10">
 							<label id="detalle_receta_label">Detalle</label>
-							<textarea id="detalle_receta" type="text" min-length="2" class="input-block-level" ><?php echo ($ed)?utf8_encode($campos["dir_dist"]):""; ?></textarea>
+							<textarea id="detalle_receta" type="text" min-length="2" class="input-block-level" ><?php echo ($ed)?utf8_encode($campos["rec_desc"]):""; ?></textarea>
 						</div>
 						<div class="span10">
 							<label id="descripcion_label">Medicinas</label>
 							<a class="btn btn-success" id="btnAgregarMedicina"><i class="icon icon-plus icon-white"></i> Agregar medicina</a>
-							<div id="contentMedicinas" class="well" style="margin-top:10px; min-height:100px;"></div>
+							<div id="contentMedicinas" class="well" style="margin-top:10px; min-height:100px;"><?php echo $mediItems; ?></div>
 						</div>
 
 					</fieldset>
@@ -298,7 +303,8 @@ function tieneConsulta($id){
 
 		var manto = {
 			estado: 'agregar',
-			id:'',
+			nMed:0,
+			id:'<?php echo ($idCo!=0?$idCo:'')?>',
 
 			precargarDatos:function(id){
 				$.ajax({
@@ -310,7 +316,9 @@ function tieneConsulta($id){
 						$("#lblPaciente").html(T.nomPa);
 						$("#lblFecha").html(T.fecha);
 						$("#lblHora").html(T.hora);
+						<?php if(!$ed){ ?>
 						$("#descripcion").val(T.com);
+						<?php } ?>
 					}
 				})
 			},
@@ -320,7 +328,6 @@ function tieneConsulta($id){
 				$('#AgregarMedicina').modal('show'); 
 			},
 
-			nMed:0,
 			insertarMedicina:function(){
 				var _t = this;
 				var content = "<b class='itemMedicina' id='item_"+_t.nMed+"'>"+$("#txtMedicina").val()+"</b>"+
@@ -346,15 +353,15 @@ function tieneConsulta($id){
 
 			guardar:function(){
 				if(!validarForm()){ return; }
-				manto.toggle(false);
+				var _t = this;
 				
 				var idCita = $('#idCita').val();
 				var descripcion = $('#descripcion').val();
 				var diagnostico = $('#diagnostico').val();
 				var detalle = $('#detalle_receta').val();
-				var medicinas = $('#detalle_receta').val();
+				var medicinas = _t.obtenerMedicinas();
 				
-				var datos = {action:'sv_consulta',idc:idCita,descripcion:descripcion,diagnostico:diagnostico,detalle:detalle,medicinas:medicinas,id:''};
+				var datos = {action:'sv_consulta',idc:idCita,descripcion:descripcion,diagnostico:diagnostico,detalle:detalle,medicinas:medicinas,id:_t.id};
 
 				$.ajax({
 					url:'stores/consultas.php',
@@ -365,10 +372,10 @@ function tieneConsulta($id){
 						humane.log(T.msg);
 						if(T.success=="true"){
 							$('#AgregarSuc').modal('hide');
-							manto.toggle(true);
+							_t.toggle(true);
 							cargarTabla();
 						}
-						manto.toggle(true);
+						_t.toggle(true);
 					}
 				});
 			},

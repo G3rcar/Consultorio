@@ -19,6 +19,9 @@ include("res/partes/encabezado.php");
 .headGrid th{
 	color: #FFFFFF;
 }
+.bootbox-input{
+	width: 95%;
+}
 
 </style>
 <link href="res/css/select2/select2.css" rel="stylesheet"/>
@@ -48,7 +51,7 @@ include("res/partes/encabezado.php");
 						
 						<li class="nav-header">Herramientas</li>
 						<li><a id="lnkFiltrar" href="#"><i class="icon-filter"></i> Filtrar</a></li>
-						<li><a id="lnkReceta" href="#"><i class="icon-list-alt"></i> Mostrar Recetas</a></li>
+						<!--<li><a id="lnkReceta" href="#"><i class="icon-list-alt"></i> Mostrar Receta</a></li>-->
 						<li><a href="agenda.php"><i class="icon-calendar"></i> Agenda</a></li>
 						<li><a href="pacientes.php"><i class="icon-user"></i> Pacientes</a></li>
 					</ul>
@@ -78,6 +81,8 @@ include("res/partes/encabezado.php");
 			$('#lnkAgregar').click(function(){ manto.agregar(); });
 			$('#lnkBorrar').click(function(){ manto.borrar(); });
 			$('#guardarMuni').click(function(){ manto.guardar(); });
+			$('#lnkFiltrar').click(function(){ manto.filtrar(); });
+			$('#lnkReceta').click(function(){ manto.verReceta(); });
 			cargarLista();
 
 		});
@@ -119,10 +124,11 @@ include("res/partes/encabezado.php");
 			manto.toggle(true);
 		}
 
-		function cargarTabla(){
+		function cargarTabla(s){
+			var str = (typeof(s)!="undefined")?s:"";
 			$.ajax({
 				url:'stores/consultas.php',
-				data:'action=gd_consultas', dataType:'json', type:'POST',
+				data:'action=gd_consultas&query='+str, dataType:'json', type:'POST',
 				complete:function(datos){
 					$("#contenedorTabla").html(datos.responseText);
 				}
@@ -138,35 +144,42 @@ include("res/partes/encabezado.php");
 			editar:function(id){
 				document.location.href="consultas.form.php?i="+id;
 			},
+
+			filtrar:function(){
+				bootbox.prompt("Escriba una palabra para buscar", function(result) {
+                    cargarTabla(result);
+                });
+			},
 			
 			verReceta:function(id){
-				this.estado = 'editar';
-				this.id = id;
 				$.ajax({
-					url:'stores/consultas.php',
+					url:'stores/consultas.php', type:'POST',
 					data:{action:'rt_receta',id:id},
 					complete:function(datos){
-						
+						$("#body_receta").html(datos.responseText);
+						$("#VerReceta").modal('show');
 					}
 				});
 
 			},
 
 			borrar:function(id){
+				event.preventDefault();
+
 				var tipo = (id)?'uno':'varios';
-				var seleccion = gridCheck.getSelectionJSON('gridMuni');
+				var seleccion = gridCheck.getSelectionJSON('gridConsulta');
 				if(tipo=='varios' && seleccion==false){
 					humane.log('No ha seleccionado ning&uacute;n registro');
 					return;
 				}
 
 				var ids = (tipo=='uno')?id:seleccion;
-				var action = (tipo=='uno')?'br_muni':'br_variosmuni' ;
+				var action = (tipo=='uno')?'br_consulta':'br_variasconsulta' ;
 				
 				bootbox.confirm("&iquest;Esta seguro de eliminar los registros?", function(confirm) {
 					if(confirm){
 						$.ajax({
-							url:'stores/municipios.php',
+							url:'stores/consultas.php',
 							data:'action='+action+'&id='+ids, dataType:'json', type:'POST',
 							complete:function(datos){
 								var T = jQuery.parseJSON(datos.responseText);
@@ -188,27 +201,21 @@ include("res/partes/encabezado.php");
 	<!-- Modales -->
 
 	<!-- Agregar -->
-	<div id="AgregarMuni" class="modal hide fade modalPequena" role="dialog" aria-labelledby="AgregarMuni" aria-hidden="true">
+	<div id="VerReceta" class="modal hide fade modalPequena" role="dialog" aria-labelledby="VerReceta" aria-hidden="true">
 		
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3 id="modalHead">Municipio</h3>
+			<h3 id="modalHead">Receta</h3>
 		</div>
-		<div class="modal-body">
-			<form>
-				<fieldset>
-					<label id="idPais_label" class="requerido">Pais</label>
-					<input id="idPais" type="hidden" style="width:100%" >
-					<label id="idDepto_label" class="requerido">Departamento</label>
-					<input id="idDepto" type="hidden" style="width:100%" >
-					<label id="nombreMuni_label" class="requerido" style="margin-top:5px;">Nombre</label>
-					<input id="nombreMuni" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
-				</fieldset>
-			</form>
+		<div class="modal-body" id="body_receta">
+			<label>Detalle</label>
+			<div class="well">Dsadsdasd</div>
+			<label>Medicinas</label>
+			<div class="well">Uno, Dos, Tres</div>
+
 		</div>
 		<div class="modal-footer">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-			<button id="guardarMuni" class="btn btn-primary">Guardar</button>
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
 		</div>
 
 	</div>
