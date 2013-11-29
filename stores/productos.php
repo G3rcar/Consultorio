@@ -132,6 +132,7 @@ switch ($accion) {
 			$query = " WHERE cat_nombre LIKE '%{$q}%' ";
 		}
 		$selProds = "SELECT cat_id AS 'id', cat_nombre AS 'nombre' FROM producto_categoria {$query} ORDER BY id";
+		
 		$res = $conexion->execSelect($selProds);
 		
 		$registros=array();
@@ -233,8 +234,8 @@ switch ($accion) {
 		//$mantoProv = "";
 		$mantoProd  = "";
 		if($tipo=='nuevo'){
-			$mantoProd  =  "INSERT INTO  producto(pro_nom,pro_salant_uni,pro_salant_mon,pro_costo_uni,pro_ult_cost,pro_existencia,pro_cant_min
-										pro_ult_ven,pro_idsuc,pro_idmar,pro_fecha_venc,,producto_categoria_cat_id,pro_ubicacion,pro_fila
+			$mantoProd  =  "INSERT INTO  producto(pro_nom,pro_salant_uni,pro_salant_mon,pro_costo_uni,pro_ult_cost,pro_existencia,pro_cant_min,
+										pro_ult_ven,pro_idsuc,pro_idmar,pro_fecha_venc,producto_categoria_cat_id,pro_ubicacion,pro_fila,
 										pro_fecha_cre,pro_tipo) 
 			                             VALUES('{$nombre}','{$salant}','{$salant2}','{$costuni}','{$ultcosto}','{$Existencia}','{$cantmin}',
 			                             	    null,'{$idsuc}','{$idmar}',null,'{$catid}','{$Ubicacion}',null,now(),'{$idtip}'

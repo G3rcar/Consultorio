@@ -4,7 +4,7 @@ include("sesion.php");
 include_once("libs/php/class.connection.php");
 
 $botones_menu["limpio"]=true;
-$botones_herramientas["proveedores"]=true;
+$botones_configuracion["proveedores"]=true;
 
 
 //- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu

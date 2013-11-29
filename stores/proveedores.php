@@ -18,7 +18,7 @@ switch ($accion) {
 
 		$selProvs = "select prv_id id,prv_nom nom ,prv_cor cor,
 						    dir_cond cond,dir_calle calle,dir_casa casa,dir_col col,dir_ref ref,mun_nom mun,
-                            dep_nom dep, pai_nom pai, prv_telefono tel, prv_fax fax
+                            dep_nom dep, pai_nom pai, '' tel, '' fax
 						  from proveedor, direccion,municipio,pais,departamento
 						 where prv_iddir = dir_id
 						   and dir_idmun = mun_id
@@ -196,8 +196,10 @@ switch ($accion) {
 		$resdir = $conexion->execManto($mantoDir);   
         $id_max = mysql_insert_id();
 
-			$mantoProv =  "INSERT INTO proveedor(prv_nom,prv_cor,prv_fecha_cre,prv_iddir,prv_fax,prv_telefono)
-			                            VALUES('{$nombre}','{$correo}',NOW(),$id_max,'{$fax}','{$tel}')" ;    //se pone dos para prueba
+			// $mantoProv =  "INSERT INTO proveedor(prv_nom,prv_cor,prv_fecha_cre,prv_iddir,prv_fax,prv_telefono)
+			//                             VALUES('{$nombre}','{$correo}',NOW(),$id_max,'{$fax}','{$tel}')" ;    //se pone dos para prueba
+            $mantoProv =  "INSERT INTO proveedor(prv_nom,prv_cor,prv_fecha_cre,prv_iddir)
+			                            VALUES('{$nombre}','{$correo}',NOW(),$id_max)" ;    //se pone dos para prueba
         		
 
 			
@@ -219,11 +221,15 @@ switch ($accion) {
 			                    dir_idmun  = '{$idMuni}'
 			             WHERE  dir_id     = '{$iddir}' ";
 
-			 $mantoProv    = "UPDATE proveedor
+			// $mantoProv    = "UPDATE proveedor
+			//                      SET prv_nom = '{$nombre}',
+			//                          prv_cor = '{$correo}',
+			//                          prv_fax = '{$fax}',
+			//                          prv_telefono = '{$tel}'
+			//                    where prv_id  = '{$id}' ";    
+			$mantoProv    = "UPDATE proveedor
 			                     SET prv_nom = '{$nombre}',
-			                         prv_cor = '{$correo}',
-			                         prv_fax = '{$fax}',
-			                         prv_telefono = '{$tel}'
+			                         prv_cor = '{$correo}'
 			                   where prv_id  = '{$id}' ";               
 
 		}
