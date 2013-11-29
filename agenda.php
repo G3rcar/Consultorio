@@ -430,7 +430,7 @@ include("res/partes/encabezado.php");
 				$("#pacienteE").select2("data",{id:iPa,text:nPa});
 
 				$("#fecha_edicion").datepicker({
-					format:'dd/mm/yyyy', startDate:nowText, autoclose:true, language:'es',
+					weekStart:1,format:'dd/mm/yyyy', startDate:nowText, autoclose:true, language:'es',
 				}).on('changeDate',function(ev){
 					var timestamp = ev.timeStamp/1000; //Sacando el timestamp en segundos UNIX
 					_t.fecha_seleccionada = timestamp;

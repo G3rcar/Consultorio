@@ -208,10 +208,6 @@ include("res/partes/encabezado.php");
 			<h3 id="modalHead">Receta</h3>
 		</div>
 		<div class="modal-body" id="body_receta">
-			<label>Detalle</label>
-			<div class="well">Dsadsdasd</div>
-			<label>Medicinas</label>
-			<div class="well">Uno, Dos, Tres</div>
 
 		</div>
 		<div class="modal-footer">
