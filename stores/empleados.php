@@ -60,6 +60,12 @@ switch ($accion) {
 
 		$id = (int)$conexion->escape($_POST["id"]);
 		$nombre  = $conexion->escape(utf8_decode($_POST["nombre"]));
+                $apellido  = $conexion->escape(utf8_decode($_POST["apellido"]));
+                $fecha_nac  = $conexion->escape(utf8_decode($_POST["fecha"]));
+                $genero  = $conexion->escape(utf8_decode($_POST["genero"]));
+                $sucursal  = $conexion->escape(utf8_decode($_POST["sucursal"]));
+                $cargo  = $conexion->escape(utf8_decode($_POST["cargo"]));
+                
 		$condominio = $conexion->escape(utf8_decode($_POST["condominio"]));
 		$condominio2 = $conexion->escape(utf8_decode($_POST["condominio2"]));
 		$calle = $conexion->escape(utf8_decode($_POST["calle"]));
@@ -68,10 +74,13 @@ switch ($accion) {
 		$colonia = $conexion->escape(utf8_decode($_POST["colonia"]));
 		$distrito = $conexion->escape(utf8_decode($_POST["distrito"]));
 		$referencia = $conexion->escape(utf8_decode($_POST["referencia"]));
-		$nuevoSuc = "";
+		$nuevoEmp = "";
 		if($tipo=='nuevo'){
 			$mantoSuc = "INSERT INTO direccion(dir_cond,dir_cond2,dir_calle,dir_compcalle, dir_casa, dir_col, dir_dist, dir_ref, dir_fecha_cre) VALUES('{$condominio}','{$condominio2}','{$calle}','{$calleComplemento}','{$casa}','{$colonia}','{$distrito}','{$referencia}',NOW()) ";
-			"INSERT INTO sucursal(suc_nom) VALUES('{$nombre}') ";
+			"INSERT INTO empleado 
+                        (emp_nom,emp_ape,emp_fecha_nac,emp_gen,emp_idsuc,emp_idcar) 
+                         VALUES
+                        ('{$nombre}','{$apellido}','{$fecha_nac}','{$genero}', '{$sucursal}','{$cargo}') ";
 		}else{
 			$mantoSuc = "UPDATE sucursal SET suc_nombre='{$nombre}' WHERE emp_id = {$id} ";
 			"UPDATE sucursal SET suc_nombre='{$nombre}' WHERE emp_id = {$id} ";

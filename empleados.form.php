@@ -128,6 +128,12 @@ include("res/partes/encabezado.php");
 						</div>
                                                 
 						<div class="span5">
+							<label id="nombreGen_label" class="requerido">genero</label>
+							<input id="nombreGen" type="text" min-length="2" class="input-block-level" >
+						</div>
+                                                
+                                                
+                                                <div class="span5">
 								<label id="sucursal_label">Sucursal</label>
 								<select id="idSucursal" class="input-block-level" >
 									<?php echo $sucursal; ?>
@@ -220,6 +226,13 @@ include("res/partes/encabezado.php");
 									<?php echo $rol; ?>
 								</select>
 						</div>
+                                                
+                                            
+                                    <input type=checkbox name=mas >permiso1<br>
+
+                                    <input type=checkbox name=fem >permiso2<br>
+
+                                    <input type=checkbox name=neutro >permiso3<br>
 					</fieldset>
                                      <br>
 				</form>
