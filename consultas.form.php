@@ -11,22 +11,57 @@ $conexion = new Conexion();
 $ed = false;
 $campos = "";
 
-$ed=false;
-$ed=(isset($_GET["i"]))?true:false;
-
 $idC = (isset($_GET["c"]))?(int)$conexion->escape($_GET["c"]):0;
+$tieneCon = tieneConsulta($idC);
+if($tieneCon!=false){ $_GET["i"]=$tieneCon; }
+
+$ed=(isset($_GET["i"]))?true:false;
+$idCo = ($ed)?(int)$conexion->escape($_GET["i"]):0;
+
+//Seleccionar datos para cargarlos
+if($ed){
+	$selConsulta = "SELECT con_desc,con_diag,con_idcit FROM consulta WHERE con_id = '{$idCo}' ";
+	$res = $conexion->execSelect($selConsulta);
+	if($res["num"]>0){
+		$campos = $conexion->fetchArray($res["result"]);
+		$selReceta = "SELECT rec_desc FROM receta WHERE rec_idcon = '{$idCo}' ";
+		$resR = $conexion->execSelect($selReceta);
+		if($resR["num"]>0){
+			$iRe = $conexion->fetchArray($resR["result"]);
+			$campos["rec_desc"] = $iRe["rec_desc"];
+		}
+
+	}else{
+		$ed=false;
+		$idCo=0;
+	}
+}
+
+
+
+
+
+//--------------------------------
+
+
+
+
 
 
 $citas="<option value='-'>Seleccione una cita</option>";
 $idPrimerCita="0";
+$condicion = ($idC!=0)?" OR c.cit_id = {$idC} ":"";
+
 $selectCitas = "SELECT c.cit_id,c.cit_com,p.pac_nom,p.pac_ape,
 				DATE_FORMAT(c.cit_fecha_cita,'%d/%b/%Y %h:%i %p') AS 'fecha'
 				FROM cita AS c INNER JOIN paciente AS p ON c.cit_idpac = p.pac_id
-				WHERE c.cit_fecha_cita >= NOW()";
+				WHERE c.cit_fecha_cita >= NOW() {$condicion} ORDER BY c.cit_fecha_cita ASC ";
 $res = $conexion->execSelect($selectCitas);
 if($res["num"]>0){
 	while($iPai = $conexion->fetchArray($res["result"])){
-		$citas .= "<option value='".$iPai["cit_id"]."'>".utf8_encode($iPai["pac_nom"]." ".$iPai["pac_ape"])." [".$iPai["fecha"]."] #### ".$iPai["cit_com"]."</option>";
+		$selO = ($idC==$iPai["cit_id"])?" selected ":"";
+		$valO = ($idC==$iPai["cit_id"])?utf8_encode($iPai["pac_nom"]." ".$iPai["pac_ape"])." [".$iPai["fecha"]."] #### ".$iPai["cit_com"]:"";
+		$citas .= "<option {$selO} value='".$iPai["cit_id"]."'>".utf8_encode($iPai["pac_nom"]." ".$iPai["pac_ape"])." [".$iPai["fecha"]."] #### ".$iPai["cit_com"]."</option>";
 	}
 }
 
@@ -36,6 +71,16 @@ $titulo = (!$ed)?"Agregar datos de consulta":"Editar datos de consulta";
 //- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
 include("res/partes/encabezado.php");
 
+
+function tieneConsulta($id){
+	global $conexion;
+	$id = $conexion->escape($id);
+	$selCon = "SELECT COUNT(con_id) AS 'total',con_id FROM consulta WHERE con_idcit = '{$id}' "; 
+	$res = $conexion->execSelect($selCon);
+	$iCon = $conexion->fetchArray($res["result"]);
+	if($iCon["total"]!="0"){ return $res["con_id"]; }
+	return false;
+}
 
 ?>
 <!-- Estilo extra -->
@@ -120,17 +165,17 @@ include("res/partes/encabezado.php");
 
 						<div class="span10">
 							<label id="descripcion_label">Descripci&oacute;n</label>
-							<textarea id="descripcion" type="text" min-length="2" class="input-block-level" ></textarea>
+							<textarea id="descripcion" type="text" min-length="2" class="input-block-level" ><?php echo ($ed)?utf8_encode($campos["dir_dist"]):""; ?></textarea>
 						</div>
 						<div class="span10">
 							<label id="diagnostico_label">Diagn&oacute;stico</label>
-							<textarea id="diagnostico" type="text" min-length="2" style="height:100px;" class="input-block-level" ></textarea>
+							<textarea id="diagnostico" type="text" min-length="2" style="height:100px;" class="input-block-level" ><?php echo ($ed)?utf8_encode($campos["dir_dist"]):""; ?></textarea>
 						</div>
 
 						<legend>Receta</legend>
 						<div class="span10">
 							<label id="detalle_receta_label">Detalle</label>
-							<textarea id="detalle_receta" type="text" min-length="2" class="input-block-level" ></textarea>
+							<textarea id="detalle_receta" type="text" min-length="2" class="input-block-level" ><?php echo ($ed)?utf8_encode($campos["dir_dist"]):""; ?></textarea>
 						</div>
 						<div class="span10">
 							<label id="descripcion_label">Medicinas</label>
@@ -210,8 +255,9 @@ include("res/partes/encabezado.php");
 				if(idCita!="-") manto.precargarDatos(idCita);
 			});
 
-			<?php if($ed){ ?>
-			$("#idCita").select2("val",<?php echo ""; ?>);
+			<?php if($idC!=0){ ?>
+			//$("#idCita").select2("data",{id:<?php echo $idC; ?>,text:'<?php echo $valO; ?>'});
+			manto.precargarDatos(<?php echo $idC; ?>);
 			
 			<?php } ?>
 

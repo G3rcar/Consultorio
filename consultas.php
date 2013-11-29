@@ -135,116 +135,23 @@ include("res/partes/encabezado.php");
 			estado: 'agregar',
 			id:'',
 
-			agregar:function(){
-				this.estado = 'agregar';
-				this.id = '';
-				limpiarValidacion(true);
-				
-				$('#AgregarMuni').modal('show');
-				$("#idPais").select2({
-					placeholder: "Seleccionar",
-					ajax: {
-						url: "stores/municipios.php", dataType: 'json', type:'POST',
-						data: function (term, page) {
-							return { q: term, action:'ls_pais' };
-						},
-						results: function (data, page) {
-							return {results: data.results};
-						}
-					}
-				});
-				$("#idPais").change(function(){
-					var idPais = $("#idPais").val();
-					$("#idDepto").select2({
-						placeholder: "Seleccionar",
-						ajax: {
-							url: "stores/municipios.php", dataType: 'json', type:'POST',
-							data: function (term, page) {
-								return { q: term, action:'ls_depto', pais:idPais };
-							},
-							results: function (data, page) {
-								return {results: data.results};
-							}
-						}
-					});
-					$("#idDepto").select2("enable",true);
-				});
-
-				$("#idDepto").select2({
-					placeholder: "Seleccionar", enable:false,
-					ajax: {
-						url: "stores/municipios.php", dataType: 'json', type:'POST',
-						data: function (term, page) {
-							return { q: term, action:'ls_depto' };
-						},
-						results: function (data, page) {
-							return {results: data.results};
-						}
-					}
-				});
-				$("#idDepto").select2("enable",false);
-
-			},
 			editar:function(id){
+				document.location.href="consultas.form.php?i="+id;
+			},
+			
+			verReceta:function(id){
 				this.estado = 'editar';
 				this.id = id;
 				$.ajax({
-					url:'stores/municipios.php',
-					data:'action=rt_muni&id='+id, dataType:'json', type:'POST',
+					url:'stores/consultas.php',
+					data:{action:'rt_receta',id:id},
 					complete:function(datos){
-						var T = jQuery.parseJSON(datos.responseText);
 						
-						limpiarValidacion(true);
-						
-						$('#nombreMuni').val(T.nombre);
-						$('#AgregarMuni').modal('show');
-						$("#idPais").select2({
-							placeholder: "Seleccionar",
-							ajax: {
-								url: "stores/municipios.php", dataType: 'json', type:'POST',
-								data: function (term, page) {
-									return { q: term, action:'ls_pais' };
-								},
-								results: function (data, page) {
-									return {results: data.results};
-								}
-							}
-						});
-						$("#idPais").change(function(){
-							var idPais = $("#idPais").val();
-							$("#idDepto").select2({
-								placeholder: "Seleccionar",
-								ajax: {
-									url: "stores/municipios.php", dataType: 'json', type:'POST',
-									data: function (term, page) {
-										return { q: term, action:'ls_depto', pais:idPais };
-									},
-									results: function (data, page) {
-										return {results: data.results};
-									}
-								}
-							});
-							$("#idDepto").select2("enable",true);
-						});
-
-						$("#idDepto").select2({
-							placeholder: "Seleccionar",
-							ajax: {
-								url: "stores/municipios.php", dataType: 'json', type:'POST',
-								data: function (term, page) {
-									return { q: term, action:'ls_depto',pais:T.idPais };
-								},
-								results: function (data, page) {
-									return {results: data.results};
-								}
-							}
-						});
-						$("#idPais").select2("data",{id:T.idPais,text:T.pais});
-						$("#idDepto").select2("data",{id:T.idDepto,text:T.depto});
 					}
 				});
 
 			},
+
 			borrar:function(id){
 				var tipo = (id)?'uno':'varios';
 				var seleccion = gridCheck.getSelectionJSON('gridMuni');
@@ -272,36 +179,6 @@ include("res/partes/encabezado.php");
 				}); 
 			},
 
-			guardar:function(){
-				if(!validarForm()){ return; }
-				manto.toggle(false);
-				var nombre = $('#nombreMuni').val();
-				var idDepto = $('#idDepto').val();
-				
-				if(this.estado=='agregar'){ this.id=''; }
-				var datos = 'action=sv_muni&nombre='+nombre+'&idDepto='+idDepto+'&id='+this.id;
-
-				$.ajax({
-					url:'stores/municipios.php',
-					data:datos, dataType:'json', type:'POST',
-					complete:function(datos){
-						var T = jQuery.parseJSON(datos.responseText);
-
-						humane.log(T.msg);
-						if(T.success=="true"){
-							$('#AgregarMuni').modal('hide');
-							manto.toggle(true);
-							cargarTabla();
-						}
-						manto.toggle(true);
-					}
-				});
-			},
-
-			toggle:function(v){
-				if(v){ $('#guardarMuni').removeClass('disabled').html('Guardar'); }
-				else{ $('#guardarMuni').addClass('disabled').html('Guardando...'); }
-			}
 		}
 
 
