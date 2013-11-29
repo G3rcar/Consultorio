@@ -25,7 +25,7 @@ switch ($accion) {
 		}
 
 		$selResult = "SELECT c.con_id,p.pac_nom,p.pac_ape,c.con_desc,c.con_diag,
-					DATE_FORMAT(ci.cit_fecha_cita,'%d/%b/%Y %h:%i %p') AS 'fecha' 
+					DATE_FORMAT(ci.cit_fecha_cita,'%d/%m/%Y %h:%i %p') AS 'fecha' 
 					FROM consulta AS c INNER JOIN cita AS ci ON c.con_idcit = ci.cit_id 
 					INNER JOIN paciente AS p ON ci.cit_idpac = p.pac_id
 					{$query}

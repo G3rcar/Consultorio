@@ -189,6 +189,58 @@ function tieneConsulta($id){
 						</div>
 
 					</fieldset>
+
+					<fieldset>
+
+						<legend>Direccion</legend>
+							<div class="span5">
+								<label id="pais_label" class="requerido">Pais</label>
+								<select id="idPais" class="input-block-level" >
+									<?php echo $paises; ?>
+								</select>
+							</div>
+							<div class="span5">
+								<label id="departamento_label" class="requerido">Departamento</label>
+								<input type="hidden" id="idDepto" class="input-block-level" />
+							</div>
+							<div class="span5">
+								<label id="municipio_label" class="requerido">Municipio</label>
+								<input type="hidden" id="idMuni" class="input-block-level" />
+							</div>
+							<div class="span5">
+								<label id="distritoDir_label">Distrito</label>
+								<input id="distritoDir" type="text" min-length="2" class="input-block-level" value="<?php echo ($ed)?utf8_encode($campos["dir_dist"]):""; ?>" >
+							</div>
+							<div class="span5">
+								<label id="coloniaDir_label" >Colonia</label>
+								<input id="coloniaDir" type="text" min-length="2" class="input-block-level" value="<?php echo ($ed)?utf8_encode($campos["dir_col"]):""; ?>" >
+							</div>
+							<div class="span5">
+								<label id="calleDir_label" class="requerido">Calle</label>
+								<input id="calleDir" type="text" min-length="2" class="input-block-level" value="<?php echo ($ed)?utf8_encode($campos["dir_calle"]):""; ?>" >
+							</div>
+							<div class="span5">
+								<label id="complementocalleDir_label" >Complemento Calle</label>
+								<input id="complementocalleDir" type="text" min-length="2" class="input-block-level" value="<?php echo ($ed)?utf8_encode($campos["dir_compcalle"]):""; ?>" >
+							</div>
+							<div class="span5">
+								<label id="condominioDir_label">Condominio</label>
+								<input id="condominioDir" type="text" min-length="2" class="input-block-level" value="<?php echo ($ed)?utf8_encode($campos["dir_cond"]):""; ?>" >
+							</div>
+							<div class="span5">
+								<label id="condominio2Dir_label" >Condominio 2</label>
+								<input id="condominio2Dir" type="text" min-length="2" class="input-block-level" value="<?php echo ($ed)?utf8_encode($campos["dir_cond2"]):""; ?>" >
+							</div>
+							<div class="span5">
+								<label id="casaDir_label">Casa</label>
+								<input id="casaDir" type="text" min-length="2" class="input-block-level" value="<?php echo ($ed)?utf8_encode($campos["dir_casa"]):""; ?>" >
+							</div>
+							<div class="span10">
+								<label id="referenciaDir_label">Referencia</label>
+								<textarea id="referenciaDir" type="text" min-length="2" class="input-block-level" ><?php echo ($ed)?utf8_encode($campos["dir_ref"]):""; ?></textarea>
+							</div>
+
+					</fieldset>
 				</form>
 			</div>
 			<!-- /Columna fluida con peso 9/12 -->
