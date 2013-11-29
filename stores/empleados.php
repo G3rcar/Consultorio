@@ -122,18 +122,18 @@ switch ($accion) {
 		if(!isset($_POST["id"])){ exit(); }
 		$id = json_decode($_POST["id"],true);
 
-		$borrarSuc = "DELETE FROM sucursal WHERE emp_id = {$id} ";
-		$res = $conexion->execManto($borrarSuc);
+		$borrarEmp = "DELETE FROM sucursal WHERE emp_id = {$id} ";
+		$res = $conexion->execManto($borrarEmp);
 		if($res>0){
-			$result = array("success"=>"true","msg"=>"La sucursal se ha borrado");
+			$result = array("success"=>"true","msg"=>"El empleado se ha borrado");
 		}else{
-			$result = array("success"=>"false","msg"=>"La sucursal tiene datos relacionados");
+			$result = array("success"=>"false","msg"=>"El empleado tiene datos relacionados");
 		}
 		echo json_encode($result);
 		
 	break;
 
-	case 'br_variossuc':
+	case 'br_variosemp':
 		$result = array("success"=>"false","msg"=>"");
 
 		if(!isset($_POST["id"])){ exit(); }
@@ -146,12 +146,12 @@ switch ($accion) {
 		for($i=0;$i<$tot;$i++){
 			$id = $ids[$i];
 
-			$borrarSuc = "DELETE FROM sucursal WHERE emp_id = {$id} ";
+			$borrarSuc = "DELETE FROM empleado WHERE emp_id = {$id} ";
 			$res = $conexion->execManto($borrarSuc);
 			if(!($res>0)) $errores++;
 		}
 		if($errores>0 && $errores<$tot){
-			$result = array("success"=>"true","msg"=>"Algunas sucursales no se pudieron eliminar");
+			$result = array("success"=>"true","msg"=>"Algunas empleados no se pudieron eliminar");
 		}elseif($errores==$tot){
 			$result = array("success"=>"false","msg"=>"No se pudo eliminar ninguna sucursal");
 		}else{
