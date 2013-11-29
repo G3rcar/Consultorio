@@ -28,6 +28,7 @@ switch ($accion) {
 		$res = $conexion->execSelect($selSuc);
 		$headers = array(
 			"Nombre",
+                        array("width"=>"200","text"=>"Apellido"),
 			array("width"=>"200","text"=>"Direccion"),
 			array("width"=>"200","text"=>"Fecha de creaci&oacute;n"),
 			array("width"=>"15","text"=>"&nbsp;"),

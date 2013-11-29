@@ -223,7 +223,6 @@ include("res/partes/encabezado.php");
 					<label id="referenciaDir_label">Referencia</label>
 					<input id="referenciaDir" type="text" min-length="2" class="input-block-level" placeholder="Escribir..." >
 					
-					
 				</fieldset>
 			</form>
 		</div>

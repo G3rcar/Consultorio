@@ -20,6 +20,41 @@ if($res["num"]>0){
 	}
 }
 
+$sucursal="";
+$idPrimerSucursal="0";
+$selectSucursales = "SELECT suc_id, suc_nom  FROM sucursal ORDER BY suc_nom";
+$res = $conexion->execSelect($selectSucursales);
+if($res["num"]>0){
+	while($iSuc = $conexion->fetchArray($res["result"])){
+		$idPrimerSucursal = ($idPrimerPais=="0")?$iPai["suc_id"]:$idPrimerPais;
+		$sucursal .= "<option value='".$iSuc["suc_id"]."'>".$iSuc["suc_nom"]."</option>";
+	}
+}
+
+$cargo="";
+$idPrimerCargo="0";
+$selectCargos = "SELECT car_id, car_nom  FROM  cargo ORDER BY car_nom";
+$res = $conexion->execSelect($selectCargos);
+if($res["num"]>0){
+	while($iCar = $conexion->fetchArray($res["result"])){
+		$idPrimerCargo = ($idPrimerCargo=="0")?$iCar["car_id"]:$idPrimerCargo;
+		$cargo .= "<option value='".$iCar["car_id"]."'>".$iCar["car_nom"]."</option>";
+	}
+}
+
+$rol="";
+$idPrimerRol="0";
+$selectRoles = "SELECT rol_id,rol_nom FROM rol ORDER BY rol_nom;";
+$res = $conexion->execSelect($selectRoles);
+if($res["num"]>0){
+	while($iRol = $conexion->fetchArray($res["result"])){
+		$idPrimerRol = ($idPrimerCargo=="0")?$iRol["rol_id"]:$idPrimerRol;
+		$rol .= "<option value='".$iRol["rol_id"]."'>".$iRol["rol_nom"]."</option>";
+	}
+}
+
+
+
 //- Hacerlo hasta el final de cada codigo embebido; incluye el head, css y el menu
 include("res/partes/encabezado.php");
 
@@ -38,6 +73,7 @@ include("res/partes/encabezado.php");
 </style>
 <link href="res/css/select2/select2.css" rel="stylesheet"/>
 <link href="res/css/bootstrap/css/bootstrap-timepicker.css" rel="stylesheet"/>
+<link rel="stylesheet" href="libs/js/smoothness/jquery-ui.css">
 <!-- /Estilo extra -->
 
 <!-- Scripts extra -->
@@ -45,9 +81,21 @@ include("res/partes/encabezado.php");
 <script type="text/javascript" src="libs/js/select2/select2_locale_es.js"></script>
 <script type="text/javascript" src="libs/js/bootstrap-timepicker.js"></script>
 <script type="text/javascript" src="libs/js/custom/objetos-comunes.js"></script>
+<script src="libs/js/jquery-ui-1.10.3.custom.js"></script>
+<script src="libs/js/jquery-ui-1.10.3.custom.js"></script>
+ 
+  <script>
+  $(function() {
+    $( "#datepicker" ).datepicker({
+      changeMonth: true,
+      changeYear: true
+    });
+  });
+  </script>
+ 
 <!-- /Scripts extra -->
 
-<h3>Sucursales</h3>
+<h3>Empleados/Usuarios</h3>
 
 	<div class="container-fluid">
 		<div class="row-fluid">
@@ -76,7 +124,7 @@ include("res/partes/encabezado.php");
                                                 
                                                 <div class="span5">
 							<label id="nombreFecha_nac_label" class="requerido">Fecha de nacimiento</label>
-							<input id="nombreFecha_nac" type="text" min-length="2" class="input-block-level" >
+							<input type="text" id="datepicker">
 						</div>
                                                 
 						<div class="span5">
@@ -97,7 +145,7 @@ include("res/partes/encabezado.php");
 					<br>
 					<fieldset>
 
-						<legend>Direccion</legend>
+						<legend>Direccion del Empleado</legend>
 							<div class="span5">
 								<label id="pais_label">Pais</label>
 								<select id="idPais" class="input-block-level" >
@@ -144,42 +192,36 @@ include("res/partes/encabezado.php");
 								<label id="referenciaDir_label">Referencia</label>
 								<textarea id="referenciaDir" type="text" min-length="2" class="input-block-level" ></textarea>
 							</div>
-
 					</fieldset>
-                                        
-                                        <fieldset>
+                                   <br>
+					<fieldset>
 						<legend>Usuario</legend>
 						<div class="span5">
-							<label id="nombreEmp_label" class="requerido">Nombre del empleado</label>
-							<input id="nombreEmp" type="text" min-length="2" class="input-block-level" >
+							<label id="nombreUsu_label" class="requerido">Usuario</label>
+							<input id="nombreUsu" type="text" min-length="2" class="input-block-level" >
 						</div>
 						
                                                 <div class="span5">
-							<label id="nombreApe_label" class="requerido">Apellido del empleado</label>
-							<input id="nombreApe" type="text" min-length="2" class="input-block-level" >
+							<label id="password_label" class="requerido">Contraseña</label>
+							<input id="password" type="password" class="input-block-level" placeholder="Contrase&ntilde;a">
 						</div>
                                                 
                                                 <div class="span5">
-							<label id="nombreFecha_nac_label" class="requerido">Fecha de nacimiento</label>
-							<input id="nombreFecha_nac" type="text" min-length="2" class="input-block-level" >
+							<label id="password2_label" class="requerido">Contraseña</label>
+							<input id="password2" type="password" class="input-block-level" placeholder="Contrase&ntilde;a">
 						</div>
-                                                
-                                                <div class="span5">
-							<label id="nombreSuc_label" class="requerido">Sucursal</label>
-							<input id="nombreSuc" type="text" min-length="2" class="input-block-level" >
-						</div>
-						
-                                                <div class="span5">
-							<label id="nombreCar_label" class="requerido">Cargo</label>
-							<input id="nombreCar" type="text" min-length="2" class="input-block-level" >
-						</div>
-                                                
 					</fieldset>
-                                        
-                                        
-                                        
-                                        
-					<br>
+                                     <br>
+                                        <fieldset>
+                                                <legend>Rol/Permisos</legend>
+						<div class="span5">
+								<label id="rol_label">Rol</label>
+								<select id="idRol" class="input-block-level" >
+									<?php echo $rol; ?>
+								</select>
+						</div>
+					</fieldset>
+                                     <br>
 				</form>
 			</div>
 			<!-- /Columna fluida con peso 9/12 -->
@@ -189,7 +231,6 @@ include("res/partes/encabezado.php");
 	</div>
 
 	<!-- Scripts -->
-
 	
 
 	<script>
