@@ -133,6 +133,18 @@ switch ($accion) {
 		}
 		//$fe = strtotime(date('Y-m-d',(int)$_POST["fecha"]));
 		$fecha = date("Y-m-d H:i:s",$fe+$hi);
+
+		$confCit = sePuedeGuardar($id,$fecha);
+		if(!$confCit["result"]){
+			if($confCit["tipo"]=="medio"){
+				$success = array("success"=>"false","msg"=>"Ya hay citas la hora que ha seleccionado");
+			}else{//fuera
+				$success = array("success"=>"false","msg"=>"La hora seleccionada no es v&aacute;lida");
+			}
+			echo json_encode($success);
+			exit();
+		}
+
 		$idSucursal = $_SESSION["idsucursal"];
 
 		$mantoCita = "";
@@ -243,6 +255,32 @@ function entero($n){
 	if(strstr($nTmp,".") === false) return (int)$n;
 	$nE = explode(".",$n);
 	return (int)$nE[0];
+}
+
+function sePuedeGuardar($id,$hora){
+	global $conexion,$minutos_citas,$hora_inicio,$hora_fin;
+
+	
+	$hi = strtotime(date("Y-m-d")." ".date("H:i:s",$hora_inicio));
+	$fe = strtotime(date("Y-m-d")." ".date("H:i:s",strtotime($hora)));
+	$hf = strtotime(date("Y-m-d")." ".date("H:i:s",$hora_fin));
+
+	if($fe<$hi){ return array("result"=>false,"tipo"=>"fuera"); }
+	if(($fe+($minutos_citas*60))>$hf){ return array("result"=>false,"tipo"=>"fuera"); }
+	
+
+
+	$fecha1 = date('Y-m-d H:i:s',strtotime("-{$minutos_citas} minutes",strtotime($hora)));
+	$fecha2 = date('Y-m-d H:i:s',strtotime("+{$minutos_citas} minutes",strtotime($hora)));
+	$selH = "SELECT COUNT(cit_id) AS 'total' FROM cita WHERE cit_id <> {$id} AND cit_fecha_cita > '{$fecha1}' AND cit_fecha_cita < '{$fecha2}' ";
+	$resH = $conexion->execSelect($selH);
+	$iH = $conexion->fetchArray($resH["result"]);
+
+	if($iH["total"]!="0"){
+		return array("result"=>false,"tipo"=>"medio");
+	}
+
+	return true;
 }
 
 ?>
