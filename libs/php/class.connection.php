@@ -3,15 +3,15 @@
 class Conexion{
 	private $link;
 	private $bd = "consultorio";
-	private $server = "localhost";
+	//private $server = "localhost";
 	//private $server = "mysql17.000webhost.com";
-	//private $server = "192.168.56.15";
-	private $user = "root";
+	private $server = "192.168.56.15";
+	//private $user = "root";
 	//private $user = "a7386860_admin";
-	//private $user = "dbadmin";
-	private $pass = "";
+	private $user = "dbadmin";
+	//private $pass = "";
 	//private $pass = "pr0gr4adm0n";
-	//private $pass = "8%(/H#U&Ce5zbvy";
+	private $pass = "8%(/H#U&Ce5zbvy";
 
 	//--
 	public function __construct(){
