@@ -280,7 +280,7 @@ function sePuedeGuardar($id,$hora){
 		return array("result"=>false,"tipo"=>"medio");
 	}
 
-	return true;
+	return array("result"=>true,"tipo"=>"valido");
 }
 
 ?>
